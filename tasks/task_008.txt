@@ -1,0 +1,11 @@
+# Task ID: 8
+# Title: Chrome Extension Basic Structure (WXT)
+# Status: pending
+# Dependencies: 1, 5
+# Priority: high
+# Description: Set up the basic structure for the Chrome Extension using WXT, including entry points for background scripts, content scripts, and popup/options UI if needed. Ensure inter-script communication mechanisms are understood.
+# Details:
+Define manifest entries in `wxt.config.ts` for background service worker, content scripts (targetting meeting platforms like Google Meet, Zoom web). Create basic HTML/TS files for any UI elements (e.g., popup). Plan for message passing between components (e.g., `wxt/storage`, `browser.runtime.sendMessage`).
+
+# Test Strategy:
+Load the extension in Chrome. Verify background script runs, content script injects into a test page, and basic message passing works.

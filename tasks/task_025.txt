@@ -1,0 +1,11 @@
+# Task ID: 25
+# Title: Basic AI Chat Interface (OpenAI in Drawer)
+# Status: pending
+# Dependencies: 23, 13, 20
+# Priority: high
+# Description: Implement a basic interactive AI chat interface within the AI Assistant Drawer. Connect this interface to OpenAI models to allow users to ask questions and get live insights based on synced data and meeting context.
+# Details:
+Create a chat input field and a message display area in the drawer. Send user queries along with relevant context (e.g., recent transcript, synced data summaries) to an OpenAI API endpoint (e.g., GPT-3.5-turbo or GPT-4). Display AI responses. Manage conversation history for context.
+
+# Test Strategy:
+Test sending queries and receiving responses from OpenAI. Verify context is being used effectively by the AI. Test UI for chat interaction.

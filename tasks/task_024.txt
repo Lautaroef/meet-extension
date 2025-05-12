@@ -1,0 +1,11 @@
+# Task ID: 24
+# Title: 'Past GEMs' Log Functionality (Drawer)
+# Status: pending
+# Dependencies: 22, 23, 21
+# Priority: medium
+# Description: Implement the 'Past GEMs' log functionality within the AI Assistant Drawer. This will be a scrollable list displaying all 'GEM' alerts that have appeared during the current meeting.
+# Details:
+When a GEM alert is triggered (Task 21) and displayed (Task 22), also add its content to a list managed by the AI Assistant Drawer component. Ensure the list is scrollable and displays GEMs chronologically.
+
+# Test Strategy:
+Trigger multiple GEM alerts. Verify they are all logged in the 'Past GEMs' section in the correct order. Test scrolling and display of GEM content.

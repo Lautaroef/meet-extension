@@ -1,0 +1,11 @@
+# Task ID: 21
+# Title: Real-time Transcript Processing (Basic Keyword Spotting for GEMs)
+# Status: pending
+# Dependencies: 20, 13
+# Priority: high
+# Description: Implement initial logic in the Chrome Extension to process the live transcript for 'GEM' alerts. For MVP, this can be based on simple keyword spotting or basic pattern matching against synced user data.
+# Details:
+Analyze incoming transcript segments. Compare text against keywords/phrases extracted from user's synced data (Supabase). Trigger a 'GEM' event when a match is found. This logic will run in the extension's background script or a dedicated web worker.
+
+# Test Strategy:
+Test with sample transcripts and keyword sets. Verify that GEM events are triggered correctly for matching keywords. Evaluate performance to ensure real-time processing.

@@ -1,0 +1,11 @@
+# Task ID: 20
+# Title: ElevenLabs 'Scribe' API Integration for Live Transcription
+# Status: pending
+# Dependencies: 8
+# Priority: high
+# Description: Integrate the ElevenLabs 'Scribe' API (or an alternative) into the Chrome Extension to capture live audio from the current meeting tab and transcribe it to text in real-time.
+# Details:
+Use `chrome.tabCapture` API to get audio stream from the active meeting tab. Send audio data to ElevenLabs Scribe API (https://elevenlabs.io/docs/api-reference/speech-to-text/convert) via WebSockets or HTTP streaming for real-time results. Handle API key management securely. Manage audio chunks and transcription segments.
+
+# Test Strategy:
+Test audio capture from a meeting tab. Verify real-time transcription accuracy and latency with ElevenLabs. Handle connection errors and API limits.

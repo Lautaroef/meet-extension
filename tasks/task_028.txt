@@ -1,0 +1,11 @@
+# Task ID: 28
+# Title: Refine 'GEM' Alert Intelligence (Contextual OpenAI analysis)
+# Status: pending
+# Dependencies: 26, 27, 20, 13
+# Priority: high
+# Description: Enhance the 'GEM' alert intelligence by using OpenAI models to analyze the live transcript in conjunction with synced user data, moving beyond simple keyword spotting to detect more nuanced contextual connections.
+# Details:
+Modify Task 21's processing logic. Instead of/in addition to keyword spotting, send transcript snippets and relevant user data context to an OpenAI model (with prompts from Task 27) to identify 'hidden gems'. Optimize for low latency.
+
+# Test Strategy:
+Test with diverse meeting scenarios. Compare AI-driven GEMs against keyword-based ones. Evaluate relevance and insightfulness. Monitor API usage and performance.

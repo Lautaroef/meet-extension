@@ -1,0 +1,11 @@
+# Task ID: 7
+# Title: Basic UI for Next.js App (Settings/Sync Shell)
+# Status: pending
+# Dependencies: 2, 6, 5
+# Priority: medium
+# Description: Develop the basic UI shell for the Next.js web application, including navigation for settings, data source management, and account information. Utilize `@21st-dev/magic` for UI components.
+# Details:
+Create a dashboard layout. Implement placeholder pages for managing data sources (Notion, Google Calendar, etc.) and user profile settings. Use `@21st-dev/magic` to generate forms, tables, and navigation components. Ensure responsive design with Tailwind CSS.
+
+# Test Strategy:
+Manual UI/UX testing for navigation, responsiveness, and component rendering. Verify that authenticated users can access these sections.

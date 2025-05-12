@@ -1,0 +1,11 @@
+# Task ID: 31
+# Title: Implement 'Intelligent Recap for Late Joiners' (Basic)
+# Status: pending
+# Dependencies: 20, 8, 25
+# Priority: medium
+# Description: Implement a basic version of the 'Intelligent Recap for Late Joiners'. When a user with the extension joins mid-meeting, provide a non-intrusive recap of key topics discussed so far, based on the transcript.
+# Details:
+Detect when the extension initializes mid-meeting (e.g., by checking current meeting duration or existing transcript). If so, automatically generate a summary (similar to Task 30) and display it discreetly to the late joiner, perhaps in the AI drawer.
+
+# Test Strategy:
+Simulate joining a meeting late. Verify that a recap is generated and displayed. Assess the quality and conciseness of the recap.

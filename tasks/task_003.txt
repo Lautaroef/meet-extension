@@ -1,0 +1,293 @@
+# Task ID: 3
+# Title: Setup Supabase Database & Prisma Schema
+# Status: done
+# Dependencies: None
+# Priority: high
+# Description: Set up a new Supabase project. Define the initial database schema using Prisma ORM, including tables for users, data sources, synced content, and meeting insights.
+# Details:
+Create Supabase project. Initialize Prisma: `npx prisma init --datasource-provider postgresql`. Define models in `prisma/schema.prisma` (e.g., User, DataSource, SyncedItem, MeetingBriefing, GemAlert). Set `DATABASE_URL` from Supabase. Run `npx prisma migrate dev`.
+
+# Test Strategy:
+Confirm Supabase project creation, successful Prisma migration, and ability to connect to the database using Prisma Client.
+
+# Subtasks:
+## 1. Create Supabase Project [done]
+### Dependencies: None
+### Description: Sign up for Supabase, create a new project, and obtain the database connection string from the project settings.
+### Details:
+Go to the Supabase dashboard, start a new project, and note the PostgreSQL connection string for later use.
+<info added on 2025-05-12T00:22:27.486Z>
+This subtask requires manual actions by the user:
+
+1. Go to supabase.com
+2. Sign up for a new account or log in to an existing one
+3. Create a new Supabase project (recommended name: "Meet MVP")
+4. Wait for the project to be fully provisioned (this may take a few minutes)
+5. Once created, navigate to Project Settings > Database in the left sidebar
+6. Under "Connection string" section, locate the PostgreSQL connection URI
+7. Copy the connection string that starts with `postgresql://postgres:[YOUR-PASSWORD]@...`
+8. Save this connection string securely - it will be needed in Subtask 3.4 as the `DATABASE_URL` environment variable
+9. Replace [YOUR-PASSWORD] in the connection string with your actual Supabase database password
+
+Note: This connection string contains sensitive credentials. Do not share it publicly or commit it to version control.
+</info added on 2025-05-12T00:22:27.486Z>
+
+## 2. Initialize Prisma [done]
+### Dependencies: 3.1
+### Description: Install Prisma in your project and initialize it to generate the necessary configuration files.
+### Details:
+Run the appropriate commands to install Prisma and create the initial Prisma setup (e.g., `npx prisma init`).
+<info added on 2025-05-12T00:26:10.939Z>
+This subtask involves setting up Prisma ORM within the Next.js project to facilitate database interactions with Supabase.
+
+1. Navigate to the Next.js project directory:
+   ```bash
+   cd live-meeting-assistant/webapp/
+   ```
+
+2. Install Prisma CLI as a development dependency:
+   ```bash
+   npm install prisma --save-dev
+   ```
+
+3. Initialize Prisma with PostgreSQL as the database provider:
+   ```bash
+   npx prisma init --datasource-provider postgresql
+   ```
+
+4. Expected outcomes after initialization:
+   - A new `prisma` directory will be created in the project root
+   - A `schema.prisma` file will be generated inside the prisma directory
+   - The `.env` file will be created or updated with a `DATABASE_URL` placeholder
+
+5. After initialization, you'll need to update the DATABASE_URL in the .env file with the connection string from Supabase before proceeding to define the schema in the next subtask.
+</info added on 2025-05-12T00:26:10.939Z>
+
+## 3. Define Initial Schema [done]
+### Dependencies: 3.2
+### Description: Edit the Prisma schema file to define your initial database models and relationships.
+### Details:
+Modify `prisma/schema.prisma` to include your desired models, such as User and Post, with appropriate fields and relations.
+<info added on 2025-05-12T00:27:38.367Z>
+Create a comprehensive Prisma schema in `live-meeting-assistant/webapp/prisma/schema.prisma` with the following models:
+
+1. User - Core user model with relations to all other user-owned entities
+2. DataSource - For integrating with external data sources (Notion, Google Calendar, etc.)
+3. DataSourceType - Enum defining supported integration types
+4. SyncedContent - Content pulled from data sources with vector embedding support
+5. Meeting - Core meeting entity with scheduling information
+6. MeetingParticipant - Meeting attendees with flexible participant data
+7. PreMeetingBrief - AI-generated meeting preparation materials
+8. GemAlert - Important insights or action items detected during meetings
+9. FeedbackRating - Enum for user feedback on system performance
+10. UserFeedback - Structured user feedback on gem alerts
+
+Key implementation considerations:
+- Map to Supabase Auth users
+- Use JSON fields for flexible/schemaless data
+- Include placeholders for vector embeddings
+- Implement secure token storage patterns
+- Define appropriate cascade behaviors for entity deletion
+- Set up initial indexing for query performance
+
+The schema will include proper relations between models, appropriate field types, and necessary indexes for query optimization.
+</info added on 2025-05-12T00:27:38.367Z>
+
+## 4. Configure Environment Variables [done]
+### Dependencies: 3.3
+### Description: Set up the environment variables, especially the database connection string, so Prisma can connect to Supabase.
+### Details:
+Add the Supabase PostgreSQL connection string to your `.env` file as `DATABASE_URL`.
+
+## 5. Run and Verify Migration [done]
+### Dependencies: 3.4
+### Description: Run Prisma migrations to apply your schema to the Supabase database and verify the setup.
+### Details:
+Execute `npx prisma migrate dev` to run the migration, then use Prisma Studio or a test script to confirm the database is set up correctly.
+<info added on 2025-05-12T00:29:39.277Z>
+Execute the following steps to run and verify the Prisma migration:
+
+1. Navigate to the `live-meeting-assistant/webapp/` directory.
+2. Run the initial Prisma migration command: `npx prisma migrate dev --name init`
+   This command will:
+   - Create the migration SQL file based on your `prisma/schema.prisma`
+   - Apply the migration to your Supabase database using the `DATABASE_URL` from your environment variables
+   - Generate the Prisma Client based on your schema
+
+3. Verification Steps:
+   - Check the terminal output for successful completion of the migration
+   - Run `npx prisma studio` to open Prisma Studio in your browser and visually inspect the database tables
+   - Alternatively, check the Supabase dashboard under Database > Migrations to confirm the `init` migration is listed
+   - Verify that Prisma Client has been generated (typically in `node_modules/.prisma/client`) and type definitions are updated
+
+If you encounter any errors during migration, check that your database connection string is correct and that your schema is valid.
+</info added on 2025-05-12T00:29:39.277Z>
+<info added on 2025-05-12T01:32:31.319Z>
+Execute `npx prisma migrate dev` to run the migration, then use Prisma Studio or a test script to confirm the database is set up correctly.
+
+<info added on 2025-05-12T00:29:39.277Z>
+Execute the following steps to run and verify the Prisma migration:
+
+1. Navigate to the `live-meeting-assistant/webapp/` directory.
+2. Run the initial Prisma migration command: `npx prisma migrate dev --name init`
+   This command will:
+   - Create the migration SQL file based on your `prisma/schema.prisma`
+   - Apply the migration to your Supabase database using the `DATABASE_URL` from your environment variables
+   - Generate the Prisma Client based on your schema
+
+3. Verification Steps:
+   - Check the terminal output for successful completion of the migration
+   - Run `npx prisma studio` to open Prisma Studio in your browser and visually inspect the database tables
+   - Alternatively, check the Supabase dashboard under Database > Migrations to confirm the `init` migration is listed
+   - Verify that Prisma Client has been generated (typically in `node_modules/.prisma/client`) and type definitions are updated
+
+If you encounter any errors during migration, check that your database connection string is correct and that your schema is valid.
+</info added on 2025-05-12T00:29:39.277Z>
+
+The migration failed with the error `ERROR: type "vector" does not exist`. This is because the schema is using vector data types which require the pgvector extension to be enabled in Supabase. Follow these updated steps to resolve the issue:
+
+1. **Enable the pgvector extension in Supabase:**
+   - Log in to your Supabase dashboard
+   - Navigate to Database > Extensions
+   - Find the "vector" (or "pgvector") extension in the list
+   - Click the toggle to enable it
+   - This extension is required for vector embeddings functionality in your database
+
+2. **Re-run the migration with a new name:**
+   - Navigate back to your project directory
+   - Run: `npx prisma migrate dev --name create_initial_tables_with_vector`
+   - Using a new migration name helps distinguish this attempt from the previous failed one
+   - This should now succeed since the required extension is enabled
+
+3. **Verification Steps:**
+   - Check the terminal output for successful completion of the migration
+   - Run `npx prisma studio` to open Prisma Studio and verify the tables were created with the vector fields
+   - Check the Supabase dashboard under Database > Tables to confirm your tables exist
+   - Verify that Prisma Client has been regenerated with the updated schema
+
+If you encounter any other extension-related errors, check if additional extensions need to be enabled in the Supabase dashboard.
+</info added on 2025-05-12T01:32:31.319Z>
+<info added on 2025-05-12T01:33:58.310Z>
+The migration is still failing with the `ERROR: type "vector" does not exist` error even after enabling the pgvector extension through the Supabase UI. This is likely because the extension needs to be properly configured in the public schema where Prisma operates. Follow these updated steps:
+
+1. **Manual SQL Commands Required:**
+   - Go to the Supabase dashboard > SQL Editor
+   - Run the following SQL command to ensure the vector extension is installed in the public schema:
+     ```sql
+     CREATE EXTENSION IF NOT EXISTS vector WITH SCHEMA public;
+     ```
+   - Then run this command to set the proper search path:
+     ```sql
+     ALTER DATABASE postgres SET search_path = "$user", public, extensions;
+     ```
+     (Note: If your database name is different from the default "postgres", replace it accordingly)
+   - These commands ensure the `vector` type is properly available in the public schema where Prisma will look for it
+
+2. **Re-run Migration with New Name:**
+   - Navigate back to your project directory
+   - Run a new migration with a distinct name:
+     ```
+     npx prisma migrate dev --name create_initial_tables_vector_public
+     ```
+   - Using a new migration name helps track this attempt separately
+
+3. **Verification Steps:**
+   - Check the terminal output for successful completion
+   - Run `npx prisma studio` to visually confirm tables were created with vector fields
+   - Check the Supabase dashboard under Database > Tables to verify table creation
+   - Confirm that Prisma Client has been regenerated with the updated schema
+
+4. **If Still Encountering Issues:**
+   - Verify the SQL commands executed successfully in the SQL Editor
+   - Check if there are any permission issues with the Supabase connection
+   - Consider restarting the Supabase project if the extension isn't being recognized
+   - Review the Prisma schema to ensure vector fields are properly defined
+</info added on 2025-05-12T01:33:58.310Z>
+<info added on 2025-05-12T01:49:22.013Z>
+The migration is still failing with the `vector` type error. We need to perform more detailed SQL debugging to understand the exact issue with the pgvector extension configuration. Follow these steps:
+
+1. **Manual SQL Debugging Steps:**
+   - Go to the Supabase dashboard > SQL Editor
+   - Execute the following diagnostic SQL commands and note the results of each:
+   
+   a. Check the current search path configuration:
+   ```sql
+   SHOW search_path;
+   ```
+   This will show where Postgres is looking for types and functions.
+   
+   b. Test if the vector type is accessible in the extensions schema:
+   ```sql
+   SELECT NULL::extensions.vector;
+   ```
+   This will tell us if the vector type exists in the extensions schema.
+   
+   c. Test if the vector type is accessible in the public schema:
+   ```sql
+   SELECT NULL::public.vector;
+   ```
+   This will tell us if the vector type exists in the public schema.
+
+2. **Record the Results:**
+   - Document the exact output or error message from each command
+   - Pay special attention to any error messages about schema visibility or type existence
+
+3. **Next Steps Based on Results:**
+   - If `SHOW search_path;` doesn't include 'extensions', we'll need to modify the search path
+   - If `SELECT NULL::extensions.vector;` succeeds but `SELECT NULL::public.vector;` fails, we need to create the type in the public schema
+   - If both vector type tests fail, we may need to reinstall the pgvector extension
+
+4. **After Diagnosis:**
+   - Based on the results, we'll execute the appropriate SQL commands to fix the schema configuration
+   - Then attempt the migration again with a new name to track this attempt separately:
+     ```
+     npx prisma migrate dev --name fix_vector_type_config
+     ```
+
+This diagnostic approach will help us pinpoint exactly where the vector type configuration is failing and allow us to apply the correct fix rather than trying generic solutions.
+</info added on 2025-05-12T01:49:22.013Z>
+<info added on 2025-05-12T01:52:34.685Z>
+After multiple attempts to resolve the vector type issue, we need to implement a workaround to proceed with the migration. The diagnostic tests confirmed that the vector type exists in the extensions schema but not in the public schema, which is causing Prisma migration to fail.
+
+Here's the updated approach to successfully complete the migration:
+
+1. **Modify the Prisma Schema**:
+   - Open your `schema.prisma` file
+   - In the `SyncedContent` model, locate the `embedding` field
+   - Change the field type from `embedding Unsupported("vector")?` to `embedding Json?`
+   - This modification uses a standard type that Prisma can handle for DDL generation
+   - Example of the modified field:
+     ```prisma
+     model SyncedContent {
+       // other fields...
+       embedding Json?  // Changed from Unsupported("vector")?
+       // remaining fields...
+     }
+     ```
+
+2. **Run the Migration with New Name**:
+   - Navigate to your project directory
+   - Execute the migration with a descriptive name:
+     ```
+     npx prisma migrate dev --name create_tables_json_placeholder_for_vector
+     ```
+   - This approach should succeed since all types will now be known to Prisma and standard PostgreSQL
+
+3. **Verification Steps**:
+   - Check the terminal output for successful completion
+   - Use Prisma Studio (`npx prisma studio`) to verify the tables were created with the Json field
+   - Check the Supabase dashboard under Database > Tables to confirm table creation
+   - Verify that all expected tables and relationships are present
+
+4. **Important Note for Future Vector Implementation**:
+   - This is a temporary workaround to unblock the migration process
+   - When implementing actual vector storage and search functionality:
+     - You'll need to use raw SQL queries via `prisma.$executeRawUnsafe` or Supabase-specific client functions
+     - These will be required to interact with the actual `extensions.vector` column type
+     - You may need to alter the column type post-migration using raw SQL if Prisma creates it as JSONB
+     - Alternatively, ensure the column is correctly typed as `extensions.vector` from the start via other means beyond Prisma's DDL capabilities
+   - Document this technical debt for the team to address when implementing vector search functionality
+
+This approach prioritizes making progress with the database setup while acknowledging the need for additional work when implementing vector-specific functionality later.
+</info added on 2025-05-12T01:52:34.685Z>
+

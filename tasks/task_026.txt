@@ -1,0 +1,11 @@
+# Task ID: 26
+# Title: Data Flow for GEM Alerts (Transcript -> Analysis -> Alert UI)
+# Status: pending
+# Dependencies: 21, 22, 24, 13
+# Priority: high
+# Description: Establish the data flow for real-time 'GEM' alerts: from live transcript capture, through analysis (initially keyword-based, later AI-driven), to displaying the alert and logging it.
+# Details:
+Orchestrate the sequence: 1. Transcript segment received (Task 20). 2. Segment analyzed for GEMs (Task 21). 3. If GEM found, data (content, source) prepared. 4. GEM displayed via UI component (Task 22). 5. GEM logged in 'Past GEMs' (Task 24). Ensure efficient communication between extension components (background, content scripts).
+
+# Test Strategy:
+End-to-end test: Speak keywords during a test meeting, verify alert appears, is logged, and contains relevant info. Monitor performance and data consistency.

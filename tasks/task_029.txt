@@ -1,0 +1,11 @@
+# Task ID: 29
+# Title: Implement 'Spark Connection' Smart Chip
+# Status: pending
+# Dependencies: 23, 25, 13, 15
+# Priority: medium
+# Description: Implement the 'Spark Connection' Smart Chip in the AI Assistant Drawer. This chip, when clicked, should query the AI to generate personalized talking points or rapport builders based on available data about attendees.
+# Details:
+Add a 'Spark Connection' button/chip to the AI drawer. On click, trigger an OpenAI query using a specific prompt designed to generate connection ideas, leveraging synced data and `open-deep-research` insights for known attendees.
+
+# Test Strategy:
+Test the chip with various meeting contexts and attendee information. Evaluate the quality and relevance of the generated talking points.

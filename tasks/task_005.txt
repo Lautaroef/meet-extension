@@ -1,0 +1,11 @@
+# Task ID: 5
+# Title: Initial Error Handling & Logging Framework Setup
+# Status: pending
+# Dependencies: 1, 2
+# Priority: high
+# Description: Implement a basic error handling and logging framework for both the WXT Chrome Extension and the Next.js web application. This should include centralized logging functions and consistent error response formats.
+# Details:
+Next.js: Create utility functions for API error responses and client-side error boundaries. Consider a simple logger (e.g., `pino` or `console` wrappers). WXT: Implement error handling in background scripts and content scripts, potentially logging to extension console or a remote service for debugging.
+
+# Test Strategy:
+Verify that errors are caught gracefully and logged in a structured format in both environments. Test with intentionally thrown errors.

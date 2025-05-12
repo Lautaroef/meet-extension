@@ -1,0 +1,11 @@
+# Task ID: 4
+# Title: Configure Git Repository and Branching Strategy
+# Status: in-progress
+# Dependencies: 1, 2
+# Priority: high
+# Description: Configure the project's Git repository, confirm the project structure within the existing repo, and establish a clear branching strategy (e.g., main, develop, feature branches).
+# Details:
+Ensure `./live-meeting-assistant` is the root. Create `extension` and `webapp` subdirectories if not done by project setups. Define branching model (e.g., GitFlow variant). Set up `.gitignore` files for Node modules, build artifacts, and environment variables.
+
+# Test Strategy:
+Verify repository structure, `.gitignore` effectiveness, and successful creation/merging of a test feature branch.

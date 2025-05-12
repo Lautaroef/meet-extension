@@ -1,0 +1,11 @@
+# Task ID: 11
+# Title: Manual Text Input/Upload Feature (Next.js & Supabase Storage)
+# Status: pending
+# Dependencies: 3, 6, 7
+# Priority: medium
+# Description: Implement functionality for users to manually upload text files or paste text content directly into the Next.js web app. Store this content in Supabase Storage and link it to the user's account.
+# Details:
+Create UI components for file upload (e.g., `.txt`, `.md`) and a textarea for pasting text. Use Supabase Storage for file persistence. Store metadata (filename, user_id, upload_date) in a Supabase table linked to the stored file.
+
+# Test Strategy:
+Test file upload and text pasting. Verify files are stored in Supabase Storage and metadata is correctly recorded in the database. Test retrieval of uploaded content.

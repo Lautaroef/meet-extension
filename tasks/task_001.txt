@@ -1,0 +1,84 @@
+# Task ID: 1
+# Title: Setup WXT Project for Chrome Extension
+# Status: done
+# Dependencies: None
+# Priority: high
+# Description: Initialize the Chrome Extension project using the WXT framework. Set up the basic directory structure (`src/`) and TypeScript configuration as per WXT best practices. Ensure build scripts are functional.
+# Details:
+Use `npm create wxt@latest` or `pnpm create wxt@latest`. Configure `wxt.config.ts` for manifest v3. Project directory: `./live-meeting-assistant/extension`. Key files: `entrypoints/`, `public/`, `wxt.config.ts`.
+
+# Test Strategy:
+Verify successful project creation, basic build (`wxt build`), and ability to load the unpacked extension in Chrome.
+
+# Subtasks:
+## 1. Initialize Project with WXT CLI [done]
+### Dependencies: None
+### Description: Use the WXT CLI to scaffold a new Chrome extension project, selecting the appropriate template (e.g., vanilla, React, Vue, Svelte).
+### Details:
+Run `npx WXT@latest init --template vanilla` (or another template as needed) and install dependencies with `npm i`.
+<info added on 2025-05-11T23:53:33.621Z>
+Detailed initialization plan for the Chrome extension project:
+
+1. Create the directory `./live-meeting-assistant` if it doesn't exist.
+2. Change directory to `./live-meeting-assistant`.
+3. Run WXT init: `npx wxt@latest init extension --template react -y` to scaffold a new project named 'extension' inside 'live-meeting-assistant', using the React template.
+4. Change directory to `./live-meeting-assistant/extension`.
+5. Run `npm install` to install all required dependencies.
+
+This initialization sets up the basic project structure that will be configured further in the next subtask (Configure TypeScript and Directory Structure).
+</info added on 2025-05-11T23:53:33.621Z>
+
+## 2. Configure TypeScript and Directory Structure [done]
+### Dependencies: 1.1
+### Description: Set up TypeScript configuration and organize the project directory according to WXT's recommended structure.
+### Details:
+Ensure `tsconfig.json` is present and correctly configured. Arrange source files and assets in the appropriate folders as per WXT documentation.
+<info added on 2025-05-12T00:01:14.206Z>
+The directory structure needs to be reorganized to follow WXT's recommended patterns. The implementation plan is as follows:
+
+1. Modify `live-meeting-assistant/live-meeting-assistant/extension/wxt.config.ts` to include `srcDir: 'src',` within the `defineConfig` object.
+2. Create the directory `live-meeting-assistant/live-meeting-assistant/extension/src`.
+3. Move the existing `entrypoints` folder from `live-meeting-assistant/live-meeting-assistant/extension/entrypoints` to `live-meeting-assistant/live-meeting-assistant/extension/src/entrypoints`.
+4. Move the existing `assets` folder from `live-meeting-assistant/live-meeting-assistant/extension/assets` to `live-meeting-assistant/live-meeting-assistant/extension/src/assets`.
+5. Verify that the existing `tsconfig.json` is properly configured (it currently extends WXT's base configuration which should be sufficient for now).
+
+This reorganization will ensure the project follows WXT's recommended structure, making it easier to maintain and extend in the future. The TypeScript configuration appears to be correctly set up already as it extends WXT's base configuration.
+</info added on 2025-05-12T00:01:14.206Z>
+
+## 3. Set Up Build Scripts and Verify Build [done]
+### Dependencies: 1.2
+### Description: Configure build scripts in `package.json` and verify that the extension builds successfully.
+### Details:
+Add or confirm scripts like `npm run dev` and `npm run build`. Run the build process and check the `.output` directory for the generated extension files.
+<info added on 2025-05-12T00:02:56.718Z>
+The build process for the WXT Chrome extension involves the following steps:
+
+1. Confirm that the `package.json` file already contains the necessary build script: `"build": "wxt build"`.
+2. Navigate to the extension directory at `live-meeting-assistant/live-meeting-assistant/extension/`.
+3. Execute the build command by running `npm run build` from the terminal.
+4. After the build completes, verify the build artifacts by checking the contents of the `.output/` directory.
+5. Ensure that all expected extension files (manifest, HTML, JS, CSS, and assets) have been properly generated in the output directory.
+6. Document any issues encountered during the build process for troubleshooting.
+</info added on 2025-05-12T00:02:56.718Z>
+
+## 4. Test Loading the Extension in Chrome [done]
+### Dependencies: 1.3
+### Description: Load the built extension into Chrome to verify it works as expected.
+### Details:
+Open Chrome, navigate to `chrome://extensions`, enable Developer Mode, and load the extension from the `.output` directory. Test basic functionality.
+<info added on 2025-05-12T00:03:46.526Z>
+This subtask requires manual testing by the user:
+
+1. Open Google Chrome.
+2. Navigate to `chrome://extensions`.
+3. Enable "Developer mode" (toggle in the top-right corner).
+4. Click "Load unpacked" button.
+5. Select the directory: `/Users/lautaro/Documents/personal/Meet MVP - iterations/meet-chrome-extension/live-meeting-assistant/live-meeting-assistant/extension/.output/chrome-mv3/`
+6. Verify the extension appears in the list of installed extensions.
+7. Click on the extension icon in the Chrome toolbar to check if the popup opens correctly.
+8. Test basic functionality of the popup interface.
+9. Document any errors or issues encountered during testing.
+
+User should report the outcome of this testing, including whether the extension loaded successfully and if the basic functionality works as expected.
+</info added on 2025-05-12T00:03:46.526Z>
+

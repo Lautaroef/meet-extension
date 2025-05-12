@@ -1,0 +1,756 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Setup WXT Project for Chrome Extension",
+      "description": "Initialize the Chrome Extension project using the WXT framework. Set up the basic directory structure (`src/`) and TypeScript configuration as per WXT best practices. Ensure build scripts are functional.",
+      "details": "Use `npm create wxt@latest` or `pnpm create wxt@latest`. Configure `wxt.config.ts` for manifest v3. Project directory: `./live-meeting-assistant/extension`. Key files: `entrypoints/`, `public/`, `wxt.config.ts`.",
+      "testStrategy": "Verify successful project creation, basic build (`wxt build`), and ability to load the unpacked extension in Chrome.",
+      "priority": "high",
+      "dependencies": [],
+      "status": "done",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Initialize Project with WXT CLI",
+          "description": "Use the WXT CLI to scaffold a new Chrome extension project, selecting the appropriate template (e.g., vanilla, React, Vue, Svelte).",
+          "dependencies": [],
+          "details": "Run `npx WXT@latest init --template vanilla` (or another template as needed) and install dependencies with `npm i`.\n<info added on 2025-05-11T23:53:33.621Z>\nDetailed initialization plan for the Chrome extension project:\n\n1. Create the directory `./live-meeting-assistant` if it doesn't exist.\n2. Change directory to `./live-meeting-assistant`.\n3. Run WXT init: `npx wxt@latest init extension --template react -y` to scaffold a new project named 'extension' inside 'live-meeting-assistant', using the React template.\n4. Change directory to `./live-meeting-assistant/extension`.\n5. Run `npm install` to install all required dependencies.\n\nThis initialization sets up the basic project structure that will be configured further in the next subtask (Configure TypeScript and Directory Structure).\n</info added on 2025-05-11T23:53:33.621Z>",
+          "status": "done"
+        },
+        {
+          "id": 2,
+          "title": "Configure TypeScript and Directory Structure",
+          "description": "Set up TypeScript configuration and organize the project directory according to WXT's recommended structure.",
+          "dependencies": [
+            1
+          ],
+          "details": "Ensure `tsconfig.json` is present and correctly configured. Arrange source files and assets in the appropriate folders as per WXT documentation.\n<info added on 2025-05-12T00:01:14.206Z>\nThe directory structure needs to be reorganized to follow WXT's recommended patterns. The implementation plan is as follows:\n\n1. Modify `live-meeting-assistant/live-meeting-assistant/extension/wxt.config.ts` to include `srcDir: 'src',` within the `defineConfig` object.\n2. Create the directory `live-meeting-assistant/live-meeting-assistant/extension/src`.\n3. Move the existing `entrypoints` folder from `live-meeting-assistant/live-meeting-assistant/extension/entrypoints` to `live-meeting-assistant/live-meeting-assistant/extension/src/entrypoints`.\n4. Move the existing `assets` folder from `live-meeting-assistant/live-meeting-assistant/extension/assets` to `live-meeting-assistant/live-meeting-assistant/extension/src/assets`.\n5. Verify that the existing `tsconfig.json` is properly configured (it currently extends WXT's base configuration which should be sufficient for now).\n\nThis reorganization will ensure the project follows WXT's recommended structure, making it easier to maintain and extend in the future. The TypeScript configuration appears to be correctly set up already as it extends WXT's base configuration.\n</info added on 2025-05-12T00:01:14.206Z>",
+          "status": "done"
+        },
+        {
+          "id": 3,
+          "title": "Set Up Build Scripts and Verify Build",
+          "description": "Configure build scripts in `package.json` and verify that the extension builds successfully.",
+          "dependencies": [
+            2
+          ],
+          "details": "Add or confirm scripts like `npm run dev` and `npm run build`. Run the build process and check the `.output` directory for the generated extension files.\n<info added on 2025-05-12T00:02:56.718Z>\nThe build process for the WXT Chrome extension involves the following steps:\n\n1. Confirm that the `package.json` file already contains the necessary build script: `\"build\": \"wxt build\"`.\n2. Navigate to the extension directory at `live-meeting-assistant/live-meeting-assistant/extension/`.\n3. Execute the build command by running `npm run build` from the terminal.\n4. After the build completes, verify the build artifacts by checking the contents of the `.output/` directory.\n5. Ensure that all expected extension files (manifest, HTML, JS, CSS, and assets) have been properly generated in the output directory.\n6. Document any issues encountered during the build process for troubleshooting.\n</info added on 2025-05-12T00:02:56.718Z>",
+          "status": "done"
+        },
+        {
+          "id": 4,
+          "title": "Test Loading the Extension in Chrome",
+          "description": "Load the built extension into Chrome to verify it works as expected.",
+          "dependencies": [
+            3
+          ],
+          "details": "Open Chrome, navigate to `chrome://extensions`, enable Developer Mode, and load the extension from the `.output` directory. Test basic functionality.\n<info added on 2025-05-12T00:03:46.526Z>\nThis subtask requires manual testing by the user:\n\n1. Open Google Chrome.\n2. Navigate to `chrome://extensions`.\n3. Enable \"Developer mode\" (toggle in the top-right corner).\n4. Click \"Load unpacked\" button.\n5. Select the directory: `/Users/lautaro/Documents/personal/Meet MVP - iterations/meet-chrome-extension/live-meeting-assistant/live-meeting-assistant/extension/.output/chrome-mv3/`\n6. Verify the extension appears in the list of installed extensions.\n7. Click on the extension icon in the Chrome toolbar to check if the popup opens correctly.\n8. Test basic functionality of the popup interface.\n9. Document any errors or issues encountered during testing.\n\nUser should report the outcome of this testing, including whether the extension loaded successfully and if the basic functionality works as expected.\n</info added on 2025-05-12T00:03:46.526Z>",
+          "status": "done"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Setup Next.js Project for Web Application",
+      "description": "Initialize the Next.js project for the web application that will handle settings, data synchronization management, and user accounts. Configure TypeScript and Tailwind CSS.",
+      "details": "Use `npx create-next-app@latest --typescript`. Integrate Tailwind CSS following official Next.js guide. Project directory: `./live-meeting-assistant/webapp`. Structure: `pages/`, `components/`, `lib/`.",
+      "testStrategy": "Verify successful project creation, that the dev server (`next dev`) runs, and Tailwind CSS utility classes are correctly applied.",
+      "priority": "high",
+      "dependencies": [],
+      "status": "done",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Initialize Next.js project with TypeScript",
+          "description": "Create a new Next.js project with TypeScript support using create-next-app",
+          "dependencies": [],
+          "details": "Run 'npx create-next-app --typescript example-app' to bootstrap a new Next.js project with TypeScript configuration. This will automatically install necessary dependencies and create the initial project structure with TypeScript support.\n<info added on 2025-05-12T00:10:31.190Z>\nNavigate to the `live-meeting-assistant` directory and run the following command to initialize the Next.js project:\n\n```bash\nnpx create-next-app@latest webapp --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\"\n```\n\nThis command will:\n1. Create a new Next.js application named `webapp` inside the `live-meeting-assistant` directory\n2. Configure TypeScript for type safety\n3. Set up Tailwind CSS for styling (note this will complete subtask 2.2)\n4. Include ESLint for code quality\n5. Use the App Router architecture\n6. Create a `src` directory for better code organization\n7. Configure import aliases to use \"@/*\" pattern\n\nThe final path to the web application will be `live-meeting-assistant/webapp`. The `create-next-app` tool will automatically handle directory creation and install all necessary dependencies.\n</info added on 2025-05-12T00:10:31.190Z>",
+          "status": "done"
+        },
+        {
+          "id": 2,
+          "title": "Integrate Tailwind CSS",
+          "description": "Add and configure Tailwind CSS in the Next.js project",
+          "dependencies": [
+            1
+          ],
+          "details": "Install Tailwind CSS dependencies with 'npm install -D tailwindcss postcss autoprefixer', initialize Tailwind with 'npx tailwindcss init -p', configure content paths in tailwind.config.js, and add Tailwind directives to the global CSS file.\n<info added on 2025-05-12T00:13:34.533Z>\nInstall Tailwind CSS dependencies with 'npm install -D tailwindcss postcss autoprefixer', initialize Tailwind with 'npx tailwindcss init -p', configure content paths in tailwind.config.js, and add Tailwind directives to the global CSS file.\n\nUsing Next.js 15+ with Tailwind v4:\n1. The `create-next-app --tailwind` command successfully installed Tailwind CSS v4 and @tailwindcss/postcss.\n2. The postcss.config.mjs file is correctly configured to use @tailwindcss/postcss.\n3. src/app/globals.css is properly set up with @import \"tailwindcss\"; for Tailwind v4 styles.\n4. Tailwind v4 is designed for zero-config in common setups, so no separate tailwind.config.js or tailwind.config.ts file is created by default.\n5. Content paths are automatically inferred by Tailwind v4.\n6. If customization is needed later, a tailwind config file can be manually created.\n\nThe default Tailwind v4 integration via create-next-app is successful and ready for use in the project.\n</info added on 2025-05-12T00:13:34.533Z>",
+          "status": "done"
+        },
+        {
+          "id": 3,
+          "title": "Set up directory structure",
+          "description": "Create and organize the project's folder structure following Next.js best practices",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Create folders for components, pages/routes, styles, utils, hooks, and types. Set up appropriate TypeScript configuration in tsconfig.json for path aliases and strict type checking. Create initial placeholder files in each directory to establish the structure.\n<info added on 2025-05-12T00:14:22.475Z>\nThe project structure will be organized within the existing `live-meeting-assistant/webapp/src/` directory that was created by the `create-next-app` command. The following additional directories will be created inside the `src/` folder:\n\n1. `components/` - For reusable UI components\n2. `lib/` - For utilities, helpers, and shared functions\n3. `hooks/` - For custom React hooks\n4. `styles/` - For additional global styles beyond the default `src/app/globals.css`\n5. `types/` - For TypeScript type definitions and interfaces\n\nEach of these empty directories will include a `.gitkeep` file to ensure they are tracked by Git version control. The existing `src/app/` directory will be used for page routes following Next.js 13+ App Router conventions.\n\nThe `tsconfig.json` file will be verified to ensure it has proper path aliases (the `@/*` alias should be configured by default with create-next-app) and that strict type checking is enabled, which is typically the default setting in newer Next.js projects.\n</info added on 2025-05-12T00:14:22.475Z>",
+          "status": "done"
+        },
+        {
+          "id": 4,
+          "title": "Verify dev server and Tailwind integration",
+          "description": "Start the development server and confirm TypeScript and Tailwind CSS are working correctly",
+          "dependencies": [
+            1,
+            2,
+            3
+          ],
+          "details": "Run 'npm run dev' to start the development server. Create a test component with Tailwind classes to verify CSS is working. Check for TypeScript errors in the terminal and browser console. Make necessary adjustments to configuration files if issues are found.\n<info added on 2025-05-12T00:15:41.574Z>\nRun 'npm run dev' to start the development server. Create a test component with Tailwind classes to verify CSS is working. Check for TypeScript errors in the terminal and browser console. Make necessary adjustments to configuration files if issues are found.\n\nVerification Steps:\n1. Add a test `div` with Tailwind classes to the main page:\n   - Navigate to `live-meeting-assistant/webapp/src/app/page.tsx`\n   - Add a div with classes: `p-4 bg-blue-500 text-white text-xl` and text \"Hello Tailwind!\"\n\n2. Start the development server:\n   - Open terminal and navigate to `live-meeting-assistant/webapp/` directory\n   - Run `npm run dev` command\n\n3. Manual Verification Process:\n   - Open browser and navigate to http://localhost:3000\n   - Inspect browser console for any TypeScript errors\n   - Check terminal output for any compilation errors\n   - Verify the test div appears with:\n     * Blue background (bg-blue-500)\n     * White text (text-white)\n     * Padding (p-4)\n     * Larger text size (text-xl)\n\n4. Document Results:\n   - Note any errors encountered\n   - Confirm successful Tailwind CSS integration\n   - Record any configuration adjustments needed\n</info added on 2025-05-12T00:15:41.574Z>",
+          "status": "done"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Setup Supabase Database & Prisma Schema",
+      "description": "Set up a new Supabase project. Define the initial database schema using Prisma ORM, including tables for users, data sources, synced content, and meeting insights.",
+      "details": "Create Supabase project. Initialize Prisma: `npx prisma init --datasource-provider postgresql`. Define models in `prisma/schema.prisma` (e.g., User, DataSource, SyncedItem, MeetingBriefing, GemAlert). Set `DATABASE_URL` from Supabase. Run `npx prisma migrate dev`.",
+      "testStrategy": "Confirm Supabase project creation, successful Prisma migration, and ability to connect to the database using Prisma Client.",
+      "priority": "high",
+      "dependencies": [],
+      "status": "done",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Create Supabase Project",
+          "description": "Sign up for Supabase, create a new project, and obtain the database connection string from the project settings.",
+          "dependencies": [],
+          "details": "Go to the Supabase dashboard, start a new project, and note the PostgreSQL connection string for later use.\n<info added on 2025-05-12T00:22:27.486Z>\nThis subtask requires manual actions by the user:\n\n1. Go to supabase.com\n2. Sign up for a new account or log in to an existing one\n3. Create a new Supabase project (recommended name: \"Meet MVP\")\n4. Wait for the project to be fully provisioned (this may take a few minutes)\n5. Once created, navigate to Project Settings > Database in the left sidebar\n6. Under \"Connection string\" section, locate the PostgreSQL connection URI\n7. Copy the connection string that starts with `postgresql://postgres:[YOUR-PASSWORD]@...`\n8. Save this connection string securely - it will be needed in Subtask 3.4 as the `DATABASE_URL` environment variable\n9. Replace [YOUR-PASSWORD] in the connection string with your actual Supabase database password\n\nNote: This connection string contains sensitive credentials. Do not share it publicly or commit it to version control.\n</info added on 2025-05-12T00:22:27.486Z>",
+          "status": "done"
+        },
+        {
+          "id": 2,
+          "title": "Initialize Prisma",
+          "description": "Install Prisma in your project and initialize it to generate the necessary configuration files.",
+          "dependencies": [
+            1
+          ],
+          "details": "Run the appropriate commands to install Prisma and create the initial Prisma setup (e.g., `npx prisma init`).\n<info added on 2025-05-12T00:26:10.939Z>\nThis subtask involves setting up Prisma ORM within the Next.js project to facilitate database interactions with Supabase.\n\n1. Navigate to the Next.js project directory:\n   ```bash\n   cd live-meeting-assistant/webapp/\n   ```\n\n2. Install Prisma CLI as a development dependency:\n   ```bash\n   npm install prisma --save-dev\n   ```\n\n3. Initialize Prisma with PostgreSQL as the database provider:\n   ```bash\n   npx prisma init --datasource-provider postgresql\n   ```\n\n4. Expected outcomes after initialization:\n   - A new `prisma` directory will be created in the project root\n   - A `schema.prisma` file will be generated inside the prisma directory\n   - The `.env` file will be created or updated with a `DATABASE_URL` placeholder\n\n5. After initialization, you'll need to update the DATABASE_URL in the .env file with the connection string from Supabase before proceeding to define the schema in the next subtask.\n</info added on 2025-05-12T00:26:10.939Z>",
+          "status": "done"
+        },
+        {
+          "id": 3,
+          "title": "Define Initial Schema",
+          "description": "Edit the Prisma schema file to define your initial database models and relationships.",
+          "dependencies": [
+            2
+          ],
+          "details": "Modify `prisma/schema.prisma` to include your desired models, such as User and Post, with appropriate fields and relations.\n<info added on 2025-05-12T00:27:38.367Z>\nCreate a comprehensive Prisma schema in `live-meeting-assistant/webapp/prisma/schema.prisma` with the following models:\n\n1. User - Core user model with relations to all other user-owned entities\n2. DataSource - For integrating with external data sources (Notion, Google Calendar, etc.)\n3. DataSourceType - Enum defining supported integration types\n4. SyncedContent - Content pulled from data sources with vector embedding support\n5. Meeting - Core meeting entity with scheduling information\n6. MeetingParticipant - Meeting attendees with flexible participant data\n7. PreMeetingBrief - AI-generated meeting preparation materials\n8. GemAlert - Important insights or action items detected during meetings\n9. FeedbackRating - Enum for user feedback on system performance\n10. UserFeedback - Structured user feedback on gem alerts\n\nKey implementation considerations:\n- Map to Supabase Auth users\n- Use JSON fields for flexible/schemaless data\n- Include placeholders for vector embeddings\n- Implement secure token storage patterns\n- Define appropriate cascade behaviors for entity deletion\n- Set up initial indexing for query performance\n\nThe schema will include proper relations between models, appropriate field types, and necessary indexes for query optimization.\n</info added on 2025-05-12T00:27:38.367Z>",
+          "status": "done"
+        },
+        {
+          "id": 4,
+          "title": "Configure Environment Variables",
+          "description": "Set up the environment variables, especially the database connection string, so Prisma can connect to Supabase.",
+          "dependencies": [
+            3
+          ],
+          "details": "Add the Supabase PostgreSQL connection string to your `.env` file as `DATABASE_URL`.",
+          "status": "done"
+        },
+        {
+          "id": 5,
+          "title": "Run and Verify Migration",
+          "description": "Run Prisma migrations to apply your schema to the Supabase database and verify the setup.",
+          "dependencies": [
+            4
+          ],
+          "details": "Execute `npx prisma migrate dev` to run the migration, then use Prisma Studio or a test script to confirm the database is set up correctly.\n<info added on 2025-05-12T00:29:39.277Z>\nExecute the following steps to run and verify the Prisma migration:\n\n1. Navigate to the `live-meeting-assistant/webapp/` directory.\n2. Run the initial Prisma migration command: `npx prisma migrate dev --name init`\n   This command will:\n   - Create the migration SQL file based on your `prisma/schema.prisma`\n   - Apply the migration to your Supabase database using the `DATABASE_URL` from your environment variables\n   - Generate the Prisma Client based on your schema\n\n3. Verification Steps:\n   - Check the terminal output for successful completion of the migration\n   - Run `npx prisma studio` to open Prisma Studio in your browser and visually inspect the database tables\n   - Alternatively, check the Supabase dashboard under Database > Migrations to confirm the `init` migration is listed\n   - Verify that Prisma Client has been generated (typically in `node_modules/.prisma/client`) and type definitions are updated\n\nIf you encounter any errors during migration, check that your database connection string is correct and that your schema is valid.\n</info added on 2025-05-12T00:29:39.277Z>\n<info added on 2025-05-12T01:32:31.319Z>\nExecute `npx prisma migrate dev` to run the migration, then use Prisma Studio or a test script to confirm the database is set up correctly.\n\n<info added on 2025-05-12T00:29:39.277Z>\nExecute the following steps to run and verify the Prisma migration:\n\n1. Navigate to the `live-meeting-assistant/webapp/` directory.\n2. Run the initial Prisma migration command: `npx prisma migrate dev --name init`\n   This command will:\n   - Create the migration SQL file based on your `prisma/schema.prisma`\n   - Apply the migration to your Supabase database using the `DATABASE_URL` from your environment variables\n   - Generate the Prisma Client based on your schema\n\n3. Verification Steps:\n   - Check the terminal output for successful completion of the migration\n   - Run `npx prisma studio` to open Prisma Studio in your browser and visually inspect the database tables\n   - Alternatively, check the Supabase dashboard under Database > Migrations to confirm the `init` migration is listed\n   - Verify that Prisma Client has been generated (typically in `node_modules/.prisma/client`) and type definitions are updated\n\nIf you encounter any errors during migration, check that your database connection string is correct and that your schema is valid.\n</info added on 2025-05-12T00:29:39.277Z>\n\nThe migration failed with the error `ERROR: type \"vector\" does not exist`. This is because the schema is using vector data types which require the pgvector extension to be enabled in Supabase. Follow these updated steps to resolve the issue:\n\n1. **Enable the pgvector extension in Supabase:**\n   - Log in to your Supabase dashboard\n   - Navigate to Database > Extensions\n   - Find the \"vector\" (or \"pgvector\") extension in the list\n   - Click the toggle to enable it\n   - This extension is required for vector embeddings functionality in your database\n\n2. **Re-run the migration with a new name:**\n   - Navigate back to your project directory\n   - Run: `npx prisma migrate dev --name create_initial_tables_with_vector`\n   - Using a new migration name helps distinguish this attempt from the previous failed one\n   - This should now succeed since the required extension is enabled\n\n3. **Verification Steps:**\n   - Check the terminal output for successful completion of the migration\n   - Run `npx prisma studio` to open Prisma Studio and verify the tables were created with the vector fields\n   - Check the Supabase dashboard under Database > Tables to confirm your tables exist\n   - Verify that Prisma Client has been regenerated with the updated schema\n\nIf you encounter any other extension-related errors, check if additional extensions need to be enabled in the Supabase dashboard.\n</info added on 2025-05-12T01:32:31.319Z>\n<info added on 2025-05-12T01:33:58.310Z>\nThe migration is still failing with the `ERROR: type \"vector\" does not exist` error even after enabling the pgvector extension through the Supabase UI. This is likely because the extension needs to be properly configured in the public schema where Prisma operates. Follow these updated steps:\n\n1. **Manual SQL Commands Required:**\n   - Go to the Supabase dashboard > SQL Editor\n   - Run the following SQL command to ensure the vector extension is installed in the public schema:\n     ```sql\n     CREATE EXTENSION IF NOT EXISTS vector WITH SCHEMA public;\n     ```\n   - Then run this command to set the proper search path:\n     ```sql\n     ALTER DATABASE postgres SET search_path = \"$user\", public, extensions;\n     ```\n     (Note: If your database name is different from the default \"postgres\", replace it accordingly)\n   - These commands ensure the `vector` type is properly available in the public schema where Prisma will look for it\n\n2. **Re-run Migration with New Name:**\n   - Navigate back to your project directory\n   - Run a new migration with a distinct name:\n     ```\n     npx prisma migrate dev --name create_initial_tables_vector_public\n     ```\n   - Using a new migration name helps track this attempt separately\n\n3. **Verification Steps:**\n   - Check the terminal output for successful completion\n   - Run `npx prisma studio` to visually confirm tables were created with vector fields\n   - Check the Supabase dashboard under Database > Tables to verify table creation\n   - Confirm that Prisma Client has been regenerated with the updated schema\n\n4. **If Still Encountering Issues:**\n   - Verify the SQL commands executed successfully in the SQL Editor\n   - Check if there are any permission issues with the Supabase connection\n   - Consider restarting the Supabase project if the extension isn't being recognized\n   - Review the Prisma schema to ensure vector fields are properly defined\n</info added on 2025-05-12T01:33:58.310Z>\n<info added on 2025-05-12T01:49:22.013Z>\nThe migration is still failing with the `vector` type error. We need to perform more detailed SQL debugging to understand the exact issue with the pgvector extension configuration. Follow these steps:\n\n1. **Manual SQL Debugging Steps:**\n   - Go to the Supabase dashboard > SQL Editor\n   - Execute the following diagnostic SQL commands and note the results of each:\n   \n   a. Check the current search path configuration:\n   ```sql\n   SHOW search_path;\n   ```\n   This will show where Postgres is looking for types and functions.\n   \n   b. Test if the vector type is accessible in the extensions schema:\n   ```sql\n   SELECT NULL::extensions.vector;\n   ```\n   This will tell us if the vector type exists in the extensions schema.\n   \n   c. Test if the vector type is accessible in the public schema:\n   ```sql\n   SELECT NULL::public.vector;\n   ```\n   This will tell us if the vector type exists in the public schema.\n\n2. **Record the Results:**\n   - Document the exact output or error message from each command\n   - Pay special attention to any error messages about schema visibility or type existence\n\n3. **Next Steps Based on Results:**\n   - If `SHOW search_path;` doesn't include 'extensions', we'll need to modify the search path\n   - If `SELECT NULL::extensions.vector;` succeeds but `SELECT NULL::public.vector;` fails, we need to create the type in the public schema\n   - If both vector type tests fail, we may need to reinstall the pgvector extension\n\n4. **After Diagnosis:**\n   - Based on the results, we'll execute the appropriate SQL commands to fix the schema configuration\n   - Then attempt the migration again with a new name to track this attempt separately:\n     ```\n     npx prisma migrate dev --name fix_vector_type_config\n     ```\n\nThis diagnostic approach will help us pinpoint exactly where the vector type configuration is failing and allow us to apply the correct fix rather than trying generic solutions.\n</info added on 2025-05-12T01:49:22.013Z>\n<info added on 2025-05-12T01:52:34.685Z>\nAfter multiple attempts to resolve the vector type issue, we need to implement a workaround to proceed with the migration. The diagnostic tests confirmed that the vector type exists in the extensions schema but not in the public schema, which is causing Prisma migration to fail.\n\nHere's the updated approach to successfully complete the migration:\n\n1. **Modify the Prisma Schema**:\n   - Open your `schema.prisma` file\n   - In the `SyncedContent` model, locate the `embedding` field\n   - Change the field type from `embedding Unsupported(\"vector\")?` to `embedding Json?`\n   - This modification uses a standard type that Prisma can handle for DDL generation\n   - Example of the modified field:\n     ```prisma\n     model SyncedContent {\n       // other fields...\n       embedding Json?  // Changed from Unsupported(\"vector\")?\n       // remaining fields...\n     }\n     ```\n\n2. **Run the Migration with New Name**:\n   - Navigate to your project directory\n   - Execute the migration with a descriptive name:\n     ```\n     npx prisma migrate dev --name create_tables_json_placeholder_for_vector\n     ```\n   - This approach should succeed since all types will now be known to Prisma and standard PostgreSQL\n\n3. **Verification Steps**:\n   - Check the terminal output for successful completion\n   - Use Prisma Studio (`npx prisma studio`) to verify the tables were created with the Json field\n   - Check the Supabase dashboard under Database > Tables to confirm table creation\n   - Verify that all expected tables and relationships are present\n\n4. **Important Note for Future Vector Implementation**:\n   - This is a temporary workaround to unblock the migration process\n   - When implementing actual vector storage and search functionality:\n     - You'll need to use raw SQL queries via `prisma.$executeRawUnsafe` or Supabase-specific client functions\n     - These will be required to interact with the actual `extensions.vector` column type\n     - You may need to alter the column type post-migration using raw SQL if Prisma creates it as JSONB\n     - Alternatively, ensure the column is correctly typed as `extensions.vector` from the start via other means beyond Prisma's DDL capabilities\n   - Document this technical debt for the team to address when implementing vector search functionality\n\nThis approach prioritizes making progress with the database setup while acknowledging the need for additional work when implementing vector-specific functionality later.\n</info added on 2025-05-12T01:52:34.685Z>",
+          "status": "done"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Configure Git Repository and Branching Strategy",
+      "description": "Configure the project's Git repository, confirm the project structure within the existing repo, and establish a clear branching strategy (e.g., main, develop, feature branches).",
+      "details": "Ensure `./live-meeting-assistant` is the root. Create `extension` and `webapp` subdirectories if not done by project setups. Define branching model (e.g., GitFlow variant). Set up `.gitignore` files for Node modules, build artifacts, and environment variables.",
+      "testStrategy": "Verify repository structure, `.gitignore` effectiveness, and successful creation/merging of a test feature branch.",
+      "priority": "high",
+      "dependencies": [
+        1,
+        2
+      ],
+      "status": "in-progress",
+      "subtasks": []
+    },
+    {
+      "id": 5,
+      "title": "Initial Error Handling & Logging Framework Setup",
+      "description": "Implement a basic error handling and logging framework for both the WXT Chrome Extension and the Next.js web application. This should include centralized logging functions and consistent error response formats.",
+      "details": "Next.js: Create utility functions for API error responses and client-side error boundaries. Consider a simple logger (e.g., `pino` or `console` wrappers). WXT: Implement error handling in background scripts and content scripts, potentially logging to extension console or a remote service for debugging.",
+      "testStrategy": "Verify that errors are caught gracefully and logged in a structured format in both environments. Test with intentionally thrown errors.",
+      "priority": "high",
+      "dependencies": [
+        1,
+        2
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 6,
+      "title": "Implement User Authentication (Supabase Auth in Next.js)",
+      "description": "Implement user registration and login functionality in the Next.js web application using Supabase Authentication. This includes UI forms and backend logic.",
+      "details": "Use `supabase-js` library. Create signup and login pages/components in Next.js. Leverage `@21st-dev/magic` for form generation if suitable. Store user sessions securely. Implement password reset and email verification flows.",
+      "testStrategy": "Test user registration, login, logout, session persistence, and password reset functionality. Verify user data is correctly stored in Supabase `auth.users` table.",
+      "priority": "high",
+      "dependencies": [
+        2,
+        3,
+        5
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 7,
+      "title": "Basic UI for Next.js App (Settings/Sync Shell)",
+      "description": "Develop the basic UI shell for the Next.js web application, including navigation for settings, data source management, and account information. Utilize `@21st-dev/magic` for UI components.",
+      "details": "Create a dashboard layout. Implement placeholder pages for managing data sources (Notion, Google Calendar, etc.) and user profile settings. Use `@21st-dev/magic` to generate forms, tables, and navigation components. Ensure responsive design with Tailwind CSS.",
+      "testStrategy": "Manual UI/UX testing for navigation, responsiveness, and component rendering. Verify that authenticated users can access these sections.",
+      "priority": "medium",
+      "dependencies": [
+        2,
+        6,
+        5
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 8,
+      "title": "Chrome Extension Basic Structure (WXT)",
+      "description": "Set up the basic structure for the Chrome Extension using WXT, including entry points for background scripts, content scripts, and popup/options UI if needed. Ensure inter-script communication mechanisms are understood.",
+      "details": "Define manifest entries in `wxt.config.ts` for background service worker, content scripts (targetting meeting platforms like Google Meet, Zoom web). Create basic HTML/TS files for any UI elements (e.g., popup). Plan for message passing between components (e.g., `wxt/storage`, `browser.runtime.sendMessage`).",
+      "testStrategy": "Load the extension in Chrome. Verify background script runs, content script injects into a test page, and basic message passing works.",
+      "priority": "high",
+      "dependencies": [
+        1,
+        5
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 9,
+      "title": "Google Calendar API Integration (Next.js)",
+      "description": "Integrate Google Calendar API into the Next.js web app to allow users to connect their calendars. Fetch meeting details (attendees, time, subject) for pre-meeting intelligence.",
+      "details": "Use `google/google-api-javascript-client` or a Node.js equivalent like `googleapis`. Implement OAuth 2.0 flow for user authorization. Store access/refresh tokens securely (e.g., in Supabase, encrypted). Fetch upcoming events. API: `calendar.events.list`.",
+      "testStrategy": "Test OAuth flow, token storage/retrieval, and fetching calendar events for an authenticated user. Validate data structure of fetched events.",
+      "priority": "high",
+      "dependencies": [
+        6,
+        7
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 10,
+      "title": "Notion API Integration (Next.js)",
+      "description": "Integrate Notion API into the Next.js web app for syncing notes. Allow users to authorize access and select relevant workspaces/pages. Fetch content from selected Notion pages.",
+      "details": "Use `makenotion/notion-sdk-js`. Implement Notion OAuth 2.0 flow. Store API tokens securely. Allow users to specify Notion pages/databases to sync. Fetch page content and block data. API: `client.blocks.children.list`, `client.pages.retrieve`.",
+      "testStrategy": "Test Notion OAuth flow, token management, and fetching content from a test Notion page. Verify correct parsing of Notion block types.",
+      "priority": "high",
+      "dependencies": [
+        6,
+        7
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 11,
+      "title": "Manual Text Input/Upload Feature (Next.js & Supabase Storage)",
+      "description": "Implement functionality for users to manually upload text files or paste text content directly into the Next.js web app. Store this content in Supabase Storage and link it to the user's account.",
+      "details": "Create UI components for file upload (e.g., `.txt`, `.md`) and a textarea for pasting text. Use Supabase Storage for file persistence. Store metadata (filename, user_id, upload_date) in a Supabase table linked to the stored file.",
+      "testStrategy": "Test file upload and text pasting. Verify files are stored in Supabase Storage and metadata is correctly recorded in the database. Test retrieval of uploaded content.",
+      "priority": "medium",
+      "dependencies": [
+        3,
+        6,
+        7
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 12,
+      "title": "Data Processing Service (Summarization/Indexing with Gemini)",
+      "description": "Develop a backend service/module (within Next.js or a separate Node.js service) to process synced data from various sources. Use Gemini API for summarizing large text contexts and structuring data for indexing.",
+      "details": "Input: Raw data from Notion, text files, etc. Output: Summarized and structured insights. Use Gemini API (e.g., `gemini-pro` model) for summarization and potentially for extracting key entities or topics. Define schema for processed data. Handle API rate limits and errors. See https://ai.google.dev/gemini-api/docs/structured-output.",
+      "testStrategy": "Unit test processing logic with sample data. Validate Gemini API integration and output quality. Test summarization of various content lengths and types.",
+      "priority": "high",
+      "dependencies": [
+        3,
+        9,
+        10,
+        11
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 13,
+      "title": "Data Storage Logic (Processed Insights to Supabase via Prisma)",
+      "description": "Implement logic to store the processed and summarized insights from the Data Processing Service into the Supabase database using Prisma. Ensure data is indexed for efficient retrieval.",
+      "details": "Use Prisma Client to write processed data to relevant Supabase tables (e.g., `SyncedItemInsights`). Ensure foreign key relationships (to users, original data sources) are maintained. Add database indexes on frequently queried columns (e.g., `user_id`, `created_at`, keywords).",
+      "testStrategy": "Verify data is correctly inserted/updated in Supabase. Test data retrieval performance with indexes. Ensure data integrity and relationships.",
+      "priority": "high",
+      "dependencies": [
+        3,
+        12
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 14,
+      "title": "Scheduled Sync Process (Cron for Data Sources)",
+      "description": "Set up a scheduled process (e.g., daily cron job using a service like Supabase Edge Functions, GitHub Actions, or a custom scheduler) to check for updates from connected data sources and trigger the sync and processing pipeline.",
+      "details": "Implement a function that iterates through users/data sources and fetches new/updated content. Trigger data processing (Task 12) and storage (Task 13). Configure cron expression for daily or configurable frequency. Handle concurrency and fault tolerance.",
+      "testStrategy": "Test the scheduler triggers correctly. Verify it fetches updates from mock data sources and processes them. Monitor logs for successful completion and error handling.",
+      "priority": "medium",
+      "dependencies": [
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 15,
+      "title": "`open-deep-research` Integration Setup",
+      "description": "Set up and configure the `open-deep-research` tool. This may involve hosting it as a separate service if it's a Python application. Develop an API interface for the Next.js app to query it for specific individuals.",
+      "details": "Clone `open-deep-research` from https://github.com/nickscamara/open-deep-research. Follow its setup instructions. If Python-based, consider Dockerizing and deploying as a microservice. Create an API endpoint (e.g., in Next.js or the service itself) that accepts a person's name/profile URL and returns research findings.",
+      "testStrategy": "Verify the `open-deep-research` service is operational. Test its API endpoint with sample queries and validate the structure and relevance of the returned data.",
+      "priority": "medium",
+      "dependencies": [
+        2
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 16,
+      "title": "Pre-Meeting Briefing Content Generation (OpenAI)",
+      "description": "Develop the logic to generate content for the 'Intelligent Pre-Flight Check' email using OpenAI models. This content will include personality insights, engagement style, rapport builders, contextual icebreakers, and key discussion points based on synced data and `open-deep-research` output.",
+      "details": "Use OpenAI API (e.g., GPT-4 or latest suitable model). Craft prompts that take meeting context (attendees, topic from calendar), synced user notes, and `open-deep-research` data as input. Output structured JSON for briefing sections. Focus on one person for `open-deep-research` for MVP.",
+      "testStrategy": "Unit test content generation with various inputs. Evaluate the quality, relevance, and accuracy of generated briefings. Iterate on prompt engineering.",
+      "priority": "high",
+      "dependencies": [
+        13,
+        15
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 17,
+      "title": "Automated Email Delivery for Pre-Meeting Briefing",
+      "description": "Implement an automated email delivery system to send the 'Intelligent Pre-Flight Check' email to users ~10 minutes before their scheduled meetings. Integrate with an email service provider (e.g., SendGrid, Resend, or Supabase's built-in email).",
+      "details": "Trigger email sending based on Google Calendar event start times. Use an email sending service API. Create email templates (HTML/text) for the briefing. Ensure proper formatting and deliverability.",
+      "testStrategy": "Test email sending to mock recipients. Verify email content and formatting. Test scheduling logic to ensure emails are sent at the correct pre-meeting interval.",
+      "priority": "medium",
+      "dependencies": [
+        16,
+        9
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 18,
+      "title": "Chrome Extension UI for 'Waiting Room Warm-Up'",
+      "description": "Develop the UI component within the Chrome Extension to display the 'Waiting Room Warm-Up' summary. This should be a minimalistic and non-intrusive overlay on meeting platform waiting room screens (e.g., Google Meet, Zoom web).",
+      "details": "Use WXT content scripts to inject HTML/CSS into target meeting platform pages. Design a discreet UI (e.g., small, dismissible panel). Fetch summary data from an API endpoint (Task 19). Ensure adaptability to different platform UIs.",
+      "testStrategy": "Test UI injection and display on supported meeting platforms. Verify content is displayed correctly and UI is non-intrusive. Test responsiveness to page layout changes.",
+      "priority": "medium",
+      "dependencies": [
+        8
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 19,
+      "title": "API Endpoint for Pre-Meeting Summary (Next.js for Chrome Ext)",
+      "description": "Create an API endpoint in the Next.js application that the Chrome Extension can call to fetch the pre-meeting summary content generated by Task 16.",
+      "details": "Develop a secure REST API endpoint (e.g., `/api/meetings/:meetingId/summary`). Authenticate requests from the Chrome extension (e.g., using user session token). Retrieve the relevant briefing data from Supabase.",
+      "testStrategy": "Test the API endpoint with valid and invalid requests. Verify authentication and correct data retrieval. Measure API response time.",
+      "priority": "medium",
+      "dependencies": [
+        16,
+        6
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 20,
+      "title": "ElevenLabs 'Scribe' API Integration for Live Transcription",
+      "description": "Integrate the ElevenLabs 'Scribe' API (or an alternative) into the Chrome Extension to capture live audio from the current meeting tab and transcribe it to text in real-time.",
+      "details": "Use `chrome.tabCapture` API to get audio stream from the active meeting tab. Send audio data to ElevenLabs Scribe API (https://elevenlabs.io/docs/api-reference/speech-to-text/convert) via WebSockets or HTTP streaming for real-time results. Handle API key management securely. Manage audio chunks and transcription segments.",
+      "testStrategy": "Test audio capture from a meeting tab. Verify real-time transcription accuracy and latency with ElevenLabs. Handle connection errors and API limits.",
+      "priority": "high",
+      "dependencies": [
+        8
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 21,
+      "title": "Real-time Transcript Processing (Basic Keyword Spotting for GEMs)",
+      "description": "Implement initial logic in the Chrome Extension to process the live transcript for 'GEM' alerts. For MVP, this can be based on simple keyword spotting or basic pattern matching against synced user data.",
+      "details": "Analyze incoming transcript segments. Compare text against keywords/phrases extracted from user's synced data (Supabase). Trigger a 'GEM' event when a match is found. This logic will run in the extension's background script or a dedicated web worker.",
+      "testStrategy": "Test with sample transcripts and keyword sets. Verify that GEM events are triggered correctly for matching keywords. Evaluate performance to ensure real-time processing.",
+      "priority": "high",
+      "dependencies": [
+        20,
+        13
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 22,
+      "title": "'GEM' Alert UI Component (Chrome Ext)",
+      "description": "Design and implement a non-intrusive UI component in the Chrome Extension to display 'GEM' alerts. Alerts should appear briefly (e.g., top-right) and then fade out.",
+      "details": "Create a UI element (e.g., a toast notification) using HTML/CSS/JS injected by a content script. Style it to be noticeable but not distracting. Implement fade-in/fade-out animations. Ensure it doesn't interfere with meeting platform controls.",
+      "testStrategy": "Test alert display on various meeting platforms. Verify visibility, timing, and non-intrusiveness. Test with multiple alerts appearing in succession.",
+      "priority": "medium",
+      "dependencies": [
+        8
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 23,
+      "title": "AI Assistant Drawer UI Shell (Chrome Ext)",
+      "description": "Develop the basic UI shell for the AI Assistant Drawer in the Chrome Extension. This drawer will house the 'Past GEMs' log and the AI chat interface.",
+      "details": "Create a collapsible/expandable drawer or sidebar UI injected into the meeting page. Use WXT for managing this UI component. It should be accessible via a toggle button. Structure for 'Past GEMs' list and chat input/output area.",
+      "testStrategy": "Test drawer opening/closing, layout, and responsiveness on target meeting platforms. Ensure it integrates smoothly with the page.",
+      "priority": "medium",
+      "dependencies": [
+        8
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 24,
+      "title": "'Past GEMs' Log Functionality (Drawer)",
+      "description": "Implement the 'Past GEMs' log functionality within the AI Assistant Drawer. This will be a scrollable list displaying all 'GEM' alerts that have appeared during the current meeting.",
+      "details": "When a GEM alert is triggered (Task 21) and displayed (Task 22), also add its content to a list managed by the AI Assistant Drawer component. Ensure the list is scrollable and displays GEMs chronologically.",
+      "testStrategy": "Trigger multiple GEM alerts. Verify they are all logged in the 'Past GEMs' section in the correct order. Test scrolling and display of GEM content.",
+      "priority": "medium",
+      "dependencies": [
+        22,
+        23,
+        21
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 25,
+      "title": "Basic AI Chat Interface (OpenAI in Drawer)",
+      "description": "Implement a basic interactive AI chat interface within the AI Assistant Drawer. Connect this interface to OpenAI models to allow users to ask questions and get live insights based on synced data and meeting context.",
+      "details": "Create a chat input field and a message display area in the drawer. Send user queries along with relevant context (e.g., recent transcript, synced data summaries) to an OpenAI API endpoint (e.g., GPT-3.5-turbo or GPT-4). Display AI responses. Manage conversation history for context.",
+      "testStrategy": "Test sending queries and receiving responses from OpenAI. Verify context is being used effectively by the AI. Test UI for chat interaction.",
+      "priority": "high",
+      "dependencies": [
+        23,
+        13,
+        20
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 26,
+      "title": "Data Flow for GEM Alerts (Transcript -> Analysis -> Alert UI)",
+      "description": "Establish the data flow for real-time 'GEM' alerts: from live transcript capture, through analysis (initially keyword-based, later AI-driven), to displaying the alert and logging it.",
+      "details": "Orchestrate the sequence: 1. Transcript segment received (Task 20). 2. Segment analyzed for GEMs (Task 21). 3. If GEM found, data (content, source) prepared. 4. GEM displayed via UI component (Task 22). 5. GEM logged in 'Past GEMs' (Task 24). Ensure efficient communication between extension components (background, content scripts).",
+      "testStrategy": "End-to-end test: Speak keywords during a test meeting, verify alert appears, is logged, and contains relevant info. Monitor performance and data consistency.",
+      "priority": "high",
+      "dependencies": [
+        21,
+        22,
+        24,
+        13
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 27,
+      "title": "Initial Prompt Engineering for OpenAI (GEMs, Chat)",
+      "description": "Develop initial prompts for OpenAI models used in 'GEM' alert generation (for more advanced GEMs beyond keyword spotting) and the AI Chat interface. Focus on clarity, context-awareness, and generating actionable insights.",
+      "details": "For GEMs: Prompts to analyze transcript + user data for connections. For Chat: System prompts to define AI persona and capabilities. User prompts to include conversation history and relevant data snippets. Refer to OpenAI Cookbook for best practices.",
+      "testStrategy": "Iteratively test prompts with sample inputs. Evaluate AI responses for relevance, accuracy, and helpfulness. Refine prompts based on results.",
+      "priority": "high",
+      "dependencies": [
+        25
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 28,
+      "title": "Refine 'GEM' Alert Intelligence (Contextual OpenAI analysis)",
+      "description": "Enhance the 'GEM' alert intelligence by using OpenAI models to analyze the live transcript in conjunction with synced user data, moving beyond simple keyword spotting to detect more nuanced contextual connections.",
+      "details": "Modify Task 21's processing logic. Instead of/in addition to keyword spotting, send transcript snippets and relevant user data context to an OpenAI model (with prompts from Task 27) to identify 'hidden gems'. Optimize for low latency.",
+      "testStrategy": "Test with diverse meeting scenarios. Compare AI-driven GEMs against keyword-based ones. Evaluate relevance and insightfulness. Monitor API usage and performance.",
+      "priority": "high",
+      "dependencies": [
+        26,
+        27,
+        20,
+        13
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 29,
+      "title": "Implement 'Spark Connection' Smart Chip",
+      "description": "Implement the 'Spark Connection' Smart Chip in the AI Assistant Drawer. This chip, when clicked, should query the AI to generate personalized talking points or rapport builders based on available data about attendees.",
+      "details": "Add a 'Spark Connection' button/chip to the AI drawer. On click, trigger an OpenAI query using a specific prompt designed to generate connection ideas, leveraging synced data and `open-deep-research` insights for known attendees.",
+      "testStrategy": "Test the chip with various meeting contexts and attendee information. Evaluate the quality and relevance of the generated talking points.",
+      "priority": "medium",
+      "dependencies": [
+        23,
+        25,
+        13,
+        15
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 30,
+      "title": "Implement 'Key Takeaways So Far' Smart Chip",
+      "description": "Implement the 'Key Takeaways So Far' Smart Chip. This chip should trigger the AI to summarize the meeting discussion up to that point based on the live transcript.",
+      "details": "Add a 'Key Takeaways' button/chip. On click, send the accumulated transcript (or a significant recent portion) to OpenAI with a summarization prompt. Display the summary in the chat interface or a dedicated area.",
+      "testStrategy": "Test during a mock meeting. Verify the generated summary accurately reflects key discussion points from the transcript up to that point.",
+      "priority": "medium",
+      "dependencies": [
+        23,
+        25,
+        20
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 31,
+      "title": "Implement 'Intelligent Recap for Late Joiners' (Basic)",
+      "description": "Implement a basic version of the 'Intelligent Recap for Late Joiners'. When a user with the extension joins mid-meeting, provide a non-intrusive recap of key topics discussed so far, based on the transcript.",
+      "details": "Detect when the extension initializes mid-meeting (e.g., by checking current meeting duration or existing transcript). If so, automatically generate a summary (similar to Task 30) and display it discreetly to the late joiner, perhaps in the AI drawer.",
+      "testStrategy": "Simulate joining a meeting late. Verify that a recap is generated and displayed. Assess the quality and conciseness of the recap.",
+      "priority": "medium",
+      "dependencies": [
+        20,
+        8,
+        25
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 32,
+      "title": "User Feedback Mechanism for GEM Alert Quality",
+      "description": "Implement a user feedback mechanism for GEM alert quality within the Chrome Extension. This could be simple thumbs up/down icons on alerts or in the 'Past GEMs' log.",
+      "details": "Add small feedback icons (e.g., 👍/👎) to each GEM alert UI or its entry in the Past GEMs log. Store feedback data (GEM ID, rating, optional comment) in Supabase, associated with the user and the GEM content, for future analysis and model improvement.",
+      "testStrategy": "Test UI for feedback submission. Verify feedback data is correctly stored in Supabase. Ensure it doesn't disrupt the user experience.",
+      "priority": "low",
+      "dependencies": [
+        22,
+        24
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 33,
+      "title": "Expand Data Source Integration (e.g., Evernote or Hubspot)",
+      "description": "Expand data source integrations by adding support for one more service, e.g., Evernote or Hubspot, following the pattern established for Notion and Google Calendar.",
+      "details": "Choose one: Evernote (use Evernote Developer Docs: NoteStore.createNote, etc.) or Hubspot (use `hubspot/hubspot-api-nodejs`). Implement OAuth, data fetching, and add to the sync/processing pipeline (Tasks 12, 13, 14). Update Next.js UI (Task 7) to manage this new source.",
+      "testStrategy": "Test OAuth, data fetching, processing, and storage for the new data source. Verify it integrates into the pre-meeting briefing and GEM alert system.",
+      "priority": "medium",
+      "dependencies": [
+        6,
+        7,
+        12,
+        13,
+        14
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 34,
+      "title": "Security Review and Hardening",
+      "description": "Conduct a thorough security review of the entire application, including data handling practices, API key management, Supabase row-level security policies, and protection against common web/extension vulnerabilities.",
+      "details": "Review all data storage for PII and apply appropriate Supabase RLS. Ensure API keys are stored securely (e.g., environment variables, Supabase Vault if available) and not exposed client-side. Sanitize inputs and outputs. Review Chrome extension permissions. Check for XSS, CSRF vulnerabilities in web app.",
+      "testStrategy": "Perform penetration testing (manual or automated tools). Review code for security best practices. Verify Supabase RLS policies are effective. Check data encryption at rest and in transit.",
+      "priority": "high",
+      "dependencies": [
+        1,
+        2,
+        3,
+        6,
+        9,
+        10,
+        11,
+        12,
+        13,
+        15,
+        16,
+        17,
+        19,
+        20,
+        25,
+        28,
+        33
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Audit Data Storage for PII",
+          "description": "Conduct a thorough audit of all database tables and storage buckets to identify and properly secure personally identifiable information (PII).",
+          "dependencies": [],
+          "details": "Review all database schemas, identify tables containing PII, verify appropriate Row Level Security policies are in place, ensure column-level security for sensitive fields, and document all PII storage locations for compliance purposes.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Review API Key Management",
+          "description": "Evaluate current API key management practices and implement secure storage, rotation, and access control mechanisms.",
+          "dependencies": [],
+          "details": "Audit existing API keys, implement secret management with Vault as recommended in Supabase docs, establish key rotation schedules, review access logs for unauthorized usage, and create a documented process for key revocation.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Check Supabase RLS Policies",
+          "description": "Review and test all Row Level Security policies to ensure proper data access controls are enforced.",
+          "dependencies": [
+            1
+          ],
+          "details": "Analyze existing RLS policies for each table, test policies with different user roles, identify and fix any overly permissive policies, implement custom claims for role-based access control, and document policy coverage across all tables.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Sanitize Inputs and Outputs",
+          "description": "Implement comprehensive input validation and output sanitization across all application interfaces.",
+          "dependencies": [],
+          "details": "Review all API endpoints for proper input validation, implement server-side validation for all user inputs, sanitize database query outputs, prevent SQL injection vulnerabilities, and test edge cases with malformed inputs.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Review Extension Permissions",
+          "description": "Audit all PostgreSQL extensions and their associated permissions to minimize attack surface.",
+          "dependencies": [
+            3
+          ],
+          "details": "Identify all installed PostgreSQL extensions, review permission requirements for each, restrict extension access to necessary roles only, remove unused extensions, and document justification for each enabled extension.",
+          "status": "pending"
+        },
+        {
+          "id": 6,
+          "title": "Test for XSS and CSRF Vulnerabilities",
+          "description": "Conduct thorough testing for Cross-Site Scripting and Cross-Site Request Forgery vulnerabilities.",
+          "dependencies": [
+            4
+          ],
+          "details": "Perform automated and manual testing for XSS vulnerabilities, implement proper CSRF tokens, verify Content Security Policy implementation, test all form submissions and API endpoints for CSRF protection, and document remediation steps for any findings.",
+          "status": "pending"
+        },
+        {
+          "id": 7,
+          "title": "Verify Encryption Implementation",
+          "description": "Audit all data encryption mechanisms for both data at rest and in transit.",
+          "dependencies": [
+            1
+          ],
+          "details": "Verify TLS configuration for all endpoints, audit database encryption settings, review encryption key management practices, ensure proper encryption for PII fields, and document compliance with encryption standards required for SOC 2.",
+          "status": "pending"
+        },
+        {
+          "id": 8,
+          "title": "Conduct Penetration Testing",
+          "description": "Perform comprehensive penetration testing against the application and infrastructure.",
+          "dependencies": [
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "details": "Engage internal or external security team for penetration testing, define testing scope and methodology, execute tests against production-like environment, document and prioritize findings, and create remediation plan with clear timelines.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "title": "MVP Documentation (User & Developer)",
+      "description": "Finalize documentation for MVP features, including user guides for setting up data sources and using in-meeting assistance, and internal developer documentation for key architectural components and APIs.",
+      "details": "User Docs: How to install extension, connect data sources, interpret briefings/GEMs, use AI chat. Developer Docs: System architecture, data models, API specifications, setup instructions for dev environment. Store in project repo (e.g., Markdown files in a `/docs` folder).",
+      "testStrategy": "Review documentation for clarity, accuracy, and completeness. Have a non-developer test user docs. Have a new developer try to set up project using dev docs.",
+      "priority": "medium",
+      "dependencies": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34
+      ],
+      "status": "pending",
+      "subtasks": []
+    }
+  ]
+}

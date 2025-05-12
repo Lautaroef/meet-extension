@@ -1,0 +1,61 @@
+# Task ID: 34
+# Title: Security Review and Hardening
+# Status: pending
+# Dependencies: 1, 2, 3, 6, 9, 10, 11, 12, 13, 15, 16, 17, 19, 20, 25, 28, 33
+# Priority: high
+# Description: Conduct a thorough security review of the entire application, including data handling practices, API key management, Supabase row-level security policies, and protection against common web/extension vulnerabilities.
+# Details:
+Review all data storage for PII and apply appropriate Supabase RLS. Ensure API keys are stored securely (e.g., environment variables, Supabase Vault if available) and not exposed client-side. Sanitize inputs and outputs. Review Chrome extension permissions. Check for XSS, CSRF vulnerabilities in web app.
+
+# Test Strategy:
+Perform penetration testing (manual or automated tools). Review code for security best practices. Verify Supabase RLS policies are effective. Check data encryption at rest and in transit.
+
+# Subtasks:
+## 1. Audit Data Storage for PII [pending]
+### Dependencies: None
+### Description: Conduct a thorough audit of all database tables and storage buckets to identify and properly secure personally identifiable information (PII).
+### Details:
+Review all database schemas, identify tables containing PII, verify appropriate Row Level Security policies are in place, ensure column-level security for sensitive fields, and document all PII storage locations for compliance purposes.
+
+## 2. Review API Key Management [pending]
+### Dependencies: None
+### Description: Evaluate current API key management practices and implement secure storage, rotation, and access control mechanisms.
+### Details:
+Audit existing API keys, implement secret management with Vault as recommended in Supabase docs, establish key rotation schedules, review access logs for unauthorized usage, and create a documented process for key revocation.
+
+## 3. Check Supabase RLS Policies [pending]
+### Dependencies: 34.1
+### Description: Review and test all Row Level Security policies to ensure proper data access controls are enforced.
+### Details:
+Analyze existing RLS policies for each table, test policies with different user roles, identify and fix any overly permissive policies, implement custom claims for role-based access control, and document policy coverage across all tables.
+
+## 4. Sanitize Inputs and Outputs [pending]
+### Dependencies: None
+### Description: Implement comprehensive input validation and output sanitization across all application interfaces.
+### Details:
+Review all API endpoints for proper input validation, implement server-side validation for all user inputs, sanitize database query outputs, prevent SQL injection vulnerabilities, and test edge cases with malformed inputs.
+
+## 5. Review Extension Permissions [pending]
+### Dependencies: 34.3
+### Description: Audit all PostgreSQL extensions and their associated permissions to minimize attack surface.
+### Details:
+Identify all installed PostgreSQL extensions, review permission requirements for each, restrict extension access to necessary roles only, remove unused extensions, and document justification for each enabled extension.
+
+## 6. Test for XSS and CSRF Vulnerabilities [pending]
+### Dependencies: 34.4
+### Description: Conduct thorough testing for Cross-Site Scripting and Cross-Site Request Forgery vulnerabilities.
+### Details:
+Perform automated and manual testing for XSS vulnerabilities, implement proper CSRF tokens, verify Content Security Policy implementation, test all form submissions and API endpoints for CSRF protection, and document remediation steps for any findings.
+
+## 7. Verify Encryption Implementation [pending]
+### Dependencies: 34.1
+### Description: Audit all data encryption mechanisms for both data at rest and in transit.
+### Details:
+Verify TLS configuration for all endpoints, audit database encryption settings, review encryption key management practices, ensure proper encryption for PII fields, and document compliance with encryption standards required for SOC 2.
+
+## 8. Conduct Penetration Testing [pending]
+### Dependencies: 34.3, 34.4, 34.5, 34.6, 34.7
+### Description: Perform comprehensive penetration testing against the application and infrastructure.
+### Details:
+Engage internal or external security team for penetration testing, define testing scope and methodology, execute tests against production-like environment, document and prioritize findings, and create remediation plan with clear timelines.
+

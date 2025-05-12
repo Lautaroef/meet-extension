@@ -1,0 +1,11 @@
+# Task ID: 27
+# Title: Initial Prompt Engineering for OpenAI (GEMs, Chat)
+# Status: pending
+# Dependencies: 25
+# Priority: high
+# Description: Develop initial prompts for OpenAI models used in 'GEM' alert generation (for more advanced GEMs beyond keyword spotting) and the AI Chat interface. Focus on clarity, context-awareness, and generating actionable insights.
+# Details:
+For GEMs: Prompts to analyze transcript + user data for connections. For Chat: System prompts to define AI persona and capabilities. User prompts to include conversation history and relevant data snippets. Refer to OpenAI Cookbook for best practices.
+
+# Test Strategy:
+Iteratively test prompts with sample inputs. Evaluate AI responses for relevance, accuracy, and helpfulness. Refine prompts based on results.

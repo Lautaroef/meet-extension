@@ -1,0 +1,11 @@
+# Task ID: 32
+# Title: User Feedback Mechanism for GEM Alert Quality
+# Status: pending
+# Dependencies: 22, 24
+# Priority: low
+# Description: Implement a user feedback mechanism for GEM alert quality within the Chrome Extension. This could be simple thumbs up/down icons on alerts or in the 'Past GEMs' log.
+# Details:
+Add small feedback icons (e.g., 👍/👎) to each GEM alert UI or its entry in the Past GEMs log. Store feedback data (GEM ID, rating, optional comment) in Supabase, associated with the user and the GEM content, for future analysis and model improvement.
+
+# Test Strategy:
+Test UI for feedback submission. Verify feedback data is correctly stored in Supabase. Ensure it doesn't disrupt the user experience.

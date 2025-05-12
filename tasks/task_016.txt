@@ -1,0 +1,11 @@
+# Task ID: 16
+# Title: Pre-Meeting Briefing Content Generation (OpenAI)
+# Status: pending
+# Dependencies: 13, 15
+# Priority: high
+# Description: Develop the logic to generate content for the 'Intelligent Pre-Flight Check' email using OpenAI models. This content will include personality insights, engagement style, rapport builders, contextual icebreakers, and key discussion points based on synced data and `open-deep-research` output.
+# Details:
+Use OpenAI API (e.g., GPT-4 or latest suitable model). Craft prompts that take meeting context (attendees, topic from calendar), synced user notes, and `open-deep-research` data as input. Output structured JSON for briefing sections. Focus on one person for `open-deep-research` for MVP.
+
+# Test Strategy:
+Unit test content generation with various inputs. Evaluate the quality, relevance, and accuracy of generated briefings. Iterate on prompt engineering.

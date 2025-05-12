@@ -1,0 +1,11 @@
+# Task ID: 30
+# Title: Implement 'Key Takeaways So Far' Smart Chip
+# Status: pending
+# Dependencies: 23, 25, 20
+# Priority: medium
+# Description: Implement the 'Key Takeaways So Far' Smart Chip. This chip should trigger the AI to summarize the meeting discussion up to that point based on the live transcript.
+# Details:
+Add a 'Key Takeaways' button/chip. On click, send the accumulated transcript (or a significant recent portion) to OpenAI with a summarization prompt. Display the summary in the chat interface or a dedicated area.
+
+# Test Strategy:
+Test during a mock meeting. Verify the generated summary accurately reflects key discussion points from the transcript up to that point.
