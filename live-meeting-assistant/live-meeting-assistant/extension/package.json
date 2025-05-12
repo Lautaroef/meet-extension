@@ -1,6 +1,6 @@
 {
-  "name": "wxt-react-starter",
-  "description": "manifest.json description",
+  "name": "live-meeting-assistant-ext",
+  "description": "Live Meeting Assistant - Your AI companion for supercharged meetings.",
   "private": true,
   "version": "0.0.0",
   "type": "module",
