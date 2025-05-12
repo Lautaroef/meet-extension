@@ -1,6 +1,6 @@
 # Task ID: 4
 # Title: Configure Git Repository and Branching Strategy
-# Status: in-progress
+# Status: done
 # Dependencies: 1, 2
 # Priority: high
 # Description: Configure the project's Git repository, confirm the project structure within the existing repo, and establish a clear branching strategy (e.g., main, develop, feature branches).

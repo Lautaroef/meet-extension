@@ -1,10 +1,20 @@
+'use client';
 import Image from "next/image";
+
+// Add this small component at the top of the file or as a nested component
+const FaultyComponent = () => {
+  throw new Error("Test Next.js render-phase error!");
+  // eslint-disable-next-line no-unreachable
+  return <div>This will not render.</div>;
+};
 
 export default function Home() {
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+        {/* <FaultyComponent /> */}
         <div className="p-4 bg-blue-500 text-white text-xl">Hello Tailwind!</div>
+        <button className="p-2 bg-red-500 text-white rounded hover:bg-red-700 my-4" onClick={() => { throw new Error("Test Next.js client-side error!"); }}>Throw Client Error (Webapp)</button>
         <Image
           className="dark:invert"
           src="/next.svg"
