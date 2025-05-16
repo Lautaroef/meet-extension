@@ -1,0 +1,16 @@
+# Task ID: 16
+# Title: Pre-Meeting Briefing Content Generation (Gemini via Backend)
+# Status: pending
+# Dependencies: 13, 15, 19
+# Priority: high
+# Description: Develop the logic, orchestrated by the backend, to generate content for the 'Intelligent Pre-Flight Check' email using Gemini models via the backend API (Subtask 19.4). This content will include personality insights, engagement style, rapport builders, contextual icebreakers, and key discussion points based on synced data and `open-deep-research` output.
+# Details:
+1. The Next.js backend (specifically logic related to Subtask 19.4: Backend API for Gemini Text Analysis) will orchestrate content generation for the 'Intelligent Pre-Flight Check'.
+2. Inputs for generation include: meeting context (attendees, topic from calendar - via Task 9), synced user notes (from Supabase - via Task 13), and `open-deep-research` output (from Task 15, focusing on one person for MVP).
+3. The backend will make a call to the Gemini API (e.g., `gemini-2.5-pro` due to complexity of inputs and desired output structure) via its internal service (Subtask 19.4).
+4. Prompts to Gemini will be crafted to generate structured JSON output, providing a `response_schema` to the backend API call for sections like: personality insights, engagement style, rapport builders, contextual icebreakers, and key discussion points.
+5. The backend API (Subtask 19.4) handles the direct Gemini API call, API key management, etc.
+6. The generated structured JSON briefing is then stored (e.g., in Supabase, linked to the meeting and user) for later retrieval (e.g., by Task 17 for email, Subtask 19.1 for API).
+
+# Test Strategy:
+Unit test content generation via the backend API (Subtask 19.4) with various inputs. Evaluate the quality, relevance, and accuracy of generated briefings. Iterate on prompt engineering within the backend service.

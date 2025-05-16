@@ -1,0 +1,141 @@
+# Task ID: 20
+# Title: OpenAI Realtime API Integration for Live Transcription (via Backend Proxy)
+# Status: pending
+# Dependencies: 8
+# Priority: high
+# Description: Integrate the OpenAI Realtime API into the Chrome Extension to capture live audio from the current meeting tab and transcribe it to text in real-time.
+# Details:
+Use `chrome.tabCapture` API to get audio stream from the active meeting tab. Connect to OpenAI Realtime API via WebSockets (refer to OpenAI documentation for endpoint and protocol). Stream audio data in a compatible format (e.g., PCM16 @ 24kHz mono) to the API. Handle incoming transcript messages (partial/interim and final) from the WebSocket connection. Implement secure API key management (consider ephemeral keys if possible). Add logic to handle session limits (e.g., reconnect every ~30 minutes). Manage audio chunking and buffering appropriately for streaming.
+
+# Test Strategy:
+Test audio capture from a meeting tab. Verify WebSocket connection to OpenAI Realtime API. Confirm real-time transcription accuracy and latency. Test handling of partial and final transcript events. Test reconnection logic for long sessions. Handle connection errors and API limits gracefully.
+
+# Subtasks:
+## 1. Implement Audio Capture [done]
+### Dependencies: None
+### Description: Set up browser-based audio capture using the Web Audio API and MediaStream API to access and process microphone input in real time.
+### Details:
+Use navigator.mediaDevices.getUserMedia() to request microphone access, create an AudioContext, and process audio data with AudioWorkletNode or MediaStreamAudioSourceNode for further streaming or analysis.
+<info added on 2025-05-12T13:32:26.418Z>
+Use chrome.tabCapture API to capture meeting audio from browser tabs instead of accessing the microphone directly. This involves:
+
+1. Adding the tabCapture permission to the extension manifest (via wxt.config.ts)
+2. Identifying the target tab containing the meeting (Google Meet, Zoom, etc.) by querying tabs based on URL patterns
+3. Using chrome.tabCapture.capture() with the appropriate tabId to obtain a MediaStream
+4. Processing the captured audio stream:
+   - Creating an AudioContext
+   - Creating a MediaStreamAudioSourceNode from the captured stream
+   - Connecting to processing nodes (ScriptProcessorNode or AudioWorkletNode) for raw audio data access
+   - Ensuring output format compatibility with ElevenLabs API requirements
+5. Implementing robust error handling for permission issues and capture failures
+6. Adding logging with the logger utility to track capture status and errors
+
+This approach allows capturing audio directly from meeting tabs rather than requiring microphone access, providing a more seamless user experience for transcribing online meetings.
+</info added on 2025-05-12T13:32:26.418Z>
+
+## 2. Establish WebSocket Connection [in-progress]
+### Dependencies: 20.1
+### Description: Create and manage a persistent WebSocket connection to the backend server for real-time audio data transmission.
+### Details:
+Initialize a WebSocket client, handle connection lifecycle events (open, message, close, error), and ensure reconnection logic for robustness.
+<info added on 2025-05-12T14:10:13.904Z>
+Initialize a WebSocket client in the Chrome extension background script to connect to our Next.js backend, which then proxies to OpenAI. The backend handles ephemeral tokens and authenticated connection to OpenAI.
+
+1. The Chrome extension background script will establish a WebSocket connection to a new endpoint on our Next.js backend (e.g., `ws://localhost:3000/api/transcribe-socket` or `wss://<your_domain>/api/transcribe-socket`).
+2. On `onopen`, the extension sends an initial message to the backend (e.g., `{ type: 'init_transcription', config: { language: 'en', model: 'gpt-4o-transcribe', /* other relevant OpenAI params */ } }`).
+3. The Next.js backend, upon receiving this `init_transcription` message:
+    a. Fetches an ephemeral token from OpenAI (using server-side API key, as per Subtask 20.5, via `https://api.openai.com/v1/realtime/transcription_sessions`).
+    b. Establishes its own authenticated WebSocket connection to OpenAI Realtime API (`wss://api.openai.com/v1/realtime?intent=transcription`) using the ephemeral token and `OpenAI-Beta: realtime=v1` header.
+    c. Sends the `transcription_session.update` message to OpenAI with parameters derived from the extension's `init_transcription` message.
+4. The Next.js backend will then proxy messages bidirectionally:
+    a. Audio data from extension -> OpenAI.
+    b. Transcription events from OpenAI -> extension.
+5. The extension's WebSocket handlers (`onmessage`, `onerror`, `onclose`) will interact with our Next.js backend.
+6. Reconnection logic in the extension will attempt to reconnect to our Next.js backend.
+
+This subtask primarily concerns the extension-to-backend WebSocket. The backend work for proxying and OpenAI connection will be part of an expanded Task 19 or a new backend task.
+</info added on 2025-05-12T14:10:13.904Z>
+
+## 3. Stream Audio Data via WebSocket [pending]
+### Dependencies: 20.2
+### Description: Continuously send captured audio chunks to the backend server over the established WebSocket connection.
+### Details:
+Buffer and encode audio data as needed (e.g., PCM, Opus), then transmit it in small, regular intervals to minimize latency and support real-time processing.
+<info added on 2025-05-12T14:10:31.823Z>
+1. The PCM16 audio data (`ArrayBuffer`) received from the `AudioWorkletNode` (Subtask 20.8) needs to be Base64 encoded in the background script.
+2. The background script sends this Base64 encoded audio string as a message over the WebSocket connection to our Next.js backend endpoint.
+3. The message format to the backend could be simple, e.g., `{ type: 'audio_chunk', data: 'base64_encoded_string' }`.
+4. The Next.js backend receives this, decodes the Base64 string back to binary, and then forwards the binary audio data to the OpenAI Realtime API WebSocket in the format OpenAI expects (e.g., as part of an `input_audio_buffer.append` message if OpenAI also expects base64, or directly as binary if OpenAI's server-side SDK/connection handles that).
+5. Implement buffering in the extension if the WebSocket to the backend is not immediately available or is reconnecting.
+</info added on 2025-05-12T14:10:31.823Z>
+
+## 4. Handle Transcription Results [done]
+### Dependencies: 20.3
+### Description: Receive and process live transcription data from the backend, updating the user interface in real time.
+### Details:
+Parse incoming WebSocket messages containing transcript updates, manage partial and final results, and display them to the user.
+<info added on 2025-05-12T14:10:45.447Z>
+Parse incoming WebSocket messages containing transcript updates, manage partial and final results, and display them to the user.
+
+1. The Chrome extension background script will receive messages from our Next.js backend via its WebSocket connection.
+2. These messages will contain transcription data proxied from the OpenAI Realtime API.
+3. The background script should specifically listen for and parse messages corresponding to OpenAI's `conversation.item.input_audio_transcription.delta` (for incremental transcript updates) and `conversation.item.input_audio_transcription.completed` (for final transcripts of a speech segment) events.
+4. Extract the transcript text (`delta` or `transcript` field from the OpenAI event payload) from these messages.
+5. This extracted text will then be used for further processing (e.g., by Task 21 for GEM analysis) or display.
+6. Ensure robust parsing and error handling for incoming messages from the backend.
+</info added on 2025-05-12T14:10:45.447Z>
+
+## 5. Manage API Keys Securely [pending]
+### Dependencies: None
+### Description: Implement secure handling, storage, and usage of API keys required for backend or third-party transcription services.
+### Details:
+Ensure API keys are never exposed in client-side code; use environment variables and secure server-side endpoints for key management.
+<info added on 2025-05-12T13:58:03.056Z>
+Ensure API keys are never exposed in client-side code; use environment variables and secure server-side endpoints for key management.
+
+For OpenAI Realtime API integration:
+1. Create a new Next.js backend API endpoint (e.g., `/api/openai/create-transcription-session`).
+2. This endpoint will use the server-side OpenAI API key to POST to `https://api.openai.com/v1/realtime/transcription_sessions` (with `OpenAI-Beta: assistants=v2` header and appropriate payload like `input_audio_format`, `input_audio_transcription` model/language, `turn_detection`).
+3. The Next.js endpoint will return the `ephemeral_token` (client_secret.value from OpenAI's response) to the Chrome extension.
+4. The Chrome extension's background script will call this Next.js endpoint to fetch the ephemeral token before establishing the WebSocket connection.
+5. The WebSocket connection will use this ephemeral token in its `Authorization: Bearer <EPHEMERAL_TOKEN>` header.
+6. The main OpenAI API key remains secure on the backend.
+
+This implementation requires changes to both the Next.js backend and the Chrome extension. The ephemeral token approach ensures the main API key is never exposed to client-side code while still allowing the extension to establish direct WebSocket connections to OpenAI's Realtime API.
+</info added on 2025-05-12T13:58:03.056Z>
+
+## 6. Implement Session Management [pending]
+### Dependencies: 20.2
+### Description: Track and manage user sessions to associate audio streams and transcripts with individual users or sessions.
+### Details:
+Generate unique session identifiers, handle session start/end events, and ensure session continuity across reconnections.
+
+## 7. Implement Robust Error Handling [pending]
+### Dependencies: 20.1, 20.2, 20.3, 20.4, 20.5, 20.6
+### Description: Detect, log, and gracefully recover from errors in audio capture, WebSocket communication, streaming, and transcription.
+### Details:
+Provide user feedback for recoverable errors, implement retry logic, and ensure system stability in the face of failures.
+
+## 8. Implement Audio Resampling and PCM Conversion (AudioWorklet) [pending]
+### Dependencies: 20.1
+### Description: Create an AudioWorkletProcessor to convert the captured MediaStream to the format required by OpenAI Realtime API (PCM16, 24kHz, mono). This includes downmixing and resampling if necessary.
+### Details:
+1. Define an AudioWorkletProcessor class in a new file (e.g., `live-meeting-assistant/live-meeting-assistant/extension/src/utils/audio-processor.worklet.ts`).
+2. In the processor's `process` method, access raw audio samples.
+3. Implement downmixing logic (if source is stereo).
+4. Implement resampling logic to convert to 24kHz (if source sample rate differs).
+5. Convert float samples to PCM16 format.
+6. Send processed audio chunks back to the main background script (via `port.postMessage()`).
+7. In `background.ts`, load this worklet into the `AudioContext`, connect the `MediaStreamSourceNode` to it, and listen for messages from the worklet containing the processed PCM data.
+<info added on 2025-05-12T14:09:52.809Z>
+1. Define an `AudioWorkletProcessor` class in `live-meeting-assistant/live-meeting-assistant/extension/src/utils/audio-processor.worklet.ts`.
+2. The OpenAI Realtime API for transcription expects `pcm16` input audio format, specifically 16-bit PCM at a 24kHz sample rate, single channel (mono), and little-endian byte order.
+3. In the processor's `process` method:
+    a. Access raw audio samples from the input.
+    b. Implement downmixing logic if the source audio from `chrome.tabCapture` is stereo to convert it to mono.
+    c. Implement resampling logic to convert the audio to a 24kHz sample rate if the `AudioContext.sampleRate` is different (e.g., 44.1kHz or 48kHz).
+    d. Convert the processed (mono, 24kHz) float samples to PCM16 format (Int16Array, little-endian).
+4. Send the processed PCM16 audio data chunks (as ArrayBuffer) back to the main background script via `this.port.postMessage()`.
+5. In `background.ts`, load this worklet, connect the `MediaStreamSourceNode` to it, and listen for messages from the worklet containing the processed PCM16 data.
+</info added on 2025-05-12T14:09:52.809Z>
+

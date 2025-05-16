@@ -1,0 +1,11 @@
+# Task ID: 12
+# Title: Data Processing Service (Summarization/Indexing with Gemini)
+# Status: pending
+# Dependencies: 3, 9, 10, 11
+# Priority: high
+# Description: Develop a backend service/module (within Next.js or a separate Node.js service) to process synced data from various sources. Use Gemini API for summarizing large text contexts and structuring data for indexing.
+# Details:
+Input: Raw data from Notion, text files, etc., received by the Next.js backend. Output: Summarized and structured insights. 1. The backend service (leveraging logic from Subtask 19.4: Backend API for Gemini Text Analysis) will receive data needing processing. 2. It will call the Gemini API (e.g., `gemini-pro` or `gemini-2.5-pro` for complex tasks) to perform summarization and/or extract key entities/topics. 3. Prompts to Gemini should request structured JSON output by providing a `response_schema` to the backend API call, which then passes it to Gemini. 4. The backend service (Subtask 19.4) handles Gemini API interaction, including API key management, rate limits, and errors. 5. Processed, structured JSON data is then available for storage (Task 13) or other uses.
+
+# Test Strategy:
+Unit test processing logic with sample data. Validate Gemini API integration and output quality. Test summarization of various content lengths and types.

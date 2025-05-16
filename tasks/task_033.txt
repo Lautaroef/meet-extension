@@ -1,0 +1,11 @@
+# Task ID: 33
+# Title: Expand Data Source Integration (e.g., Evernote or Hubspot)
+# Status: pending
+# Dependencies: 6, 7, 12, 13, 14
+# Priority: medium
+# Description: Expand data source integrations by adding support for one more service, e.g., Evernote or Hubspot, following the pattern established for Notion and Google Calendar.
+# Details:
+Choose one: Evernote (use Evernote Developer Docs: NoteStore.createNote, etc.) or Hubspot (use `hubspot/hubspot-api-nodejs`). Implement OAuth, data fetching, and add to the sync/processing pipeline (Tasks 12, 13, 14). Update Next.js UI (Task 7) to manage this new source.
+
+# Test Strategy:
+Test OAuth, data fetching, processing, and storage for the new data source. Verify it integrates into the pre-meeting briefing and GEM alert system.

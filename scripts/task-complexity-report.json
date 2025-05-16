@@ -1,331 +1,243 @@
 {
   "meta": {
-    "generatedAt": "2025-05-10T22:52:40.496Z",
-    "tasksAnalyzed": 40,
+    "generatedAt": "2025-05-12T13:30:54.265Z",
+    "tasksAnalyzed": 29,
     "thresholdScore": 5,
     "projectName": "Taskmaster",
     "usedResearch": true
   },
   "complexityAnalysis": [
     {
-      "taskId": 1,
-      "taskTitle": "Initialize Project Repository and Basic Chrome Extension",
-      "complexityScore": 3,
-      "recommendedSubtasks": 4,
-      "expansionPrompt": "Break down the initialization of the project repository and Chrome extension into subtasks such as: (1) Create and initialize the Git repository and directory structure, (2) Create and configure manifest.json (v3) with required permissions and fields, (3) Scaffold initial popup.html, background.js, and content_script.js files, (4) Load and test the extension in Chrome to verify basic functionality.",
-      "reasoning": "This task involves standard setup steps for a Chrome extension and repository, which are well-documented and straightforward for developers familiar with web technologies. However, it includes multiple file creations and configuration steps that benefit from clear separation.[1][3][4]"
-    },
-    {
-      "taskId": 2,
-      "taskTitle": "Configure Supabase Database and Prisma ORM",
-      "complexityScore": 4,
-      "recommendedSubtasks": 5,
-      "expansionPrompt": "Expand this task into subtasks: (1) Create a new Supabase project, (2) Set up database credentials and connection strings, (3) Install Prisma CLI and client libraries, (4) Initialize Prisma and configure datasource, (5) Test database connection and run initial migration.",
-      "reasoning": "Setting up a cloud database and ORM involves several configuration and verification steps, but each is well-supported by documentation and tooling. The process is moderately complex due to integration between services."
-    },
-    {
-      "taskId": 3,
-      "taskTitle": "Design Initial Database Schema with Prisma (Users, Sources)",
-      "complexityScore": 5,
-      "recommendedSubtasks": 5,
-      "expansionPrompt": "Decompose into: (1) Define User model in schema, (2) Define DataSource model, (3) Define UserDataSourceLink model with relations, (4) Add initial DataSource entries, (5) Generate and apply migration, verify schema in Supabase.",
-      "reasoning": "Schema design requires careful planning of relations and constraints, and initial data seeding. It is more complex than basic setup but manageable with Prisma's tooling."
-    },
-    {
-      "taskId": 4,
-      "taskTitle": "Implement User Authentication via Supabase Auth",
-      "complexityScore": 6,
-      "recommendedSubtasks": 6,
-      "expansionPrompt": "Break down into: (1) Integrate supabase-js client in extension, (2) Build login/signup UI, (3) Implement email/password and OAuth flows, (4) Handle session storage and persistence, (5) Ensure authenticated context in scripts, (6) Test full auth flow.",
-      "reasoning": "Authentication in a Chrome extension with Supabase involves both frontend UI and secure session management, increasing complexity due to security and cross-context requirements."
-    },
-    {
-      "taskId": 5,
-      "taskTitle": "Implement Secure API Key Management",
-      "complexityScore": 6,
-      "recommendedSubtasks": 5,
-      "expansionPrompt": "Expand into: (1) Configure secure storage of API keys in Supabase Edge Functions or backend, (2) Implement backend proxy/functions for third-party API calls, (3) Update extension to use backend endpoints, (4) Test for absence of keys in client code, (5) Validate secure API communication.",
-      "reasoning": "Secure key management is critical and requires backend integration, careful client-server separation, and security validation, making it moderately complex."
-    },
-    {
       "taskId": 6,
-      "taskTitle": "Implement Notion API OAuth Integration",
-      "complexityScore": 7,
-      "recommendedSubtasks": 6,
-      "expansionPrompt": "Decompose into: (1) Register Notion OAuth app, (2) Implement OAuth flow initiation in extension, (3) Handle redirect and token exchange, (4) Securely store access tokens, (5) Integrate Notion JS SDK, (6) Test authorization and API call.",
-      "reasoning": "OAuth integrations are complex due to multi-step flows, security, and token management, especially within a Chrome extension context."
+      "taskTitle": "Implement User Authentication (Supabase Auth in Next.js)",
+      "complexityScore": 8,
+      "recommendedSubtasks": 7,
+      "expansionPrompt": "Break down the implementation of user authentication with Supabase Auth in Next.js into subtasks covering: signup form, login form, password reset, email verification, session management, integration with Supabase, and testing.",
+      "reasoning": "This task involves multiple authentication flows (signup, login, password reset, email verification), secure session handling, integration with Supabase, and UI/UX considerations. Each flow requires careful handling and testing, making the task complex and multifaceted."
     },
     {
       "taskId": 7,
-      "taskTitle": "Implement Evernote API OAuth Integration",
-      "complexityScore": 7,
-      "recommendedSubtasks": 6,
-      "expansionPrompt": "Break down into: (1) Register Evernote app, (2) Implement OAuth 1.0a/2.0 flow, (3) Handle token exchange and storage, (4) Integrate Evernote SDK or HTTP requests, (5) Test authorization, (6) Perform basic API call.",
-      "reasoning": "Similar to Notion, but potentially more complex due to Evernote's support for both OAuth 1.0a and 2.0, requiring careful handling."
-    },
-    {
-      "taskId": 8,
-      "taskTitle": "Implement Salesforce API OAuth Integration",
-      "complexityScore": 7,
-      "recommendedSubtasks": 6,
-      "expansionPrompt": "Expand into: (1) Create Salesforce Connected App, (2) Implement OAuth 2.0 flow, (3) Handle token and instance URL storage, (4) Integrate JSforce library, (5) Test authorization, (6) Execute basic SOQL query.",
-      "reasoning": "Salesforce OAuth is multi-step and requires handling of additional parameters (instance URL), increasing integration complexity."
+      "taskTitle": "Basic UI for Next.js App (Settings/Sync Shell)",
+      "complexityScore": 6,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Expand this task into subtasks for dashboard layout, navigation, settings page, data source management page, and responsive design implementation.",
+      "reasoning": "While foundational, this task covers several UI components and requires integration with form/table generators and responsive design, but does not involve complex business logic."
     },
     {
       "taskId": 9,
-      "taskTitle": "Implement HubSpot API OAuth Integration",
-      "complexityScore": 6,
-      "recommendedSubtasks": 5,
-      "expansionPrompt": "Decompose into: (1) Register HubSpot app, (2) Implement OAuth 2.0 flow, (3) Store access and refresh tokens, (4) Integrate HubSpot Node.js SDK, (5) Test authorization and API call.",
-      "reasoning": "OAuth 2.0 with HubSpot is standard but still requires careful token handling and backend integration."
+      "taskTitle": "Google Calendar API Integration (Next.js)",
+      "complexityScore": 8,
+      "recommendedSubtasks": 6,
+      "expansionPrompt": "Decompose into subtasks for OAuth flow, token storage, event fetching, API integration, error handling, and testing.",
+      "reasoning": "Integrating with Google Calendar involves secure OAuth, token management, API data fetching, and robust error handling, each of which is non-trivial and security-sensitive."
     },
     {
       "taskId": 10,
-      "taskTitle": "Implement Google Calendar API OAuth Integration",
-      "complexityScore": 7,
+      "taskTitle": "Notion API Integration (Next.js)",
+      "complexityScore": 8,
       "recommendedSubtasks": 6,
-      "expansionPrompt": "Break down into: (1) Set up Google Cloud project and credentials, (2) Implement OAuth flow (chrome.identity or web), (3) Request calendar scopes, (4) Store tokens, (5) Integrate with Calendar API, (6) Test event fetching.",
-      "reasoning": "Google OAuth in Chrome extensions is complex due to required scopes, consent, and Chrome-specific APIs."
+      "expansionPrompt": "Break down into subtasks for OAuth flow, token management, page/database selection UI, content fetching, data parsing, and integration testing.",
+      "reasoning": "Similar to Google Calendar, this task requires secure OAuth, dynamic data fetching, and parsing complex Notion data structures, each requiring careful implementation."
     },
     {
       "taskId": 11,
-      "taskTitle": "Implement Local Text/Document File Ingestion",
-      "complexityScore": 7,
-      "recommendedSubtasks": 7,
-      "expansionPrompt": "Expand into: (1) Build file upload UI, (2) Implement FileReader for .txt/.md, (3) Integrate PDF/Docx parsing libraries, (4) Upload files to Supabase Storage if needed, (5) Process and extract text, (6) Store extracted content, (7) Test with various file types.",
-      "reasoning": "Handling multiple file types, client-side parsing, and backend processing introduces significant complexity."
+      "taskTitle": "Manual Text Input/Upload Feature (Next.js & Supabase Storage)",
+      "complexityScore": 6,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Expand into subtasks for file upload UI, text input UI, Supabase Storage integration, metadata handling, and retrieval testing.",
+      "reasoning": "This task involves both UI and backend integration, but the flows are relatively straightforward compared to OAuth-based integrations."
     },
     {
       "taskId": 12,
-      "taskTitle": "Develop Core Data Synchronization Service",
-      "complexityScore": 8,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Decompose into: (1) Design sync schedule and triggers, (2) Iterate through user data source links, (3) Refresh tokens as needed, (4) Fetch data from each source, (5) Handle pagination and deltas, (6) Store/merge data in ProcessedContent, (7) Update lastSyncedAt, (8) Test with mock and real sources.",
-      "reasoning": "This service must coordinate multiple APIs, handle scheduling, data merging, and error cases, making it highly complex."
+      "taskTitle": "Data Processing Service (Summarization/Indexing with Gemini)",
+      "complexityScore": 9,
+      "recommendedSubtasks": 7,
+      "expansionPrompt": "Decompose into subtasks for data ingestion, Gemini API integration, summarization logic, schema definition, error/rate limit handling, output validation, and unit testing.",
+      "reasoning": "This backend service must handle diverse data, integrate with an external AI API, manage rate limits, and ensure structured outputs, making it highly complex."
     },
     {
       "taskId": 13,
-      "taskTitle": "Integrate Google Gemini for Large Document Summarization & Structuring",
-      "complexityScore": 6,
+      "taskTitle": "Data Storage Logic (Processed Insights to Supabase via Prisma)",
+      "complexityScore": 7,
       "recommendedSubtasks": 5,
-      "expansionPrompt": "Break down into: (1) Integrate Gemini API client, (2) Design summarization/structuring prompts, (3) Send large content to Gemini, (4) Store summaries/structured output, (5) Test with large documents.",
-      "reasoning": "LLM integration for summarization is moderately complex, especially with large payloads and structured output requirements."
+      "expansionPrompt": "Break down into subtasks for Prisma schema updates, data insertion logic, relationship management, indexing, and data integrity testing.",
+      "reasoning": "Storing processed data with correct relationships and indexes requires careful schema design and validation, but is less complex than external API integrations."
     },
     {
       "taskId": 14,
-      "taskTitle": "Extend Prisma Schema for Processed Content and Insights",
-      "complexityScore": 5,
-      "recommendedSubtasks": 4,
-      "expansionPrompt": "Expand into: (1) Define ProcessedContent model, (2) Add relations to users and sources, (3) Generate and apply migration, (4) Test storing and retrieving processed content.",
-      "reasoning": "Schema extension is straightforward with Prisma, but requires careful design for new relations and data types."
+      "taskTitle": "Scheduled Sync Process (Cron for Data Sources)",
+      "complexityScore": 7,
+      "recommendedSubtasks": 6,
+      "expansionPrompt": "Expand into subtasks for scheduler setup, sync logic, data fetching, triggering processing, concurrency handling, and monitoring/logging.",
+      "reasoning": "Automating sync across multiple data sources with error handling and scheduling introduces moderate complexity, especially around concurrency and reliability."
     },
     {
       "taskId": 15,
-      "taskTitle": "Integrate ElevenLabs Scribe for Speech-to-Text",
-      "complexityScore": 8,
-      "recommendedSubtasks": 7,
-      "expansionPrompt": "Decompose into: (1) Capture microphone audio in content script, (2) Stream audio to backend, (3) Integrate with ElevenLabs Scribe API, (4) Handle streaming responses, (5) Manage WebSocket connections, (6) Handle permissions and errors, (7) Test real-time transcription.",
-      "reasoning": "Real-time audio capture, streaming, and transcription integration in a browser context is technically challenging and requires robust error handling."
+      "taskTitle": "`open-deep-research` Integration Setup",
+      "complexityScore": 6,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Decompose into subtasks for service setup (clone/Dockerize), deployment, API interface development, Next.js integration, and testing.",
+      "reasoning": "Setting up and integrating an external research tool involves some infrastructure and API work, but is relatively contained."
     },
     {
       "taskId": 16,
-      "taskTitle": "Setup OpenAI API Client",
-      "complexityScore": 5,
-      "recommendedSubtasks": 4,
-      "expansionPrompt": "Break down into: (1) Install OpenAI client library, (2) Initialize client with secure API key, (3) Create helper functions for LLM tasks, (4) Test with sample API calls.",
-      "reasoning": "Setting up an API client is straightforward, but helper function design and secure key handling add some complexity."
+      "taskTitle": "Pre-Meeting Briefing Content Generation (OpenAI)",
+      "complexityScore": 8,
+      "recommendedSubtasks": 6,
+      "expansionPrompt": "Expand into subtasks for prompt engineering, data aggregation, OpenAI API integration, output formatting, quality evaluation, and testing.",
+      "reasoning": "Generating structured, context-aware content with AI requires careful prompt design, data handling, and iterative testing for quality."
     },
     {
       "taskId": 17,
-      "taskTitle": "Setup Google Gemini API Client",
-      "complexityScore": 5,
-      "recommendedSubtasks": 4,
-      "expansionPrompt": "Expand into: (1) Install Gemini SDK, (2) Initialize client with API key, (3) Create helper functions for Gemini models, (4) Test with sample prompts.",
-      "reasoning": "Similar to OpenAI client setup, with moderate complexity due to SDK integration and secure configuration."
+      "taskTitle": "Automated Email Delivery for Pre-Meeting Briefing",
+      "complexityScore": 6,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Break down into subtasks for scheduling logic, email template creation, email service integration, delivery timing, and testing.",
+      "reasoning": "Automated email delivery involves scheduling, template management, and integration with third-party services, but is a well-understood pattern."
     },
     {
       "taskId": 18,
-      "taskTitle": "Integrate `open-deep-research` for Attendee Information",
-      "complexityScore": 7,
-      "recommendedSubtasks": 6,
-      "expansionPrompt": "Decompose into: (1) Clone and review open-deep-research repo, (2) Decide on hosting/integration strategy, (3) Set up API or function interface, (4) Integrate with attendee data input, (5) Parse and store research output, (6) Test with sample attendee.",
-      "reasoning": "Integrating an external research tool, especially if adapting Python code for a JS/Edge Function environment, is complex and requires architectural decisions."
+      "taskTitle": "Chrome Extension UI for 'Waiting Room Warm-Up'",
+      "complexityScore": 6,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Expand into subtasks for UI design, content script injection, API data fetching, cross-platform adaptation, and UI testing.",
+      "reasoning": "Injecting UI into third-party web apps requires careful handling, but the UI itself is minimal and the data flow is straightforward."
     },
     {
       "taskId": 19,
-      "taskTitle": "Develop Pre-Meeting Briefing Data Aggregation Logic",
-      "complexityScore": 7,
-      "recommendedSubtasks": 6,
-      "expansionPrompt": "Break down into: (1) Identify meeting attendees from calendar, (2) Query ProcessedContent for related data, (3) Trigger open-deep-research for attendees, (4) Aggregate all data into context object, (5) Handle data merging and deduplication, (6) Test with sample meetings.",
-      "reasoning": "Aggregating and merging data from multiple sources and research tools into a coherent structure is non-trivial and requires careful logic."
+      "taskTitle": "API Endpoint for Pre-Meeting Summary (Next.js for Chrome Ext)",
+      "complexityScore": 6,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Decompose into subtasks for endpoint creation, authentication, data retrieval, response formatting, and endpoint testing.",
+      "reasoning": "Creating a secure API endpoint with authentication and data retrieval is standard, but must be robust and performant."
     },
     {
       "taskId": 20,
-      "taskTitle": "Generate Briefing Insights (Personality, Engagement, Rapport) using LLM",
-      "complexityScore": 6,
-      "recommendedSubtasks": 5,
-      "expansionPrompt": "Expand into: (1) Design LLM prompts for insights, (2) Integrate with aggregated data, (3) Parse and structure LLM output, (4) Validate output quality, (5) Test with sample attendees.",
-      "reasoning": "Prompt engineering and output parsing for LLMs is moderately complex, especially for nuanced insights."
+      "taskTitle": "ElevenLabs 'Scribe' API Integration for Live Transcription",
+      "complexityScore": 8,
+      "recommendedSubtasks": 7,
+      "expansionPrompt": "Break down into subtasks for audio capture, WebSocket connection, audio streaming, transcript handling, API key management, session management, and error handling.",
+      "reasoning": "Real-time audio capture and streaming with live transcription involves complex browser APIs, real-time data handling, and robust error management."
     },
     {
       "taskId": 21,
-      "taskTitle": "Generate Contextual Icebreakers & Key Discussion Points using LLM",
-      "complexityScore": 6,
+      "taskTitle": "Real-time Transcript Processing (Basic Keyword Spotting for GEMs)",
+      "complexityScore": 7,
       "recommendedSubtasks": 5,
-      "expansionPrompt": "Decompose into: (1) Design prompts for icebreakers and discussion points, (2) Integrate with attendee and meeting data, (3) Parse LLM responses, (4) Validate contextual relevance, (5) Test with sample meetings.",
-      "reasoning": "Similar to Task 20, with complexity in prompt design and ensuring contextual relevance."
+      "expansionPrompt": "Expand into subtasks for transcript analysis logic, keyword extraction, GEM event triggering, performance optimization, and testing.",
+      "reasoning": "Processing real-time transcripts and triggering events requires efficient, low-latency logic and integration with user data."
     },
     {
       "taskId": 22,
-      "taskTitle": "Implement Automated Pre-Meeting Briefing Email Service",
-      "complexityScore": 7,
-      "recommendedSubtasks": 6,
-      "expansionPrompt": "Break down into: (1) Design email scheduling logic, (2) Retrieve upcoming meetings and briefing content, (3) Format HTML email, (4) Integrate with email sending service, (5) Handle scheduling and retries, (6) Test with scheduled meetings.",
-      "reasoning": "Automated, scheduled email delivery with dynamic content and third-party integration is moderately complex."
+      "taskTitle": "'GEM' Alert UI Component (Chrome Ext)",
+      "complexityScore": 5,
+      "recommendedSubtasks": 4,
+      "expansionPrompt": "Decompose into subtasks for UI component design, animation implementation, alert display logic, and cross-platform testing.",
+      "reasoning": "This is a focused UI task with limited logic, mainly involving design and event-driven display."
     },
     {
       "taskId": 23,
-      "taskTitle": "Develop On-Screen Pre-Meeting Summary UI (Waiting Room Warm-Up)",
-      "complexityScore": 7,
-      "recommendedSubtasks": 6,
-      "expansionPrompt": "Expand into: (1) Detect meeting platform waiting rooms, (2) Inject UI panel using @21st-dev/magic, (3) Fetch and display briefing insights, (4) Ensure non-intrusive design, (5) Handle dismissal and responsiveness, (6) Test on multiple platforms.",
-      "reasoning": "Injecting UI into third-party web apps, ensuring compatibility and non-intrusiveness, is technically challenging."
+      "taskTitle": "AI Assistant Drawer UI Shell (Chrome Ext)",
+      "complexityScore": 6,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Expand into subtasks for drawer UI design, toggle button, layout for GEM log and chat, integration with WXT, and responsiveness testing.",
+      "reasoning": "Building a sidebar UI with toggling and layout management is moderately complex, especially for cross-platform compatibility."
     },
     {
       "taskId": 24,
-      "taskTitle": "Process and Buffer Real-Time Transcriptions",
-      "complexityScore": 6,
-      "recommendedSubtasks": 5,
-      "expansionPrompt": "Decompose into: (1) Receive transcribed text chunks, (2) Concatenate into rolling transcript, (3) Store transcript in memory or chrome.storage, (4) Provide access to transcript for other features, (5) Test with live transcription.",
-      "reasoning": "Real-time data buffering and cross-context access in a Chrome extension is moderately complex."
+      "taskTitle": "'Past GEMs' Log Functionality (Drawer)",
+      "complexityScore": 5,
+      "recommendedSubtasks": 4,
+      "expansionPrompt": "Break down into subtasks for GEM log data structure, UI integration, chronological ordering, and scrollable display.",
+      "reasoning": "Logging and displaying a list of events is a standard UI/data management task with limited complexity."
     },
     {
       "taskId": 25,
-      "taskTitle": "Develop Real-Time \"GEM\" Alert Generation Logic",
-      "complexityScore": 8,
-      "recommendedSubtasks": 7,
-      "expansionPrompt": "Break down into: (1) Periodically extract transcript segments, (2) Fetch contextual data, (3) Design LLM prompts for GEMs, (4) Send data to LLM and receive response, (5) Parse and validate GEM output, (6) Ensure low-latency processing, (7) Test with sample transcripts.",
-      "reasoning": "Real-time analysis, prompt engineering, and actionable alert generation with LLMs is highly complex, especially under latency constraints."
+      "taskTitle": "Basic AI Chat Interface (OpenAI in Drawer)",
+      "complexityScore": 7,
+      "recommendedSubtasks": 6,
+      "expansionPrompt": "Expand into subtasks for chat UI, message handling, OpenAI API integration, context management, conversation history, and testing.",
+      "reasoning": "Integrating a live AI chat with context management and UI/UX considerations is moderately complex, especially with real-time data."
     },
     {
       "taskId": 26,
-      "taskTitle": "Implement UI Component for \"GEM\" Alerts",
-      "complexityScore": 6,
-      "recommendedSubtasks": 5,
-      "expansionPrompt": "Expand into: (1) Design GEM alert UI with @21st-dev/magic, (2) Inject component into meeting tab, (3) Implement show/hide logic, (4) Ensure non-intrusiveness, (5) Test appearance and usability.",
-      "reasoning": "UI component injection and timing logic in third-party web apps is moderately complex."
+      "taskTitle": "Data Flow for GEM Alerts (Transcript -> Analysis -> Alert UI)",
+      "complexityScore": 7,
+      "recommendedSubtasks": 6,
+      "expansionPrompt": "Decompose into subtasks for transcript event handling, analysis orchestration, alert data preparation, UI triggering, GEM logging, and inter-component communication.",
+      "reasoning": "Coordinating real-time data flow across multiple extension components requires careful orchestration and robust communication."
     },
     {
       "taskId": 27,
-      "taskTitle": "Develop AI Assistant Drawer UI Shell",
+      "taskTitle": "Initial Prompt Engineering for OpenAI (GEMs, Chat)",
       "complexityScore": 6,
       "recommendedSubtasks": 5,
-      "expansionPrompt": "Decompose into: (1) Design drawer/sidebar UI, (2) Implement open/close toggle, (3) Integrate with @21st-dev/magic, (4) Scaffold layout for sub-features, (5) Test integration in browser.",
-      "reasoning": "Building a robust, toggleable UI shell in a browser extension requires careful design and integration."
+      "expansionPrompt": "Expand into subtasks for GEM prompt design, chat system prompt design, user prompt templating, iterative testing, and documentation.",
+      "reasoning": "Prompt engineering is creative and iterative, but does not involve complex code or infrastructure."
     },
     {
       "taskId": 28,
-      "taskTitle": "Implement Persistent Insights Log (\"Past GEMs\") in Drawer",
-      "complexityScore": 5,
-      "recommendedSubtasks": 4,
-      "expansionPrompt": "Expand into: (1) Store GEM alerts with timestamps, (2) Display log in drawer UI, (3) Implement scrolling and ordering, (4) Test log persistence and display.",
-      "reasoning": "Logging and displaying chronological data in a UI is straightforward but requires attention to persistence and UX."
+      "taskTitle": "Refine 'GEM' Alert Intelligence (Contextual OpenAI analysis)",
+      "complexityScore": 8,
+      "recommendedSubtasks": 7,
+      "expansionPrompt": "Break down into subtasks for transcript context extraction, OpenAI integration, latency optimization, fallback logic, API usage monitoring, relevance evaluation, and testing.",
+      "reasoning": "Enhancing real-time analysis with AI introduces complexity in data handling, latency, and quality control."
     },
     {
       "taskId": 29,
-      "taskTitle": "Implement Interactive AI Chat Interface in Drawer",
-      "complexityScore": 7,
-      "recommendedSubtasks": 6,
-      "expansionPrompt": "Break down into: (1) Build chat input and display UI, (2) Integrate with LLM backend, (3) Send transcript/context with queries, (4) Display responses, (5) Maintain chat history, (6) Test with live meeting data.",
-      "reasoning": "Interactive chat with live context and LLM integration is complex due to real-time data handling and UI/UX requirements."
+      "taskTitle": "Implement 'Spark Connection' Smart Chip",
+      "complexityScore": 6,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Expand into subtasks for chip UI, click handler, OpenAI query integration, result display, and testing.",
+      "reasoning": "This feature combines UI and AI integration, but is focused and follows established patterns."
     },
     {
       "taskId": 30,
-      "taskTitle": "Implement \"Spark Connection\" Smart Chip",
+      "taskTitle": "Implement 'Key Takeaways So Far' Smart Chip",
       "complexityScore": 6,
       "recommendedSubtasks": 5,
-      "expansionPrompt": "Expand into: (1) Add Spark Connection chip UI, (2) Trigger LLM query on click, (3) Use pre-meeting data for prompt, (4) Display talking points, (5) Test with sample attendees.",
-      "reasoning": "Smart chip logic is moderately complex due to LLM integration and UI interaction."
+      "expansionPrompt": "Decompose into subtasks for chip UI, transcript aggregation, OpenAI summarization, result display, and testing.",
+      "reasoning": "Similar to Task 29, this is a focused feature combining UI and AI summarization."
     },
     {
       "taskId": 31,
-      "taskTitle": "Implement \"Key Takeaways So Far\" Smart Chip",
+      "taskTitle": "Implement 'Intelligent Recap for Late Joiners' (Basic)",
       "complexityScore": 6,
       "recommendedSubtasks": 5,
-      "expansionPrompt": "Decompose into: (1) Add Key Takeaways chip UI, (2) Send transcript to LLM on click, (3) Parse and display summary, (4) Ensure structured output, (5) Test with ongoing meetings.",
-      "reasoning": "Similar to Task 30, with complexity in summarization and UI feedback."
+      "expansionPrompt": "Expand into subtasks for late join detection, transcript retrieval, recap generation, UI display, and testing.",
+      "reasoning": "Detecting late joiners and generating a summary is moderately complex, but leverages existing transcript and summarization logic."
     },
     {
       "taskId": 32,
-      "taskTitle": "Implement \"Revisit Key Topics\" Smart Chip",
-      "complexityScore": 6,
-      "recommendedSubtasks": 5,
-      "expansionPrompt": "Expand into: (1) Add Revisit Key Topics chip UI, (2) Send transcript and agenda to LLM, (3) Parse pending topics, (4) Display list, (5) Test with sample meetings.",
-      "reasoning": "Requires integration of agenda data and transcript analysis, with moderate complexity."
+      "taskTitle": "User Feedback Mechanism for GEM Alert Quality",
+      "complexityScore": 5,
+      "recommendedSubtasks": 4,
+      "expansionPrompt": "Break down into subtasks for feedback UI, feedback data storage, Supabase integration, and feedback retrieval/testing.",
+      "reasoning": "Adding a feedback mechanism is a standard UI and backend integration task with limited complexity."
     },
     {
       "taskId": 33,
-      "taskTitle": "Implement \"Unpack That\" Smart Chip",
-      "complexityScore": 6,
-      "recommendedSubtasks": 5,
-      "expansionPrompt": "Break down into: (1) Add Unpack That chip UI, (2) Enable user to specify term, (3) Query LLM with context, (4) Display explanation, (5) Test with various terms.",
-      "reasoning": "Requires user interaction, context passing, and dynamic LLM queries, with moderate complexity."
+      "taskTitle": "Expand Data Source Integration (e.g., Evernote or Hubspot)",
+      "complexityScore": 7,
+      "recommendedSubtasks": 6,
+      "expansionPrompt": "Decompose into subtasks for OAuth setup, API integration, data fetching, sync pipeline integration, UI update, and testing.",
+      "reasoning": "Adding a new data source involves OAuth, API integration, and pipeline updates, similar in complexity to previous integrations."
     },
     {
       "taskId": 34,
-      "taskTitle": "Implement \"Bridge to Objective\" Smart Chip",
-      "complexityScore": 6,
-      "recommendedSubtasks": 5,
-      "expansionPrompt": "Expand into: (1) Add Bridge to Objective chip UI, (2) Send transcript and objectives to LLM, (3) Parse suggestions, (4) Display actionable phrases, (5) Test with sample meetings.",
-      "reasoning": "Similar to other smart chips, with focus on actionable suggestions and UI integration."
+      "taskTitle": "Security Review and Hardening",
+      "complexityScore": 10,
+      "recommendedSubtasks": 8,
+      "expansionPrompt": "Expand into subtasks for PII audit, API key management, RLS policy review, input/output sanitization, extension permissions review, XSS/CSRF testing, encryption verification, and penetration testing.",
+      "reasoning": "A comprehensive security review spans the entire stack, requires specialized expertise, and covers multiple critical areas, making it the most complex task."
     },
     {
       "taskId": 35,
-      "taskTitle": "Implement \"Data Point Check\" Smart Chip",
+      "taskTitle": "MVP Documentation (User & Developer)",
       "complexityScore": 6,
       "recommendedSubtasks": 5,
-      "expansionPrompt": "Decompose into: (1) Add Data Point Check chip UI, (2) Accept user input for data point, (3) Query ProcessedContent or LLM, (4) Display findings, (5) Test with various data points.",
-      "reasoning": "Requires data querying and dynamic UI, with moderate complexity."
-    },
-    {
-      "taskId": 36,
-      "taskTitle": "Develop Logic for Intelligent Recap for Late Joiners",
-      "complexityScore": 7,
-      "recommendedSubtasks": 6,
-      "expansionPrompt": "Break down into: (1) Detect late joiners, (2) Compile transcript and Past GEMs, (3) Design LLM prompt for recap, (4) Generate summary, (5) Handle recap delivery, (6) Test with simulated late joiners.",
-      "reasoning": "Requires real-time detection, data aggregation, and LLM summarization, making it complex."
-    },
-    {
-      "taskId": 37,
-      "taskTitle": "Implement UI for Late Joiner Recap",
-      "complexityScore": 5,
-      "recommendedSubtasks": 4,
-      "expansionPrompt": "Expand into: (1) Design recap display UI, (2) Integrate with recap logic, (3) Ensure non-intrusive delivery, (4) Test dismissal and user experience.",
-      "reasoning": "UI implementation for recap is straightforward but must be carefully designed for non-intrusiveness."
-    },
-    {
-      "taskId": 38,
-      "taskTitle": "Polish Chrome Extension UI/UX and Optimize Performance",
-      "complexityScore": 8,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Decompose into: (1) Review all UI components, (2) Ensure design consistency, (3) Optimize JavaScript execution, (4) Minimize memory usage, (5) Address visual glitches, (6) Test across resolutions, (7) Gather user feedback, (8) Implement improvements.",
-      "reasoning": "Comprehensive UI/UX and performance optimization across a large extension is highly complex and iterative.[2][3]"
-    },
-    {
-      "taskId": 39,
-      "taskTitle": "Implement Comprehensive Error Handling and API Resilience",
-      "complexityScore": 8,
-      "recommendedSubtasks": 7,
-      "expansionPrompt": "Break down into: (1) Implement try-catch in all API calls, (2) Handle network and auth errors, (3) Provide user-friendly error messages, (4) Implement retry logic, (5) Log errors for debugging, (6) Add fallback behaviors, (7) Test with simulated failures.",
-      "reasoning": "Ensuring robust error handling and resilience across many APIs and features is highly complex and critical for reliability."
-    },
-    {
-      "taskId": 40,
-      "taskTitle": "Conduct Security Review and Implement Data Privacy Measures",
-      "complexityScore": 9,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Expand into: (1) Review code for vulnerabilities, (2) Ensure data encryption at rest and in transit, (3) Audit API key handling, (4) Develop privacy policy, (5) Implement user privacy controls, (6) Sanitize inputs/outputs, (7) Test compliance with Chrome policies, (8) Perform security audit.",
-      "reasoning": "Security and privacy reviews are highly complex, requiring expertise, thoroughness, and compliance with industry standards and platform policies."
+      "expansionPrompt": "Break down into subtasks for user guide writing, developer documentation, API reference, setup instructions, and documentation review/testing.",
+      "reasoning": "Documentation is broad but not technically complex, involving clear communication and coverage of all MVP features."
     }
   ]
 }

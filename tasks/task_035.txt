@@ -1,0 +1,11 @@
+# Task ID: 35
+# Title: MVP Documentation (User & Developer)
+# Status: pending
+# Dependencies: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34
+# Priority: medium
+# Description: Finalize documentation for MVP features, including user guides for setting up data sources and using in-meeting assistance, and internal developer documentation for key architectural components and APIs.
+# Details:
+User Docs: How to install extension, connect data sources, interpret briefings/GEMs, use AI chat. Developer Docs: System architecture, data models, API specifications, setup instructions for dev environment. Store in project repo (e.g., Markdown files in a `/docs` folder).
+
+# Test Strategy:
+Review documentation for clarity, accuracy, and completeness. Have a non-developer test user docs. Have a new developer try to set up project using dev docs.

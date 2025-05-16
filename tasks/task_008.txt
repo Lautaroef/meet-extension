@@ -1,0 +1,286 @@
+# Task ID: 8
+# Title: Chrome Extension Basic Structure (WXT)
+# Status: done
+# Dependencies: 1, 5
+# Priority: high
+# Description: Set up the basic structure for the Chrome Extension using WXT, including entry points for background scripts, content scripts, and popup/options UI if needed. Ensure inter-script communication mechanisms are understood.
+# Details:
+Define manifest entries in `wxt.config.ts` for background service worker, content scripts (targetting meeting platforms like Google Meet, Zoom web). Create basic HTML/TS files for any UI elements (e.g., popup). Plan for message passing between components (e.g., `wxt/storage`, `browser.runtime.sendMessage`).
+
+# Test Strategy:
+Load the extension in Chrome. Verify background script runs, content script injects into a test page, and basic message passing works.
+
+# Subtasks:
+## 1. Define Manifest Entries [done]
+### Dependencies: None
+### Description: Create and configure the manifest.json file, specifying extension metadata, permissions, background scripts, content scripts, and UI pages (popup/options).
+### Details:
+Include required fields such as name, version, manifest_version, permissions, background, content_scripts, action (for popup), and options_page as needed.
+<info added on 2025-05-12T02:41:27.485Z>
+For the WXT-based Chrome extension, follow these steps to define manifest entries:
+
+1. Review and update the `package.json` file in `live-meeting-assistant/live-meeting-assistant/extension/package.json` to ensure it has an appropriate description for the extension.
+
+2. Modify the `wxt.config.ts` file in the extension directory:
+   - Add a `manifest` property to the `defineConfig` object
+   - Set the extension `name` (e.g., "Live Meeting Assistant") and `description`
+   - Configure required permissions in an array: ["storage", "activeTab", "scripting", "tabs"]
+   - Add an `entrypoints` property to define content scripts, for example:
+     ```typescript
+     entrypoints: {
+       'meeting-content': {
+         matches: ['*://meet.google.com/*', '*://*.zoom.us/wc/*'],
+         // WXT will look for src/entrypoints/meeting-content.ts
+       },
+     },
+     ```
+
+3. Create a placeholder content script file at `live-meeting-assistant/live-meeting-assistant/extension/src/entrypoints/meeting-content.ts` (this will be developed in Subtask 8.3).
+
+4. Build and verify the manifest by running `npm run build` in the extension directory, then inspect the generated `manifest.json` in the `.output/chrome-mv3/` directory to confirm all settings are correctly applied.
+
+Note that WXT will handle the generation of the actual manifest.json file based on the configuration in wxt.config.ts, simplifying the manifest management process.
+</info added on 2025-05-12T02:41:27.485Z>
+<info added on 2025-05-12T02:48:15.597Z>
+When creating a content script placeholder for WXT, it's important to use the proper WXT helper functions to define entrypoints. The content script must export a default using `defineContentScript` from 'wxt/sandbox'.
+
+Create the placeholder content script file at `live-meeting-assistant/live-meeting-assistant/extension/src/entrypoints/meeting-content.ts` with this structure:
+
+```typescript
+// live-meeting-assistant/live-meeting-assistant/extension/src/entrypoints/meeting-content.ts
+import { defineContentScript } from 'wxt/sandbox';
+import logger from '@/utils/logger';
+
+export default defineContentScript({
+  main() {
+    logger.info('Meeting content script executing main().');
+    // Content script logic will be added in Subtask 8.3
+  },
+});
+```
+
+This properly uses WXT's `defineContentScript` helper function which is required for all content script entrypoints. The default export is necessary for WXT to properly recognize and build the content script. This structure will resolve the "Default export not found" build error.
+
+Make sure the logger utility is properly set up in the project, or remove that import if it's not available yet.
+</info added on 2025-05-12T02:48:15.597Z>
+
+## 2. Set Up Background Script [done]
+### Dependencies: 8.1
+### Description: Develop the background script to handle core extension logic, event listeners, and communication with other extension components.
+### Details:
+Implement event handlers and message listeners in the background script. Ensure it is referenced correctly in the manifest.
+<info added on 2025-05-12T03:01:22.970Z>
+The background script should be implemented in the file path `live-meeting-assistant/live-meeting-assistant/extension/src/entrypoints/background.ts` using WXT's `defineBackground` helper imported from `#imports`. 
+
+The implementation should include:
+1. A startup log message when the service worker starts
+2. An `onInstalled` event listener to track installation and update events
+3. A `runtime.onMessage` listener to handle communication with other parts of the extension
+
+The background script should follow this structure:
+```typescript
+// live-meeting-assistant/live-meeting-assistant/extension/src/entrypoints/background.ts
+import { defineBackground } from '#imports';
+import logger from '@/utils/logger';
+
+export default defineBackground(() => {
+  logger.info('Background service worker started.');
+
+  browser.runtime.onInstalled.addListener((details) => {
+    logger.info('Extension installed or updated.', { reason: details.reason, previousVersion: details.previousVersion });
+  });
+
+  browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    logger.debug('Message received in background script:', { message, sender });
+    if (message.action === 'getBackgroundInfo') {
+      sendResponse({ info: 'Info from background.', timestamp: Date.now() });
+      return true;
+    }
+  });
+});
+```
+
+This implementation provides the basic structure for the background script with essential event listeners and logging functionality. The script will be able to respond to installation events and handle messages from other parts of the extension, such as content scripts or popup pages.
+</info added on 2025-05-12T03:01:22.970Z>
+
+## 3. Set Up Content Script [done]
+### Dependencies: 8.1
+### Description: Create the content script to interact with web page DOMs and facilitate communication with the background script.
+### Details:
+Write JavaScript that will be injected into specified web pages, as defined in the manifest. Ensure it can send and receive messages to/from the background script.
+<info added on 2025-05-12T03:02:48.505Z>
+Write JavaScript that will be injected into specified web pages, as defined in the manifest. Ensure it can send and receive messages to/from the background script.
+
+The content script will be implemented in `live-meeting-assistant/live-meeting-assistant/extension/src/entrypoints/meetingScript.content.ts` using the `defineContentScript` function. The script should be configured to match meeting platform URLs including Google Meet, Zoom, and Webex.
+
+Implementation plan:
+1. Set up the content script with appropriate URL matching patterns:
+   - '*://meet.google.com/*'
+   - '*://*.zoom.us/wc/*'
+   - '*://*.webex.com/*'
+
+2. Configure the script to run at 'document_idle' to ensure the page is fully loaded
+
+3. Implement the main() function with the following initial logic:
+   - Log the current URL (window.location.href) to confirm script execution on expected pages
+   - Log document.title as a basic DOM interaction test
+   - Implement a setTimeout (3 seconds) to test background script communication
+   - Send a test message to the background script with format: { action: 'pingFromContentScript', url: window.location.href }
+   - Log the response or any errors from the communication attempt
+
+4. Import and use the logger utility for consistent logging throughout the extension
+
+This implementation will verify that:
+- The content script is properly injected into the target meeting platforms
+- Basic DOM interaction is working
+- Communication with the background script is functioning
+</info added on 2025-05-12T03:02:48.505Z>
+<info added on 2025-05-12T03:09:52.847Z>
+The content script will be implemented in `live-meeting-assistant/live-meeting-assistant/extension/src/entrypoints/meetingScript.content.ts` using the `defineContentScript` function. The script should be configured to match meeting platform URLs including Google Meet, Zoom, and Webex.
+
+Implementation plan:
+1. Set up the content script with appropriate URL matching patterns:
+   - '*://meet.google.com/*'
+   - '*://*.zoom.us/wc/*'
+   - '*://*.webex.com/*'
+
+2. Configure the script to run at 'document_idle' to ensure the page is fully loaded
+
+3. Implement the main() function with the following initial logic:
+   - Log the current URL (window.location.href) to confirm script execution on expected pages
+   - Log document.title as a basic DOM interaction test
+   - Implement a setTimeout (3 seconds) to test background script communication
+   - Send a test message to the background script with format: { action: 'pingFromContentScript', url: window.location.href }
+   - Log the response or any errors from the communication attempt
+
+4. Import and use the logger utility for consistent logging throughout the extension
+
+This implementation will verify that:
+- The content script is properly injected into the target meeting platforms
+- Basic DOM interaction is working
+- Communication with the background script is functioning
+
+Debugging message passing between content script and background script:
+
+1. Modify background.ts:
+   - Add a specific case to the onMessage listener to handle message.action === 'pingFromContentScript'
+   - Log receipt of the message using logger.info
+   - Send a simple acknowledgment response back to the content script
+
+2. Modify meetingScript.content.ts:
+   - Change the main() function to be async
+   - Remove the setTimeout delay that was previously used
+   - Attempt to send message using browser.runtime.sendMessage({ action: 'pingFromContentScript', url: window.location.href }) immediately after the initial logs
+   - Use logger.info for logging both the send attempt and the response to ensure visibility in the console
+   - Add proper error handling with try/catch to capture and log any errors during message sending
+
+3. Testing approach:
+   - Rebuild the extension after making these changes
+   - Test on target meeting platforms
+   - Check both the content script console and background service worker console for logs and errors
+   - Look specifically for "Extension context invalidated" errors and their timing
+   - Verify if the background script receives the message and if the content script receives the response
+
+This revised approach aims to reduce potential timing issues and ensure the background script is actively listening for the specific message type being sent from the content script.
+</info added on 2025-05-12T03:09:52.847Z>
+
+## 4. Create Popup/Options UI [done]
+### Dependencies: 8.1
+### Description: Design and implement the popup and/or options page UI for user interaction and extension customization.
+### Details:
+Develop HTML, CSS, and JavaScript for the popup and options pages. Link them in the manifest under 'action' and 'options_page'.
+<info added on 2025-05-12T03:12:18.648Z>
+This subtask involves developing the user interface components for both the popup and options pages of the Chrome extension.
+
+## Implementation Plan:
+
+1. **Popup UI**
+   - Utilize the existing popup structure in `src/entrypoints/popup/` created by the WXT template as the foundation
+   - The popup will serve as the primary user interaction point when clicking the extension icon
+
+2. **Options Page Implementation**
+   - Create `src/entrypoints/options/index.html` with basic HTML structure that references `main.tsx`
+   - Develop `src/entrypoints/options/main.tsx` with a simple React component displaying placeholder text ("Settings will go here")
+   - Include console logging for development verification
+
+3. **Configuration Updates**
+   - Modify `wxt.config.ts` to register the options page by adding the following to the manifest object:
+     ```typescript
+     options_ui: {
+       page: "entrypoints/options/index.html",
+       open_in_tab: true
+     },
+     ```
+
+4. **Verification Process**
+   - Build the extension using `npm run build`
+   - Reload the extension in Chrome's extension management page
+   - Test the options page by right-clicking the extension icon and selecting "Options"
+   - Confirm the placeholder options page loads correctly
+
+Both UI components will be linked in the manifest under 'action' (for popup) and 'options_ui' (for options page) to ensure proper integration with the extension.
+</info added on 2025-05-12T03:12:18.648Z>
+
+## 5. Implement and Test Message Passing [done]
+### Dependencies: 8.2, 8.3, 8.4
+### Description: Establish and verify message passing between background, content scripts, and UI components to ensure proper communication and data flow.
+### Details:
+Use the Chrome extensions messaging API to send and receive messages between scripts. Test communication paths and handle responses appropriately.
+<info added on 2025-05-12T03:15:49.092Z>
+Use the Chrome extensions messaging API to send and receive messages between scripts. Test communication paths and handle responses appropriately.
+
+## Part 1: Popup to Background Communication
+
+### Implementation Steps
+1. Modify `.../extension/src/entrypoints/popup/App.tsx`:
+   - Add a new button labeled "Get Info from Background"
+   - Implement an onClick handler for this button
+   - Inside the handler, use `browser.runtime.sendMessage({ action: 'getBackgroundInfo' })`
+   - Implement with async/await and proper try/catch error handling
+   - Log successful responses with `logger.info`
+   - Log any errors with `logger.error`
+
+2. Background Script (`background.ts`):
+   - Verify the existing message listener handles `{ action: 'getBackgroundInfo' }` requests
+   - Ensure it sends an appropriate response back to the popup
+
+### Testing Procedure
+1. Build the extension (`npm run build` in extension directory)
+2. Reload the unpacked extension in `chrome://extensions`
+3. Open the extension popup
+4. Click the "Get Info from Background" button
+5. Expected Results:
+   - Popup Console: Should display a log showing the response from background (e.g., `{ info: 'This is some info from the background script.', timestamp: ... }`)
+   - Background Service Worker Console: Should show a log with `Message received in background script:` and the `getBackgroundInfo` action
+
+This implementation will verify the Popup → Background communication path is working correctly.
+</info added on 2025-05-12T03:15:49.092Z>
+<info added on 2025-05-12T03:29:26.582Z>
+## Part 2: Debugging Background Script Message Listener
+
+After implementing the Popup to Background communication, we've identified that while the popup successfully receives responses from the background script, the initial debug log in the background script's message listener is not appearing in the service worker console.
+
+### Issue Identified
+The `logger.debug()` statements in the background script aren't showing up in the console, even in development mode. This might be because `process.env.NODE_ENV` is still set to 'production' in the background script context, causing debug logs to be suppressed.
+
+### Debugging Steps
+1. **Modify `background.ts`**:
+   - Change the first log statement inside `browser.runtime.onMessage.addListener` from `logger.debug(...)` to `logger.info(...)`
+   - Replace with: `logger.info('BG SCRIPT: Message received (onMessage entry):', { messageAction: message?.action });`
+   - This ensures the log bypasses any NODE_ENV check and will be visible regardless of environment
+
+2. **Testing Procedure**:
+   - Run `npm run dev` for the extension
+   - Reload the extension in Chrome
+   - Open the extension popup
+   - Click the "Get Info from Background" button
+   - Check the Service Worker console (should now show the new logger.info message)
+   - Verify the popup console still shows the successful response
+
+3. **Expected Results**:
+   - Service Worker Console: Should display "BG SCRIPT: Message received (onMessage entry): ..." confirming the listener is being invoked
+   - Popup Console: Should still show the successful response from the background script
+
+This debugging approach will help confirm if the issue is with the logger level configuration or if there's a more fundamental problem with the message listener.
+</info added on 2025-05-12T03:29:26.582Z>
+

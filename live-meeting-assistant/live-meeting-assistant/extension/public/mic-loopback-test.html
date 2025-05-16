@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mic Loopback Test</title>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; margin-top: 20px; }
+        button { padding: 10px 20px; font-size: 16px; margin-bottom: 15px; }
+        audio { margin-top: 15px; }
+        #status { margin-top: 10px; font-style: italic; }
+    </style>
+</head>
+<body>
+    <h1>Microphone Loopback Test Page</h1>
+    <p>This page will request microphone access and play your voice back to you.</p>
+    <button id="startMicButton">Start Microphone Loopback</button>
+    <audio id="loopbackAudio" controls></audio>
+    <div id="status">Status: Idle</div>
+
+    <script src="./mic-loopback-test.js"></script> 
+</body>
+</html> 

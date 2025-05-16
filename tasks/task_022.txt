@@ -1,0 +1,11 @@
+# Task ID: 22
+# Title: 'GEM' Alert UI Component (Chrome Ext)
+# Status: pending
+# Dependencies: 8
+# Priority: medium
+# Description: Design and implement a non-intrusive UI component in the Chrome Extension to display 'GEM' alerts. Alerts should appear briefly (e.g., top-right) and then fade out.
+# Details:
+Create a UI element (e.g., a toast notification) using HTML/CSS/JS injected by a content script. Style it to be noticeable but not distracting. Implement fade-in/fade-out animations. Ensure it doesn't interfere with meeting platform controls.
+
+# Test Strategy:
+Test alert display on various meeting platforms. Verify visibility, timing, and non-intrusiveness. Test with multiple alerts appearing in succession.

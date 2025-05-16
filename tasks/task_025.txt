@@ -1,0 +1,54 @@
+# Task ID: 25
+# Title: AI Chat Interface (Gemini via Backend in Drawer)
+# Status: pending
+# Dependencies: 23, 13, 20, 19
+# Priority: high
+# Description: Implement a basic interactive AI chat interface within the AI Assistant Drawer. This interface will connect to Gemini via our Next.js backend API (detailed in Subtask 19.4), allowing users to ask questions and receive live insights based on synced data and meeting context. The backend will manage the direct interaction with the Gemini model.
+# Details:
+Key implementation details include:
+- Creating a chat input field and a message display area within the AI Assistant Drawer.
+- Sending user queries, along with relevant context (e.g., recent transcript, synced data summaries), to the designated Next.js backend API endpoint (from Subtask 19.4).
+- The backend API will then forward these requests to Gemini and return the responses.
+- Displaying AI responses received from the backend in the chat interface.
+- Managing conversation history effectively within the new communication flow.
+- Prioritizing the use of structured JSON output from Gemini (facilitated by the backend) if it can enhance chat features, such as displaying rich content or interactive elements.
+
+# Test Strategy:
+Testing will cover:
+- Sending queries to the Next.js backend API and verifying successful receipt of responses originating from Gemini.
+- Ensuring context (transcript, synced data) is correctly passed to the backend and utilized effectively by Gemini for generating relevant responses.
+- Thorough UI testing for chat interaction, including message input, display, and scrolling.
+- Verifying the correct handling and rendering of structured JSON responses from the backend, if this feature is implemented.
+- End-to-end testing of the chat flow from user input to AI response display via the backend.
+
+# Subtasks:
+## 25.1. Update frontend to call Next.js backend API [pending]
+### Dependencies: None
+### Description: Modify the frontend chat interface to send requests to the Next.js backend API (specified in Subtask 19.4) instead of directly calling an external AI provider.
+### Details:
+
+
+## 25.2. Adapt frontend for backend responses (Gemini) [pending]
+### Dependencies: None
+### Description: Adapt the frontend to correctly process and display responses received from the Next.js backend, which now communicates with Gemini. This includes handling any new data structures or error formats.
+### Details:
+
+
+## 25.3. Ensure conversation history compatibility [pending]
+### Dependencies: None
+### Description: Verify and update the conversation history management logic on the frontend to ensure it's compatible with the new backend communication flow and data structures.
+### Details:
+
+
+## 25.4. Handle structured JSON output from Gemini (via backend) [pending]
+### Dependencies: None
+### Description: Investigate the potential for Gemini to return structured JSON via the backend. If beneficial, implement frontend handling for such structured responses to enhance chat features (e.g., rich content, actions).
+### Details:
+
+
+## 25.5. Update tests for new architecture [pending]
+### Dependencies: None
+### Description: Update existing unit, integration, and end-to-end tests, and create new ones as necessary, to reflect the change in AI provider (Gemini via backend) and the updated communication flow.
+### Details:
+
+

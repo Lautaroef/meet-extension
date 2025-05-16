@@ -1,0 +1,11 @@
+# Task ID: 18
+# Title: Chrome Extension UI for 'Waiting Room Warm-Up'
+# Status: pending
+# Dependencies: 8
+# Priority: medium
+# Description: Develop the UI component within the Chrome Extension to display the 'Waiting Room Warm-Up' summary. This should be a minimalistic and non-intrusive overlay on meeting platform waiting room screens (e.g., Google Meet, Zoom web).
+# Details:
+Use WXT content scripts to inject HTML/CSS into target meeting platform pages. Design a discreet UI (e.g., small, dismissible panel). Fetch summary data from an API endpoint (Task 19). Ensure adaptability to different platform UIs.
+
+# Test Strategy:
+Test UI injection and display on supported meeting platforms. Verify content is displayed correctly and UI is non-intrusive. Test responsiveness to page layout changes.

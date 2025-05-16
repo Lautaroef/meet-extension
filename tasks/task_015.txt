@@ -1,0 +1,11 @@
+# Task ID: 15
+# Title: `open-deep-research` Integration Setup
+# Status: pending
+# Dependencies: 2
+# Priority: medium
+# Description: Set up and configure the `open-deep-research` tool. This may involve hosting it as a separate service if it's a Python application. Develop an API interface for the Next.js app to query it for specific individuals.
+# Details:
+Clone `open-deep-research` from https://github.com/nickscamara/open-deep-research. Follow its setup instructions. If Python-based, consider Dockerizing and deploying as a microservice. Create an API endpoint (e.g., in Next.js or the service itself) that accepts a person's name/profile URL and returns research findings.
+
+# Test Strategy:
+Verify the `open-deep-research` service is operational. Test its API endpoint with sample queries and validate the structure and relevance of the returned data.

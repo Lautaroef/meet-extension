@@ -1,0 +1,11 @@
+# Task ID: 23
+# Title: AI Assistant Drawer UI Shell (Chrome Ext)
+# Status: pending
+# Dependencies: 8
+# Priority: medium
+# Description: Develop the basic UI shell for the AI Assistant Drawer in the Chrome Extension. This drawer will house the 'Past GEMs' log and the AI chat interface.
+# Details:
+Create a collapsible/expandable drawer or sidebar UI injected into the meeting page. Use WXT for managing this UI component. It should be accessible via a toggle button. Structure for 'Past GEMs' list and chat input/output area.
+
+# Test Strategy:
+Test drawer opening/closing, layout, and responsiveness on target meeting platforms. Ensure it integrates smoothly with the page.

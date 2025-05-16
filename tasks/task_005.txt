@@ -1,0 +1,304 @@
+# Task ID: 5
+# Title: Initial Error Handling & Logging Framework Setup
+# Status: done
+# Dependencies: 1, 2
+# Priority: high
+# Description: Implement a basic error handling and logging framework for both the WXT Chrome Extension and the Next.js web application. This should include centralized logging functions and consistent error response formats.
+# Details:
+Next.js: Create utility functions for API error responses and client-side error boundaries. Consider a simple logger (e.g., `pino` or `console` wrappers). WXT: Implement error handling in background scripts and content scripts, potentially logging to extension console or a remote service for debugging.
+
+# Test Strategy:
+Verify that errors are caught gracefully and logged in a structured format in both environments. Test with intentionally thrown errors.
+
+# Subtasks:
+## 1. Design comprehensive error handling approach [done]
+### Dependencies: None
+### Description: Create a unified error handling strategy that works across both Next.js and WXT environments
+### Details:
+Define error categories (expected vs. unexpected), establish error response formats, create custom error classes, and determine logging levels. Consider centralized error handling module with utility functions for consistent error management across platforms.
+<info added on 2025-05-12T02:11:26.845Z>
+Define error categories (expected vs. unexpected), establish error response formats, create custom error classes, and determine logging levels. Consider centralized error handling module with utility functions for consistent error management across platforms.
+
+The comprehensive error handling and logging framework will follow these design principles:
+
+I. Core Principles:
+1. Consistency across Next.js webapp & WXT extension environments
+2. Actionable logs with timestamps, context, and stack traces
+3. Graceful user experience with no raw errors exposed in UI
+4. Developer-friendly logging and error handling patterns
+5. Security-focused approach avoiding sensitive data in logs
+
+II. Error Categories:
+1. Expected/User Errors: Display user-friendly UI messages, log at WARN/INFO levels
+2. Operational/Recoverable Errors: Implement retry mechanisms where applicable, log at ERROR level, inform user with generic messages
+3. Unexpected/Programmer Errors: Log at ERROR/FATAL levels with complete stack traces, utilize Error Boundaries for UI protection
+
+III. Logging Levels Hierarchy:
+- DEBUG: Detailed debugging information
+- INFO: General operational information
+- WARN: Warning conditions that don't affect normal operation
+- ERROR: Error conditions disrupting operations
+- FATAL: Critical errors requiring immediate attention (primarily for severe issues)
+
+IV. Implementation Strategy:
+- Next.js (Webapp):
+  * Client-side: Create utility logger in webapp/src/lib/logger.ts wrapping console methods, implement React Error Boundaries
+  * Server-side: Use same utility logger with standardized API error response formats
+- WXT (Chrome Extension):
+  * Background/Content Scripts: Implement utility logger in extension/src/utils/logger.ts
+  * Popup/Options UI: Utilize utility logger with React Error Boundaries
+- Remote Logging: Plan for future integration with services like Sentry, but start with console logging for MVP
+
+V. Custom Error Classes:
+- Create a base AppError class extending Error
+- Implement specific error types (ApiError, ValidationError, etc.) extending the base class
+- Include properties for error codes, status codes, and contextual information
+- Example structure:
+  ```typescript
+  export class AppError extends Error {
+    constructor(message: string, public readonly code?: string, public readonly statusCode?: number) {
+      super(message);
+      this.name = this.constructor.name;
+    }
+  }
+  export class ApiError extends AppError { /* ... */ }
+  ```
+
+This design document serves as the foundation for the error handling and logging framework. Implementation of loggers and error classes will be addressed in subsequent subtasks.
+</info added on 2025-05-12T02:11:26.845Z>
+
+## 2. Implement logging utilities for Next.js [done]
+### Dependencies: 5.1
+### Description: Develop logging infrastructure for the Next.js application
+### Details:
+Create logging service with different severity levels, implement error boundary components for client-side errors, set up custom 404 and 500 error pages, and integrate with server-side error handling. Consider third-party integration for advanced monitoring.
+<info added on 2025-05-12T02:12:12.349Z>
+Create a comprehensive logging utility for the Next.js application with the following implementation plan:
+
+1. Create the logger utility file at `live-meeting-assistant/webapp/src/lib/logger.ts`
+2. Implement a basic logger service that wraps `console` methods (`debug`, `info`, `warn`, `error`)
+3. Include the following features in the logger:
+   - Timestamps in ISO format for all log messages
+   - Formatted messages with appropriate log levels (DEBUG, INFO, WARN, ERROR)
+   - Support for optional context objects to include structured data with logs
+   - Special handling for Error objects in error logs to capture message, stack trace, and error name
+   - Environment-based control for debug logs (disabled in production unless explicitly enabled)
+   
+The logger implementation will use TypeScript with proper interfaces for type safety. The utility will serve as the foundation for the entire application's logging infrastructure, providing consistent formatting and behavior across all components.
+
+After implementing the base logger utility, subsequent steps will include creating React Error Boundary components for client-side error handling and setting up custom 404 and 500 error pages. The logger will be integrated with server-side error handling to ensure comprehensive error tracking throughout the application.
+
+The implementation will follow best practices for Next.js applications, ensuring that logs are properly formatted and contain sufficient context for debugging issues in both development and production environments.
+</info added on 2025-05-12T02:12:12.349Z>
+<info added on 2025-05-12T02:15:26.912Z>
+I've implemented the ErrorBoundary component for the Next.js application as part of our error handling framework. The component is designed to catch JavaScript errors in the component tree, log them appropriately using our logger utility, and display a user-friendly fallback UI.
+
+The ErrorBoundary component has been created at `live-meeting-assistant/webapp/src/components/ErrorBoundary.tsx` with the following key features:
+- Implements React's error boundary pattern using a class component
+- Captures errors with getDerivedStateFromError and componentDidCatch lifecycle methods
+- Integrates with our logger utility to record errors with component stack traces
+- Provides a customizable fallback message through props
+- Shows detailed error information only in non-production environments
+- Uses Tailwind CSS for styling the error display
+
+The implementation includes TypeScript interfaces for props and state, ensuring type safety throughout the component. The error boundary can be used to wrap any component or section of the application that needs isolated error handling.
+
+Next steps will include:
+1. Creating custom 404 and 500 error pages
+2. Implementing higher-order components to easily wrap common sections with error boundaries
+3. Setting up global error handling for unhandled exceptions
+
+This implementation aligns with the comprehensive error handling approach designed in subtask 5.1 and prepares for the logging implementation for WXT in subtask 5.3.
+</info added on 2025-05-12T02:15:26.912Z>
+
+## 3. Implement logging for WXT [done]
+### Dependencies: 5.1
+### Description: Develop equivalent logging infrastructure for the WXT environment
+### Details:
+Adapt the logging utilities to work within WXT's architecture, ensuring consistent error handling between platforms. Implement background script error handling and content script error capture mechanisms specific to browser extension context.
+<info added on 2025-05-12T02:16:55.076Z>
+Adapt the logging utilities to work within WXT's architecture, ensuring consistent error handling between platforms. Implement background script error handling and content script error capture mechanisms specific to browser extension context.
+
+Implementation plan:
+1. Create a dedicated logger utility file at `live-meeting-assistant/live-meeting-assistant/extension/src/utils/logger.ts`
+2. Implement a logger service that wraps console methods (debug, info, warn, error) with enhanced functionality
+3. Include the following features in the WXT logger:
+   - Timestamp generation for all log messages
+   - Formatted messages with log levels (DEBUG, INFO, WARN, ERROR)
+   - "EXT:" prefix to distinguish extension logs from other application logs
+   - Support for optional context objects to provide additional debugging information
+   - Special handling for Error objects in logger.error to extract message, stack trace, and error name
+   - Environment-aware debug logging that only outputs in non-production environments
+4. Implement error serialization with fallbacks for unserializable objects
+5. Ensure the logger can be easily imported and used across all extension components (background scripts, content scripts, popups)
+
+The implementation will follow the TypeScript interface pattern with a LogContext interface for structured logging and helper functions for timestamp generation and message formatting.
+</info added on 2025-05-12T02:16:55.076Z>
+
+## 4. Integrate error boundaries across application components [done]
+### Dependencies: 5.2, 5.3
+### Description: Strategically implement error boundaries in both Next.js and WXT components
+### Details:
+Identify critical components that need error boundaries, implement appropriate fallback UIs, ensure error information is properly captured and logged, and verify that errors don't cascade through the application.
+<info added on 2025-05-12T02:17:45.793Z>
+Identify critical components that need error boundaries, implement appropriate fallback UIs, ensure error information is properly captured and logged, and verify that errors don't cascade through the application.
+
+Implementation Plan:
+
+For Next.js webapp:
+1. Import `ErrorBoundary` from `@/components/ErrorBoundary` into `live-meeting-assistant/webapp/src/app/layout.tsx`
+2. Wrap the `{children}` prop within the `<body>` tag with `<ErrorBoundary>` to provide a global error boundary for the webapp
+3. Ensure the ErrorBoundary component includes appropriate fallback UI and error logging
+
+For WXT extension:
+1. Create a similar ErrorBoundary component for the extension's React UI components
+2. Identify key component hierarchies in the extension that need error isolation
+3. Implement component-level error boundaries at strategic points in the component tree
+
+Both implementations should ensure errors are properly captured, logged to our logging system, and prevented from cascading through the application.
+</info added on 2025-05-12T02:17:45.793Z>
+
+## 5. Test error capture and logging system [done]
+### Dependencies: 5.4
+### Description: Verify the complete error handling and logging system works as expected
+### Details:
+Create test scenarios for different error types (client-side, server-side, API errors), verify proper error boundary behavior, confirm logging captures appropriate information, test custom error pages, and ensure user experience remains graceful during errors.
+<info added on 2025-05-12T02:19:12.968Z>
+Create test scenarios for different error types (client-side, server-side, API errors), verify proper error boundary behavior, confirm logging captures appropriate information, test custom error pages, and ensure user experience remains graceful during errors.
+
+Testing Plan:
+
+A. Test Next.js Webapp Error Handling:
+1. Modify `page.tsx`: Add a test button that throws a client-side error when clicked:
+   ```jsx
+   <button onClick={() => { throw new Error("Test Next.js client-side error!"); }}>
+     Throw Client Error
+   </button>
+   ```
+   Add this to `live-meeting-assistant/webapp/src/app/page.tsx`.
+
+2. Run the development server: Execute `npm run dev` in the `live-meeting-assistant/webapp/` directory.
+
+3. Manual verification steps:
+   - Navigate to http://localhost:3000
+   - Click the test button
+   - Expected results:
+     * Fallback UI from ErrorBoundary should display
+     * Development error details should be visible
+     * Check browser console for logger.error message from ErrorBoundary.componentDidCatch
+
+B. Test WXT Extension Error Handling:
+1. Modify Popup `App.tsx`: Add a test button that throws an error in the extension popup:
+   ```jsx
+   <button onClick={() => { throw new Error("Test WXT popup error!"); }}>
+     Throw Popup Error
+   </button>
+   ```
+   Add this to `live-meeting-assistant/live-meeting-assistant/extension/src/entrypoints/popup/App.tsx`.
+
+2. Build and load the extension:
+   - Run `npm run build` in the extension directory
+   - Reload the unpacked extension in Chrome
+
+3. Manual verification steps:
+   - Open the extension popup
+   - Click the test button
+   - Expected results:
+     * Fallback UI from extension's ErrorBoundary should display
+     * Development error details should be visible
+     * Check popup's console for logger.error message
+</info added on 2025-05-12T02:19:12.968Z>
+<info added on 2025-05-12T02:28:18.532Z>
+Based on user testing feedback, we need to follow up on the error handling implementation with specific debugging steps:
+
+A. Next.js Webapp Error Handling Test Results:
+- Confirmed: ErrorBoundary successfully caught and handled 'use client' errors
+- Follow-up needed: Verify if the explicit "Throw Client Error (Webapp)" button also triggered:
+  1. The ErrorBoundary fallback UI display
+  2. The expected console log message from ErrorBoundary.componentDidCatch
+
+B. WXT Extension Error Handling Issues:
+- Problem identified: Error message "Error: Test WXT popup error!" appeared in console, but ErrorBoundary fallback UI did not display
+- Debugging steps:
+  1. Console Log Verification: Check for specific log message "[TIMESTAMP] [ERROR] EXT: WXT ErrorBoundary caught an error" in the popup's console to confirm if the error was actually caught by our boundary
+  2. Fallback UI Simplification: Modify ErrorBoundary.tsx to display a more distinct error UI:
+     ```tsx
+     // In live-meeting-assistant/live-meeting-assistant/extension/src/components/ErrorBoundary.tsx
+     // Update the render method's error state return:
+     return (
+       <div style={{ padding: '20px', backgroundColor: 'red', color: 'white', fontSize: '20px', border: '5px solid yellow' }}>
+         <h1>ERROR CAUGHT BY BOUNDARY!</h1>
+         <p>{this.state.error?.message}</p>
+       </div>
+     );
+     ```
+  3. Re-testing procedure:
+     - Rebuild the extension with `npm run build`
+     - Reload the extension in Chrome
+     - Open popup and click "Throw Popup Error" button
+     - Check for:
+       a. The new red/yellow fallback UI
+       b. The specific componentDidCatch log message
+
+Additional note: Users working with hidden files (like .output folder) should use Command + Shift + . in Finder to toggle visibility of hidden files.
+</info added on 2025-05-12T02:28:18.532Z>
+<info added on 2025-05-12T02:33:01.928Z>
+Based on our previous testing and feedback, we need to focus specifically on render-phase errors, which are a critical test case for React Error Boundaries. The render-phase is when components are being rendered to the DOM, and errors during this phase are exactly what Error Boundaries are designed to catch.
+
+A. Test Next.js Webapp Error Boundary (Render-Phase Error):
+1. Modify `page.tsx` (`live-meeting-assistant/webapp/src/app/page.tsx`):
+   ```typescript
+   // Add at top or as nested component
+   const FaultyComponent = () => {
+     throw new Error("Test Next.js render-phase error!");
+     return <div>Will not render.</div>;
+   };
+
+   // In Home component's return JSX, include:
+   // <FaultyComponent /> 
+   ```
+   For testing, uncomment the `<FaultyComponent />` line to trigger the error.
+
+2. Run the development server: Ensure `npm run dev` is active in the `webapp/` directory.
+
+3. Manual verification steps:
+   a. Navigate to http://localhost:3000
+   b. Expected results:
+      * ErrorBoundary in `layout.tsx` should catch the error immediately
+      * Fallback UI should display without any user interaction
+      * Development error details should be visible
+      * Check browser console for logger.error message from ErrorBoundary.componentDidCatch
+
+4. Cleanup: Comment out or remove `<FaultyComponent />` from `page.tsx` after completing the test.
+
+B. Test WXT Extension Error Boundary (Render-Phase Error):
+1. Modify Popup `App.tsx` (`.../extension/src/entrypoints/popup/App.tsx`):
+   ```typescript
+   // Add at top or as nested component
+   const FaultyPopupComponent = () => {
+     throw new Error("Test WXT popup render-phase error!");
+     return <div>Will not render.</div>;
+   };
+
+   // In App component's return JSX, inside the ErrorBoundary, include:
+   // <FaultyPopupComponent />
+   ```
+   For testing, uncomment the `<FaultyPopupComponent />` line to trigger the error.
+
+2. Build and load the extension:
+   - Run `npm run build` in the extension directory
+   - Reload the unpacked extension in Chrome
+
+3. Manual verification steps:
+   a. Open the extension popup
+   b. Expected results:
+      * ErrorBoundary in popup `App.tsx` should catch the error immediately
+      * Fallback UI should display without any user interaction
+      * Development error details should be visible
+      * Check popup's console for logger.error message from ErrorBoundary.componentDidCatch
+
+4. Cleanup: Comment out or remove `<FaultyPopupComponent />` from popup `App.tsx` after completing the test.
+
+This revised testing approach focuses on the primary use case for Error Boundaries - catching errors during the component rendering phase, which is different from the event handler errors we tested previously.
+</info added on 2025-05-12T02:33:01.928Z>
+

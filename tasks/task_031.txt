@@ -1,0 +1,48 @@
+# Task ID: 31
+# Title: Implement 'Intelligent Recap for Late Joiners' (Basic)
+# Status: pending
+# Dependencies: 20, 8, 25, 19, 23
+# Priority: medium
+# Description: Implement the 'Intelligent Recap for Late Joiners' feature. When a user with the extension joins mid-meeting, fetch the available prior transcript, send it to the backend for summarization using Gemini, and display the generated recap discreetly to the user.
+# Details:
+1. Detect when the extension initializes and the user has joined a meeting that is already in progress.
+2. **Transcript Source for Late Joiner (Needs Design):** Determine how a late-joining user's extension can access the transcript accrued so far. Options include sharing via backend from another user, backend storage, or potentially limiting scope for MVP if too complex. Assume for now that *some* portion of the prior transcript can be made available.
+3. The extension sends this available prior transcript to our Next.js backend API (related to Subtask 19.4).
+4. The backend API (Subtask 19.4) prompts the Gemini API with this transcript, asking for a concise recap of key topics discussed.
+5. Gemini's response (the recap text) is returned by the backend to the extension.
+6. The extension displays this recap discreetly to the late joiner, likely within the AI Assistant Drawer (Task 23).
+
+# Test Strategy:
+Simulate joining a meeting late. Test the mechanism for obtaining the prior transcript (once designed/implemented). Verify the request sent to the backend with a mock transcript and the response received. Test the display of the recap in the designated UI area (e.g., AI Drawer). Evaluate the quality and conciseness of Gemini-generated recaps once the backend integration is live.
+
+# Subtasks:
+## 31.1. Implement late join detection logic [pending]
+### Dependencies: None
+### Description: 
+### Details:
+
+
+## 31.2. Design and implement mechanism for late joiner transcript retrieval [pending]
+### Dependencies: None
+### Description: 
+### Details:
+Investigate and implement the best approach for getting prior transcript data (e.g., backend sharing, direct P2P, etc.). Define fallback if no prior transcript is available.
+
+## 31.3. Implement extension logic to send transcript to backend API [pending]
+### Dependencies: None
+### Description: 
+### Details:
+Requires coordination on the API endpoint defined in Subtask 19.4.
+
+## 31.4. Implement extension logic to receive and handle recap from backend [pending]
+### Dependencies: None
+### Description: 
+### Details:
+
+
+## 31.5. Implement UI for displaying the recap [pending]
+### Dependencies: None
+### Description: 
+### Details:
+Display the received recap text discreetly, likely integrating with the AI Assistant Drawer (Task 23).
+

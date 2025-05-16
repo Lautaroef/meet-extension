@@ -1,0 +1,11 @@
+# Task ID: 13
+# Title: Data Storage Logic (Processed Insights to Supabase via Prisma)
+# Status: pending
+# Dependencies: 3, 12
+# Priority: high
+# Description: Implement logic to store the processed and summarized insights from the Data Processing Service into the Supabase database using Prisma. Ensure data is indexed for efficient retrieval.
+# Details:
+Use Prisma Client to write processed data to relevant Supabase tables (e.g., `SyncedItemInsights`). Ensure foreign key relationships (to users, original data sources) are maintained. Add database indexes on frequently queried columns (e.g., `user_id`, `created_at`, keywords).
+
+# Test Strategy:
+Verify data is correctly inserted/updated in Supabase. Test data retrieval performance with indexes. Ensure data integrity and relationships.

@@ -1,0 +1,11 @@
+# Task ID: 10
+# Title: Notion API Integration (Next.js)
+# Status: pending
+# Dependencies: 6, 7
+# Priority: high
+# Description: Integrate Notion API into the Next.js web app for syncing notes. Allow users to authorize access and select relevant workspaces/pages. Fetch content from selected Notion pages.
+# Details:
+Use `makenotion/notion-sdk-js`. Implement Notion OAuth 2.0 flow. Store API tokens securely. Allow users to specify Notion pages/databases to sync. Fetch page content and block data. API: `client.blocks.children.list`, `client.pages.retrieve`.
+
+# Test Strategy:
+Test Notion OAuth flow, token management, and fetching content from a test Notion page. Verify correct parsing of Notion block types.

@@ -1,0 +1,161 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  directUrl    = env("DIRECT_URL")
+  relationMode = "prisma" // Recommended for new projects with Supabase
+}
+
+model User {
+  id               String               @id @default(uuid()) // Corresponds to Supabase Auth user ID
+  email            String?              @unique // Can be synced from Supabase Auth
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  dataSources      DataSource[]
+  meetingsAsOwner  Meeting[]            @relation("MeetingOwner")
+  meetingAttendees MeetingParticipant[]
+  preMeetingBriefs PreMeetingBrief[]
+  gemAlerts        GemAlert[]
+  userFeedbacks    UserFeedback[]
+  // Add other app-specific preferences if needed
+}
+
+enum DataSourceType {
+  NOTION
+  GOOGLE_CALENDAR
+  EVERNOTE
+  SALESFORCE
+  HUBSPOT
+  MANUAL_TEXT
+  FILE_UPLOAD
+}
+
+model DataSource {
+  id             String          @id @default(cuid())
+  userId         String
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type           DataSourceType
+  name           String // e.g., "My Work Notion", "Personal Calendar"
+  accessToken    String? // Encrypt this if stored, or use Supabase Vault
+  refreshToken   String? // Encrypt this
+  scope          String? // e.g., specific Notion pages, calendar ID
+  lastSyncedAt   DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  syncedContents SyncedContent[]
+
+  @@index([userId])
+}
+
+model SyncedContent {
+  id           String     @id @default(cuid())
+  dataSourceId String
+  dataSource   DataSource @relation(fields: [dataSourceId], references: [id], onDelete: Cascade)
+  userId       String // Denormalized for easier querying, or query through dataSource
+  contentType  String // e.g., "page_summary", "event_details", "contact_notes"
+  content      Json // The actual summarized/processed content or raw data if small
+  embedding    Json? // Changed from Unsupported("vector")? - Placeholder for vector embeddings if used later
+  sourceItemId String? // Original item ID from the source system (e.g., Notion page ID)
+  processedAt  DateTime   @default(now())
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([dataSourceId])
+  @@index([userId]) // If directly querying by user
+}
+
+model Meeting {
+  id                    String               @id @default(cuid())
+  ownerId               String // User who owns/created this meeting context in our app
+  owner                 User                 @relation("MeetingOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  title                 String?
+  startTime             DateTime
+  endTime               DateTime?
+  sourceCalendarEventId String?              @unique // If from Google Calendar
+  platformUrl           String? // e.g., Google Meet link
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+  participants          MeetingParticipant[]
+  preMeetingBrief       PreMeetingBrief?
+  gemAlerts             GemAlert[]
+
+  @@index([ownerId])
+}
+
+model MeetingParticipant {
+  id        String   @id @default(cuid())
+  meetingId String
+  meeting   Meeting  @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  userId    String? // If the participant is a registered user of our app
+  user      User?    @relation(fields: [userId], references: [id])
+  name      String? // If not a registered user, or as fallback
+  email     String? // Participant's email
+  role      String? // e.g., "Interviewer", "Candidate", "Prospect"
+  insights  Json? // Store insights from open-deep-research or other sources
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([meetingId])
+  @@index([userId])
+}
+
+model PreMeetingBrief {
+  id          String    @id @default(cuid())
+  meetingId   String    @unique
+  meeting     Meeting   @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  userId      String // User for whom this brief was generated
+  user        User      @relation(fields: [userId], references: [id])
+  content     Json // The generated briefing content
+  generatedAt DateTime  @default(now())
+  sentAt      DateTime? // If sent via email
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([userId])
+}
+
+model GemAlert {
+  id           String        @id @default(cuid())
+  meetingId    String
+  meeting      Meeting       @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  userId       String // User who received this alert
+  user         User          @relation(fields: [userId], references: [id])
+  timestamp    DateTime      @default(now()) // When the alert was triggered in the meeting
+  trigger      String? // What triggered the alert (e.g., keyword, context)
+  content      String // The text of the alert
+  userFeedback UserFeedback? // Link to feedback if provided
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([meetingId])
+  @@index([userId])
+}
+
+enum FeedbackRating {
+  HELPFUL
+  NOT_HELPFUL
+  NEUTRAL
+}
+
+model UserFeedback {
+  id         String         @id @default(cuid())
+  userId     String
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gemAlertId String?        @unique // If feedback is for a specific GEM alert
+  gemAlert   GemAlert?      @relation(fields: [gemAlertId], references: [id])
+  rating     FeedbackRating
+  comment    String?
+  createdAt  DateTime       @default(now())
+
+  @@index([userId])
+}

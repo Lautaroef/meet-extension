@@ -1,0 +1,216 @@
+# Overview
+The Live Meeting Assistant is a Chrome extension designed to revolutionize how users prepare for, participate in, and benefit from live online meetings. It acts as a "second brain," providing pre-meeting intelligence, real-time contextual insights ("hidden gems"), and a way to interact with an AI assistant during the meeting. The primary goal is to make users more confident, prepared, and productive, ensuring they never miss crucial points and can leverage their knowledge effectively. Initially targeting users of popular web-based meeting platforms via a Chrome extension, the long-term vision includes a standalone application.
+
+# Core Features
+
+## MVP - Chrome Extension
+
+### Phase 1: Pre-Meeting Preparation & Intelligence
+1.  **Data Integration & Sync:**
+    *   Securely sync with users' designated "sources of truth":
+        *   Note-taking apps (e.g., Notion, Evernote).
+        *   CRMs (e.g., Salesforce, Hubspot).
+        *   Text files or other manually uploaded/pasted content.
+        *   Google Calendar for meeting context.
+    *   Daily (or configurable) process to check for updates from these sources.
+    *   Process synced data (potentially using Gemini for large contexts) and store summarized/indexed insights in a Supabase database.
+
+2.  **Proactive Guest & Meeting Briefing ("Intelligent Pre-Flight Check")**
+    *   **Delivery:** Automated email sent ~10 minutes before the meeting.
+    *   **Content Generation:** Utilize OpenAI models to generate the briefing based on synced data and meeting attendee information.
+    *   **Briefing Content:**
+        *   **Personality Insights:** Summaries like "reserved, prefers directness, values listening."
+        *   **Engagement Style:** e.g., "For Jordan, be direct and clear. Emphasize data-backed points."
+        *   **Rapport Builders:** e.g., "Jordan enjoys family time and tennis."
+        *   **Contextual Icebreakers:** e.g., "LinkedIn shows Jordan recently shared an article on sustainability – your company's green initiatives could be a relevant talking point." (Leverage deep research on individuals via `open-deep-research` integration for MVP, starting with one person).
+        *   **Key Discussion Points:** AI-generated list of critical items from synced sources.
+
+3.  **On-Screen Pre-Meeting Summary ("Waiting Room Warm-Up")**
+    *   **Delivery:** Display key insights from the briefing email discreetly within the browser on the meeting platform's waiting room screen (adapting to the specific domain like Google Meet, Zoom web client, etc.).
+    *   UI to be minimalistic and non-intrusive.
+
+### Phase 2: During Meeting Assistance
+1.  **Live Meeting Transcription:**
+    *   Integrate ElevenLabs "Scribe" model (or explore alternatives) to capture live audio from the meeting tab and convert it to text in real-time.
+
+2.  **Real-Time Contextual "GEM" Alerts:**
+    *   AI (OpenAI models) analyzes the live transcript and synced user data.
+    *   When a relevant connection or "hidden gem" is detected, display an alert.
+    *   **Alert Display:** Non-intrusive UI component (e.g., top-right, fades after a few seconds).
+    *   **Example Scenarios (as detailed by user):**
+        *   Candidate in an interview (suggesting relevant experiences, STAR method points).
+        *   Recruiter interviewing (pointing out resume discrepancies, alignment with company values).
+        *   Salesperson with a prospect (reminders of differentiators, answers to objections, rapport points).
+        *   Internal team meetings (recalling past decisions, potential conflicts, data checks).
+    *   **Alert Principles:** Brevity, action-oriented/insight-driven, contextual relevance, source connection, positive framing, user discretion.
+
+3.  **AI Assistant Drawer:**
+    *   Accessible UI drawer for deeper AI interaction.
+    *   **Persistent Insights Log ("Past GEMs"):** Scrollable log of all "GEM" alerts from the current meeting.
+    *   **Interactive AI Chat Interface:** Chat window to query the AI assistant (OpenAI) for live insights, clarifications, or specific information.
+    *   **AI Quick Actions ("Smart Chips"):**
+        *   Contextually relevant, pre-defined clickable prompts/commands.
+        *   Dynamically adapt based on conversation flow or available data.
+        *   **Examples (as detailed by user):**
+            *   💡 "Spark Connection" (Personalized talking points).
+            *   M "Key Takeaways So Far" (Real-time summary).
+            *   🎯 "Revisit Key Topics" (Pending agenda items).
+            *   🔍 "Unpack That" (Deeper info on mentioned terms/entities).
+            *   🤝 "Bridge to Objective" (Steer conversation to goals).
+            *   📊 "Data Point Check" (Verify or pull relevant stats).
+
+4.  **Intelligent Recap for Late Joiners:**
+    *   If a new participant (with the extension installed) joins mid-meeting, provide a non-intrusive recap of key topics discussed so far.
+
+## Future Considerations (Post-MVP)
+1.  **Standalone Desktop Application:**
+    *   Full meeting platform capabilities (video, audio, screen sharing - potentially using Zoom Video SDK).
+    *   Redesigned meeting flow for enhanced UX.
+2.  **Comprehensive Post-Meeting Summaries:**
+    *   Key decisions, action items, sentiment analysis.
+3.  **Searchable Meeting Archive:**
+    *   Natural language query for past meetings and insights.
+4.  **Enhanced Team Collaboration Features.**
+5.  **Deeper Integrations with More Enterprise Tools.**
+6.  **Pricing and Monetization Strategy.**
+7.  **Dedicated Landing Page and Marketing.**
+
+# User Experience
+*   **Chrome Extension First:** Low barrier to entry, users leverage existing meeting platforms.
+*   **"Wow" Factor:** Focus on immediate, undeniable value through intelligent insights and assistance.
+*   **Minimalist & Intuitive UI:** Clean, non-intrusive design. UI components for settings/sync on a separate web app.
+*   **Ease of Use:** Seamless integration into the user's existing workflow.
+*   **User Control:** Alerts and suggestions empower, not command.
+
+# Technical Architecture
+
+## Core Platform: Chrome Extension
+*   **Framework:** WXT (wxt.dev) - chosen for its suitability for Chrome extensions over Next.js for this part.
+    *   Follow WXT project structure (consider `src/` directory).
+    *   Utilize WXT modules as needed (e.g., for a UI framework if WXT doesn't cover all needs for extension UI parts, although @21st-dev/magic is preferred for specific components).
+*   **Language:** TypeScript.
+
+## Web Application (for Settings, Data Sync Management, User Accounts)
+*   **Framework:** Next.js.
+*   **Language:** TypeScript.
+*   **UI Components:** Leverage "@21st-dev/magic" tool for generating UI components (e.g., signup forms, dashboards for managing data sources).
+*   **Styling:** Tailwind CSS (likely, given @21st-dev/magic components often use it).
+
+## Backend & AI
+*   **Speech-to-Text:** ElevenLabs "Scribe" API (URL: https://elevenlabs.io/docs/api-reference/speech-to-text/convert). Research alternatives if necessary.
+*   **Language Models (LLM):** OpenAI APIs.
+    *   Explore: OpenAI Agents Python, OpenAI Realtime Agents, OpenAI Node.js SDK, OpenAI Cookbook for best practices.
+    *   Gemini API for specific tasks like handling large contexts for summarization or structured output (https://ai.google.dev/gemini-api/docs/structured-output).
+*   **Database:** Supabase (PostgreSQL).
+    *   User authentication, storing synced/processed data, user preferences.
+*   **ORM:** Prisma.
+*   **Deep Research on Individuals:** Integrate `open-deep-research` (https://github.com/nickscamara/open-deep-research) – host as a separate service if needed.
+
+## Integrations (Data Sources)
+*   **Note-Taking:**
+    *   Notion: `makenotion/notion-sdk-js` (https://github.com/makenotion/notion-sdk-js).
+    *   Evernote: Evernote Developer Docs (https://dev.evernote.com/doc/reference/NoteStore.html#Fn_NoteStore_createNote).
+*   **CRM:**
+    *   Salesforce: Web search for specific API docs as needed.
+    *   Hubspot: `hubspot/hubspot-api-nodejs` (https://github.com/hubspot/hubspot-api-nodejs).
+*   **Calendar:** Google Calendar API: `google/google-api-javascript-client` (https://github.com/google/google-api-javascript-client).
+*   **File Storage for Manual Uploads:** Supabase Storage or similar.
+
+## Language Choice
+*   Primarily JavaScript/TypeScript ecosystem (WXT, Next.js, Node.js for backend services if any).
+*   Python may be used if specific SDKs (e.g., for some OpenAI agent functionalities or `open-deep-research`) are only available or more mature in Python.
+
+## Data Flow (Pre-Meeting Example)
+1.  User grants access to data sources (Notion, CRM, Calendar, etc.) via the Next.js web app.
+2.  Scheduled process (e.g., daily cron job or triggered by an event) fetches new/updated data.
+3.  Data is processed/summarized (e.g., by Gemini) and stored in Supabase, indexed for quick retrieval.
+4.  ~10 mins before a Google Calendar event, the system fetches relevant summarized data from Supabase.
+5.  OpenAI LLM generates the pre-meeting briefing (email content, on-screen summary content).
+6.  Email is sent; on-screen summary is made available to the Chrome extension.
+
+# Development Roadmap
+
+## Phase 1: MVP (Chrome Extension)
+1.  **Foundation:**
+    *   Setup WXT project (`live-meeting-assistant` directory).
+    *   Setup Next.js project for settings/sync web app.
+    *   Supabase & Prisma setup for database and schema.
+    *   Basic user authentication (Supabase Auth).
+2.  **Core Data Sync:**
+    *   Implement sync with 1-2 key data sources for MVP (e.g., Google Calendar + Notion or manual text input).
+    *   Develop data processing and storage logic in Supabase.
+3.  **Pre-Meeting Features (MVP version):**
+    *   Basic "Intelligent Pre-Flight Check" email (focus on content generation logic).
+    *   Simple "Waiting Room Warm-Up" display in the extension.
+4.  **During Meeting Core (MVP version):**
+    *   Integrate ElevenLabs Scribe for live transcription.
+    *   Develop basic "GEM" Alert system (triggered by simple keywords initially, then more complex logic).
+    *   Implement AI Assistant Drawer with "Past GEMs" log and basic AI Chat (OpenAI).
+5.  **Research & Development:**
+    *   Investigate `open-deep-research` integration for richer people insights.
+    *   Refine LLM prompting for all AI-driven features.
+    *   Explore WXT capabilities for UI and Chrome extension specifics.
+
+## Phase 2: MVP Polish & Initial Feedback
+*   Expand data source integrations.
+*   Refine "GEM" alert intelligence and UI.
+*   Enhance "Smart Chips" functionality.
+*   Gather user feedback and iterate.
+
+## Phase 3: Post-MVP Enhancements (Chrome Extension)
+*   Implement all detailed "Smart Chip" examples.
+*   Full implementation of "Intelligent Recap for Late Joiners."
+*   Broader and deeper integrations.
+
+## Phase 4: Standalone App Exploration
+*   Evaluate feasibility and user demand for a full desktop application.
+*   Begin design and architecture planning if pursued.
+
+# Logical Dependency Chain
+1.  User Authentication and Basic Account Management (Supabase, Next.js app).
+2.  Core Data Sync Mechanism (selected sources to Supabase).
+3.  Live Transcription Service (ElevenLabs Scribe integration into WXT extension).
+4.  LLM Integration for Basic Insights (OpenAI into WXT extension, interacting with Supabase data).
+5.  Chrome Extension UI for displaying pre-meeting info and during-meeting drawer/alerts (WXT).
+6.  Pre-Meeting Briefing Email Generation and Delivery.
+7.  Iterative improvement of GEM alerts, Smart Chips, and overall AI intelligence.
+
+# Risks and Mitigations
+1.  **Technical Complexity of Integrations:**
+    *   **Risk:** APIs for various services (ElevenLabs, OpenAI, CRMs, note apps) can be complex and change. Real-time processing is challenging.
+    *   **Mitigation:** Start with core, well-documented APIs. Prioritize asynchronous operations where possible. Use robust error handling and logging. Allocate time for R&D on each integration.
+2.  **Real-Time Performance:**
+    *   **Risk:** Transcription, LLM analysis, and alert display must be near real-time to be useful.
+    *   **Mitigation:** Optimize data transfer. Choose efficient models/APIs. Use web workers in the Chrome extension if needed. Test performance rigorously.
+3.  **Accuracy and Relevance of AI Insights:**
+    *   **Risk:** AI might misunderstand context, provide irrelevant or incorrect "GEMs."
+    *   **Mitigation:** Extensive prompt engineering. Allow user feedback on alert quality. Start with simpler heuristics for alerts and gradually increase complexity. Focus on high-value, less ambiguous use cases for MVP.
+4.  **User Adoption and Trust:**
+    *   **Risk:** Users might be hesitant to grant access to their data or rely on AI suggestions.
+    *   **Mitigation:** Be transparent about data usage and security. Start with less sensitive data if possible. Ensure the "wow" factor of MVP features provides clear, immediate value.
+5.  **Browser/Platform Compatibility & Changes:**
+    *   **Risk:** Chrome extension APIs can change. Meeting platform UIs (where info is displayed) can be updated by vendors, breaking the extension.
+    *   **Mitigation:** Use a stable extension framework like WXT. Design for adaptability in UI injection. Monitor Chrome and meeting platform updates.
+6.  **Scope Creep for MVP:**
+    *   **Risk:** The list of desired features is extensive.
+    *   **Mitigation:** Strictly adhere to the defined MVP scope. Defer non-essential features. Use Taskmaster to track and prioritize.
+7.  **API Costs:**
+    *   **Risk:** Costs for LLMs (OpenAI, Gemini) and speech-to-text can escalate with usage.
+    *   **Mitigation:** Monitor API usage closely. Implement caching where appropriate. Optimize prompts and model choices for cost-effectiveness. Plan for this in future pricing models.
+
+# Appendix
+*   **Key Technologies:** WXT, Next.js, TypeScript, Supabase, Prisma, OpenAI, ElevenLabs, Gemini.
+*   **Code Versioning:** Git (repo already initialized at https://github.com/Lautaroef/meet-extension.git). Project code to reside in `./live-meeting-assistant` directory.
+*   **UI Components (Web App):** @21st-dev/magic.
+*   **Documentation Links:** (User has provided an extensive list of relevant documentation for various services and tools to be referenced during development). 
+
+# Documentations:
+- Notion JS Client: https://github.com/makenotion/notion-sdk-js
+- Evernote Dev docs: https://dev.evernote.com/doc/reference/NoteStore.html#Fn_NoteStore_createNote
+- For salesforce, the docs are pretty lengthy, you would need to search on the web for specific documents if needed.
+- Hubspot: https://github.com/hubspot/hubspot-api-nodejs
+- Google Calendar API (not in context7): https://github.com/google/google-api-javascript-client
+- Supabase JS Docs/sdk (must use tool to list all endpoints under this, then use the tool to get the content for th relevant ones, since everything is under this one): https://supabase.com/docs/reference/javascript/
+- Gemini (explore the endpoints under this domain for latest docs on how to take the most out of it): https://ai.google.dev/gemini-api/docs. Refer to ./gemini-example.ts for example implementation with typescript.
+- Open AI JS SDK: https://github.com/openai/openai-node
+- ElevenLabs Scribe - Speech to text (although feel free to explore other apis): https://elevenlabs.io/docs/api-reference/speech-to-text/convert

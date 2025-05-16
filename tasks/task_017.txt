@@ -1,0 +1,11 @@
+# Task ID: 17
+# Title: Automated Email Delivery for Pre-Meeting Briefing
+# Status: pending
+# Dependencies: 16, 9
+# Priority: medium
+# Description: Implement an automated email delivery system to send the 'Intelligent Pre-Flight Check' email to users ~10 minutes before their scheduled meetings. Integrate with an email service provider (e.g., SendGrid, Resend, or Supabase's built-in email).
+# Details:
+Trigger email sending based on Google Calendar event start times. Use an email sending service API. Create email templates (HTML/text) for the briefing. Ensure proper formatting and deliverability.
+
+# Test Strategy:
+Test email sending to mock recipients. Verify email content and formatting. Test scheduling logic to ensure emails are sent at the correct pre-meeting interval.

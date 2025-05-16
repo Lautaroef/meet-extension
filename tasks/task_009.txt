@@ -1,0 +1,11 @@
+# Task ID: 9
+# Title: Google Calendar API Integration (Next.js)
+# Status: pending
+# Dependencies: 6, 7
+# Priority: high
+# Description: Integrate Google Calendar API into the Next.js web app to allow users to connect their calendars. Fetch meeting details (attendees, time, subject) for pre-meeting intelligence.
+# Details:
+Use `google/google-api-javascript-client` or a Node.js equivalent like `googleapis`. Implement OAuth 2.0 flow for user authorization. Store access/refresh tokens securely (e.g., in Supabase, encrypted). Fetch upcoming events. API: `calendar.events.list`.
+
+# Test Strategy:
+Test OAuth flow, token storage/retrieval, and fetching calendar events for an authenticated user. Validate data structure of fetched events.

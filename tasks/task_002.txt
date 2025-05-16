@@ -1,0 +1,108 @@
+# Task ID: 2
+# Title: Setup Next.js Project for Web Application
+# Status: done
+# Dependencies: None
+# Priority: high
+# Description: Initialize the Next.js project for the web application that will handle settings, data synchronization management, and user accounts. Configure TypeScript and Tailwind CSS.
+# Details:
+Use `npx create-next-app@latest --typescript`. Integrate Tailwind CSS following official Next.js guide. Project directory: `./live-meeting-assistant/webapp`. Structure: `pages/`, `components/`, `lib/`.
+
+# Test Strategy:
+Verify successful project creation, that the dev server (`next dev`) runs, and Tailwind CSS utility classes are correctly applied.
+
+# Subtasks:
+## 1. Initialize Next.js project with TypeScript [done]
+### Dependencies: None
+### Description: Create a new Next.js project with TypeScript support using create-next-app
+### Details:
+Run 'npx create-next-app --typescript example-app' to bootstrap a new Next.js project with TypeScript configuration. This will automatically install necessary dependencies and create the initial project structure with TypeScript support.
+<info added on 2025-05-12T00:10:31.190Z>
+Navigate to the `live-meeting-assistant` directory and run the following command to initialize the Next.js project:
+
+```bash
+npx create-next-app@latest webapp --typescript --tailwind --eslint --app --src-dir --import-alias "@/*"
+```
+
+This command will:
+1. Create a new Next.js application named `webapp` inside the `live-meeting-assistant` directory
+2. Configure TypeScript for type safety
+3. Set up Tailwind CSS for styling (note this will complete subtask 2.2)
+4. Include ESLint for code quality
+5. Use the App Router architecture
+6. Create a `src` directory for better code organization
+7. Configure import aliases to use "@/*" pattern
+
+The final path to the web application will be `live-meeting-assistant/webapp`. The `create-next-app` tool will automatically handle directory creation and install all necessary dependencies.
+</info added on 2025-05-12T00:10:31.190Z>
+
+## 2. Integrate Tailwind CSS [done]
+### Dependencies: 2.1
+### Description: Add and configure Tailwind CSS in the Next.js project
+### Details:
+Install Tailwind CSS dependencies with 'npm install -D tailwindcss postcss autoprefixer', initialize Tailwind with 'npx tailwindcss init -p', configure content paths in tailwind.config.js, and add Tailwind directives to the global CSS file.
+<info added on 2025-05-12T00:13:34.533Z>
+Install Tailwind CSS dependencies with 'npm install -D tailwindcss postcss autoprefixer', initialize Tailwind with 'npx tailwindcss init -p', configure content paths in tailwind.config.js, and add Tailwind directives to the global CSS file.
+
+Using Next.js 15+ with Tailwind v4:
+1. The `create-next-app --tailwind` command successfully installed Tailwind CSS v4 and @tailwindcss/postcss.
+2. The postcss.config.mjs file is correctly configured to use @tailwindcss/postcss.
+3. src/app/globals.css is properly set up with @import "tailwindcss"; for Tailwind v4 styles.
+4. Tailwind v4 is designed for zero-config in common setups, so no separate tailwind.config.js or tailwind.config.ts file is created by default.
+5. Content paths are automatically inferred by Tailwind v4.
+6. If customization is needed later, a tailwind config file can be manually created.
+
+The default Tailwind v4 integration via create-next-app is successful and ready for use in the project.
+</info added on 2025-05-12T00:13:34.533Z>
+
+## 3. Set up directory structure [done]
+### Dependencies: 2.1, 2.2
+### Description: Create and organize the project's folder structure following Next.js best practices
+### Details:
+Create folders for components, pages/routes, styles, utils, hooks, and types. Set up appropriate TypeScript configuration in tsconfig.json for path aliases and strict type checking. Create initial placeholder files in each directory to establish the structure.
+<info added on 2025-05-12T00:14:22.475Z>
+The project structure will be organized within the existing `live-meeting-assistant/webapp/src/` directory that was created by the `create-next-app` command. The following additional directories will be created inside the `src/` folder:
+
+1. `components/` - For reusable UI components
+2. `lib/` - For utilities, helpers, and shared functions
+3. `hooks/` - For custom React hooks
+4. `styles/` - For additional global styles beyond the default `src/app/globals.css`
+5. `types/` - For TypeScript type definitions and interfaces
+
+Each of these empty directories will include a `.gitkeep` file to ensure they are tracked by Git version control. The existing `src/app/` directory will be used for page routes following Next.js 13+ App Router conventions.
+
+The `tsconfig.json` file will be verified to ensure it has proper path aliases (the `@/*` alias should be configured by default with create-next-app) and that strict type checking is enabled, which is typically the default setting in newer Next.js projects.
+</info added on 2025-05-12T00:14:22.475Z>
+
+## 4. Verify dev server and Tailwind integration [done]
+### Dependencies: 2.1, 2.2, 2.3
+### Description: Start the development server and confirm TypeScript and Tailwind CSS are working correctly
+### Details:
+Run 'npm run dev' to start the development server. Create a test component with Tailwind classes to verify CSS is working. Check for TypeScript errors in the terminal and browser console. Make necessary adjustments to configuration files if issues are found.
+<info added on 2025-05-12T00:15:41.574Z>
+Run 'npm run dev' to start the development server. Create a test component with Tailwind classes to verify CSS is working. Check for TypeScript errors in the terminal and browser console. Make necessary adjustments to configuration files if issues are found.
+
+Verification Steps:
+1. Add a test `div` with Tailwind classes to the main page:
+   - Navigate to `live-meeting-assistant/webapp/src/app/page.tsx`
+   - Add a div with classes: `p-4 bg-blue-500 text-white text-xl` and text "Hello Tailwind!"
+
+2. Start the development server:
+   - Open terminal and navigate to `live-meeting-assistant/webapp/` directory
+   - Run `npm run dev` command
+
+3. Manual Verification Process:
+   - Open browser and navigate to http://localhost:3000
+   - Inspect browser console for any TypeScript errors
+   - Check terminal output for any compilation errors
+   - Verify the test div appears with:
+     * Blue background (bg-blue-500)
+     * White text (text-white)
+     * Padding (p-4)
+     * Larger text size (text-xl)
+
+4. Document Results:
+   - Note any errors encountered
+   - Confirm successful Tailwind CSS integration
+   - Record any configuration adjustments needed
+</info added on 2025-05-12T00:15:41.574Z>
+
