@@ -12,12 +12,22 @@ export default defineConfig({
       "storage",
       "activeTab",
       "scripting",
-      "tabs"
+      "tabs",
+      "tabCapture",
+      "offscreen"
       // Add "tabCapture" later if directly capturing tab audio
     ],
     options_ui: {
       page: "entrypoints/options/index.html",
       open_in_tab: true
+    },
+    // Explicitly define action to prevent auto-detection of popup as default
+    action: {},
+    // Declare the offscreen document
+    offscreen: {
+      reasons: ["USER_MEDIA"], // Reason required for accessing media APIs
+      justification: "Capture tab audio for processing and transcription.", // Justification for using the offscreen document
+      path: "offscreen.html" // Path to the offscreen HTML file (we will create this)
     },
     // browser_specific_settings for Firefox if needed later
   },

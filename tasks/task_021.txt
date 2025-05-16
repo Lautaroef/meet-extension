@@ -1,11 +1,56 @@
 # Task ID: 21
 # Title: Real-time Transcript Processing (Basic Keyword Spotting for GEMs)
 # Status: pending
-# Dependencies: 20, 13
+# Dependencies: 20, 13, 19, 22, 24
 # Priority: high
-# Description: Implement initial logic in the Chrome Extension to process the live transcript for 'GEM' alerts. For MVP, this can be based on simple keyword spotting or basic pattern matching against synced user data.
+# Description: Implement logic in the Chrome Extension to orchestrate real-time transcript analysis for 'GEMs' by sending segments to the backend for Gemini processing, receiving structured results, and triggering events.
 # Details:
-Analyze incoming transcript segments. Compare text against keywords/phrases extracted from user's synced data (Supabase). Trigger a 'GEM' event when a match is found. This logic will run in the extension's background script or a dedicated web worker.
+1. The Chrome extension's background script receives transcript segments (from Subtask 20.4, potentially via WebSocket from our backend proxy).
+2. These segments are packaged and sent to our Next.js backend API endpoint dedicated to Gemini text analysis (related to Subtask 19.4).
+3. The backend API (Subtask 19.4) prompts the Gemini API, providing the transcript segment and potentially relevant context from synced user data (Task 13 - coordination needed on how context is efficiently retrieved/passed).
+4. The prompt to Gemini will request structured JSON output. Example schema: `{ "is_gem": boolean, "gem_details": { "type": "keyword|insight|action", "trigger_text": "...", "explanation": "..." } }` or similar. The exact schema needs finalization.
+5. The backend returns this structured JSON response from Gemini to the extension.
+6. The extension's background script receives and parses this JSON response.
+7. If `is_gem` is true (or based on defined criteria in the response), the extension triggers an internal 'GEM' event for UI display (Task 22) and logging/storage (Task 24).
+8. For MVP, the analysis might focus on Gemini enhancing basic keyword spotting or identifying simple patterns for action items/insights based on the transcript and limited user context.
 
 # Test Strategy:
-Test with sample transcripts and keyword sets. Verify that GEM events are triggered correctly for matching keywords. Evaluate performance to ensure real-time processing.
+Test by mocking transcript segment reception in the extension. Verify segments are correctly sent to the backend API endpoint. Mock backend responses with various structured JSON payloads (GEM found, GEM not found, different GEM types). Verify the extension correctly parses the JSON and triggers internal GEM events only when appropriate. Test integration with the actual backend API once available. Evaluate the round-trip latency.
+
+# Subtasks:
+## 21.1. undefined [pending]
+### Dependencies: None
+### Description: Implement listener in background script to receive transcript segments (from Task 20 / WebSocket).
+### Details:
+
+
+## 21.2. undefined [pending]
+### Dependencies: None
+### Description: Implement function to send transcript segments to the designated Next.js backend API endpoint (Subtask 19.4).
+### Details:
+
+
+## 21.3. undefined [pending]
+### Dependencies: None
+### Description: Implement handler for receiving and parsing the structured JSON response from the backend API.
+### Details:
+
+
+## 21.4. undefined [pending]
+### Dependencies: None
+### Description: Implement logic to evaluate the parsed JSON (e.g., check `is_gem` flag) and extract relevant GEM details.
+### Details:
+
+
+## 21.5. undefined [pending]
+### Dependencies: None
+### Description: Trigger internal extension events (e.g., using `chrome.runtime.sendMessage`) when a GEM is identified, passing necessary details for UI (Task 22) and logging (Task 24).
+### Details:
+
+
+## 21.6. undefined [pending]
+### Dependencies: None
+### Description: Define and document the expected JSON structure for the API response (coordinate with backend Task 19).
+### Details:
+
+

@@ -282,8 +282,59 @@
         1,
         5
       ],
-      "status": "pending",
-      "subtasks": []
+      "status": "done",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Define Manifest Entries",
+          "description": "Create and configure the manifest.json file, specifying extension metadata, permissions, background scripts, content scripts, and UI pages (popup/options).",
+          "dependencies": [],
+          "details": "Include required fields such as name, version, manifest_version, permissions, background, content_scripts, action (for popup), and options_page as needed.\n<info added on 2025-05-12T02:41:27.485Z>\nFor the WXT-based Chrome extension, follow these steps to define manifest entries:\n\n1. Review and update the `package.json` file in `live-meeting-assistant/live-meeting-assistant/extension/package.json` to ensure it has an appropriate description for the extension.\n\n2. Modify the `wxt.config.ts` file in the extension directory:\n   - Add a `manifest` property to the `defineConfig` object\n   - Set the extension `name` (e.g., \"Live Meeting Assistant\") and `description`\n   - Configure required permissions in an array: [\"storage\", \"activeTab\", \"scripting\", \"tabs\"]\n   - Add an `entrypoints` property to define content scripts, for example:\n     ```typescript\n     entrypoints: {\n       'meeting-content': {\n         matches: ['*://meet.google.com/*', '*://*.zoom.us/wc/*'],\n         // WXT will look for src/entrypoints/meeting-content.ts\n       },\n     },\n     ```\n\n3. Create a placeholder content script file at `live-meeting-assistant/live-meeting-assistant/extension/src/entrypoints/meeting-content.ts` (this will be developed in Subtask 8.3).\n\n4. Build and verify the manifest by running `npm run build` in the extension directory, then inspect the generated `manifest.json` in the `.output/chrome-mv3/` directory to confirm all settings are correctly applied.\n\nNote that WXT will handle the generation of the actual manifest.json file based on the configuration in wxt.config.ts, simplifying the manifest management process.\n</info added on 2025-05-12T02:41:27.485Z>\n<info added on 2025-05-12T02:48:15.597Z>\nWhen creating a content script placeholder for WXT, it's important to use the proper WXT helper functions to define entrypoints. The content script must export a default using `defineContentScript` from 'wxt/sandbox'.\n\nCreate the placeholder content script file at `live-meeting-assistant/live-meeting-assistant/extension/src/entrypoints/meeting-content.ts` with this structure:\n\n```typescript\n// live-meeting-assistant/live-meeting-assistant/extension/src/entrypoints/meeting-content.ts\nimport { defineContentScript } from 'wxt/sandbox';\nimport logger from '@/utils/logger';\n\nexport default defineContentScript({\n  main() {\n    logger.info('Meeting content script executing main().');\n    // Content script logic will be added in Subtask 8.3\n  },\n});\n```\n\nThis properly uses WXT's `defineContentScript` helper function which is required for all content script entrypoints. The default export is necessary for WXT to properly recognize and build the content script. This structure will resolve the \"Default export not found\" build error.\n\nMake sure the logger utility is properly set up in the project, or remove that import if it's not available yet.\n</info added on 2025-05-12T02:48:15.597Z>",
+          "status": "done"
+        },
+        {
+          "id": 2,
+          "title": "Set Up Background Script",
+          "description": "Develop the background script to handle core extension logic, event listeners, and communication with other extension components.",
+          "dependencies": [
+            1
+          ],
+          "details": "Implement event handlers and message listeners in the background script. Ensure it is referenced correctly in the manifest.\n<info added on 2025-05-12T03:01:22.970Z>\nThe background script should be implemented in the file path `live-meeting-assistant/live-meeting-assistant/extension/src/entrypoints/background.ts` using WXT's `defineBackground` helper imported from `#imports`. \n\nThe implementation should include:\n1. A startup log message when the service worker starts\n2. An `onInstalled` event listener to track installation and update events\n3. A `runtime.onMessage` listener to handle communication with other parts of the extension\n\nThe background script should follow this structure:\n```typescript\n// live-meeting-assistant/live-meeting-assistant/extension/src/entrypoints/background.ts\nimport { defineBackground } from '#imports';\nimport logger from '@/utils/logger';\n\nexport default defineBackground(() => {\n  logger.info('Background service worker started.');\n\n  browser.runtime.onInstalled.addListener((details) => {\n    logger.info('Extension installed or updated.', { reason: details.reason, previousVersion: details.previousVersion });\n  });\n\n  browser.runtime.onMessage.addListener((message, sender, sendResponse) => {\n    logger.debug('Message received in background script:', { message, sender });\n    if (message.action === 'getBackgroundInfo') {\n      sendResponse({ info: 'Info from background.', timestamp: Date.now() });\n      return true;\n    }\n  });\n});\n```\n\nThis implementation provides the basic structure for the background script with essential event listeners and logging functionality. The script will be able to respond to installation events and handle messages from other parts of the extension, such as content scripts or popup pages.\n</info added on 2025-05-12T03:01:22.970Z>",
+          "status": "done"
+        },
+        {
+          "id": 3,
+          "title": "Set Up Content Script",
+          "description": "Create the content script to interact with web page DOMs and facilitate communication with the background script.",
+          "dependencies": [
+            1
+          ],
+          "details": "Write JavaScript that will be injected into specified web pages, as defined in the manifest. Ensure it can send and receive messages to/from the background script.\n<info added on 2025-05-12T03:02:48.505Z>\nWrite JavaScript that will be injected into specified web pages, as defined in the manifest. Ensure it can send and receive messages to/from the background script.\n\nThe content script will be implemented in `live-meeting-assistant/live-meeting-assistant/extension/src/entrypoints/meetingScript.content.ts` using the `defineContentScript` function. The script should be configured to match meeting platform URLs including Google Meet, Zoom, and Webex.\n\nImplementation plan:\n1. Set up the content script with appropriate URL matching patterns:\n   - '*://meet.google.com/*'\n   - '*://*.zoom.us/wc/*'\n   - '*://*.webex.com/*'\n\n2. Configure the script to run at 'document_idle' to ensure the page is fully loaded\n\n3. Implement the main() function with the following initial logic:\n   - Log the current URL (window.location.href) to confirm script execution on expected pages\n   - Log document.title as a basic DOM interaction test\n   - Implement a setTimeout (3 seconds) to test background script communication\n   - Send a test message to the background script with format: { action: 'pingFromContentScript', url: window.location.href }\n   - Log the response or any errors from the communication attempt\n\n4. Import and use the logger utility for consistent logging throughout the extension\n\nThis implementation will verify that:\n- The content script is properly injected into the target meeting platforms\n- Basic DOM interaction is working\n- Communication with the background script is functioning\n</info added on 2025-05-12T03:02:48.505Z>\n<info added on 2025-05-12T03:09:52.847Z>\nThe content script will be implemented in `live-meeting-assistant/live-meeting-assistant/extension/src/entrypoints/meetingScript.content.ts` using the `defineContentScript` function. The script should be configured to match meeting platform URLs including Google Meet, Zoom, and Webex.\n\nImplementation plan:\n1. Set up the content script with appropriate URL matching patterns:\n   - '*://meet.google.com/*'\n   - '*://*.zoom.us/wc/*'\n   - '*://*.webex.com/*'\n\n2. Configure the script to run at 'document_idle' to ensure the page is fully loaded\n\n3. Implement the main() function with the following initial logic:\n   - Log the current URL (window.location.href) to confirm script execution on expected pages\n   - Log document.title as a basic DOM interaction test\n   - Implement a setTimeout (3 seconds) to test background script communication\n   - Send a test message to the background script with format: { action: 'pingFromContentScript', url: window.location.href }\n   - Log the response or any errors from the communication attempt\n\n4. Import and use the logger utility for consistent logging throughout the extension\n\nThis implementation will verify that:\n- The content script is properly injected into the target meeting platforms\n- Basic DOM interaction is working\n- Communication with the background script is functioning\n\nDebugging message passing between content script and background script:\n\n1. Modify background.ts:\n   - Add a specific case to the onMessage listener to handle message.action === 'pingFromContentScript'\n   - Log receipt of the message using logger.info\n   - Send a simple acknowledgment response back to the content script\n\n2. Modify meetingScript.content.ts:\n   - Change the main() function to be async\n   - Remove the setTimeout delay that was previously used\n   - Attempt to send message using browser.runtime.sendMessage({ action: 'pingFromContentScript', url: window.location.href }) immediately after the initial logs\n   - Use logger.info for logging both the send attempt and the response to ensure visibility in the console\n   - Add proper error handling with try/catch to capture and log any errors during message sending\n\n3. Testing approach:\n   - Rebuild the extension after making these changes\n   - Test on target meeting platforms\n   - Check both the content script console and background service worker console for logs and errors\n   - Look specifically for \"Extension context invalidated\" errors and their timing\n   - Verify if the background script receives the message and if the content script receives the response\n\nThis revised approach aims to reduce potential timing issues and ensure the background script is actively listening for the specific message type being sent from the content script.\n</info added on 2025-05-12T03:09:52.847Z>",
+          "status": "done"
+        },
+        {
+          "id": 4,
+          "title": "Create Popup/Options UI",
+          "description": "Design and implement the popup and/or options page UI for user interaction and extension customization.",
+          "dependencies": [
+            1
+          ],
+          "details": "Develop HTML, CSS, and JavaScript for the popup and options pages. Link them in the manifest under 'action' and 'options_page'.\n<info added on 2025-05-12T03:12:18.648Z>\nThis subtask involves developing the user interface components for both the popup and options pages of the Chrome extension.\n\n## Implementation Plan:\n\n1. **Popup UI**\n   - Utilize the existing popup structure in `src/entrypoints/popup/` created by the WXT template as the foundation\n   - The popup will serve as the primary user interaction point when clicking the extension icon\n\n2. **Options Page Implementation**\n   - Create `src/entrypoints/options/index.html` with basic HTML structure that references `main.tsx`\n   - Develop `src/entrypoints/options/main.tsx` with a simple React component displaying placeholder text (\"Settings will go here\")\n   - Include console logging for development verification\n\n3. **Configuration Updates**\n   - Modify `wxt.config.ts` to register the options page by adding the following to the manifest object:\n     ```typescript\n     options_ui: {\n       page: \"entrypoints/options/index.html\",\n       open_in_tab: true\n     },\n     ```\n\n4. **Verification Process**\n   - Build the extension using `npm run build`\n   - Reload the extension in Chrome's extension management page\n   - Test the options page by right-clicking the extension icon and selecting \"Options\"\n   - Confirm the placeholder options page loads correctly\n\nBoth UI components will be linked in the manifest under 'action' (for popup) and 'options_ui' (for options page) to ensure proper integration with the extension.\n</info added on 2025-05-12T03:12:18.648Z>",
+          "status": "done"
+        },
+        {
+          "id": 5,
+          "title": "Implement and Test Message Passing",
+          "description": "Establish and verify message passing between background, content scripts, and UI components to ensure proper communication and data flow.",
+          "dependencies": [
+            2,
+            3,
+            4
+          ],
+          "details": "Use the Chrome extensions messaging API to send and receive messages between scripts. Test communication paths and handle responses appropriately.\n<info added on 2025-05-12T03:15:49.092Z>\nUse the Chrome extensions messaging API to send and receive messages between scripts. Test communication paths and handle responses appropriately.\n\n## Part 1: Popup to Background Communication\n\n### Implementation Steps\n1. Modify `.../extension/src/entrypoints/popup/App.tsx`:\n   - Add a new button labeled \"Get Info from Background\"\n   - Implement an onClick handler for this button\n   - Inside the handler, use `browser.runtime.sendMessage({ action: 'getBackgroundInfo' })`\n   - Implement with async/await and proper try/catch error handling\n   - Log successful responses with `logger.info`\n   - Log any errors with `logger.error`\n\n2. Background Script (`background.ts`):\n   - Verify the existing message listener handles `{ action: 'getBackgroundInfo' }` requests\n   - Ensure it sends an appropriate response back to the popup\n\n### Testing Procedure\n1. Build the extension (`npm run build` in extension directory)\n2. Reload the unpacked extension in `chrome://extensions`\n3. Open the extension popup\n4. Click the \"Get Info from Background\" button\n5. Expected Results:\n   - Popup Console: Should display a log showing the response from background (e.g., `{ info: 'This is some info from the background script.', timestamp: ... }`)\n   - Background Service Worker Console: Should show a log with `Message received in background script:` and the `getBackgroundInfo` action\n\nThis implementation will verify the Popup → Background communication path is working correctly.\n</info added on 2025-05-12T03:15:49.092Z>\n<info added on 2025-05-12T03:29:26.582Z>\n## Part 2: Debugging Background Script Message Listener\n\nAfter implementing the Popup to Background communication, we've identified that while the popup successfully receives responses from the background script, the initial debug log in the background script's message listener is not appearing in the service worker console.\n\n### Issue Identified\nThe `logger.debug()` statements in the background script aren't showing up in the console, even in development mode. This might be because `process.env.NODE_ENV` is still set to 'production' in the background script context, causing debug logs to be suppressed.\n\n### Debugging Steps\n1. **Modify `background.ts`**:\n   - Change the first log statement inside `browser.runtime.onMessage.addListener` from `logger.debug(...)` to `logger.info(...)`\n   - Replace with: `logger.info('BG SCRIPT: Message received (onMessage entry):', { messageAction: message?.action });`\n   - This ensures the log bypasses any NODE_ENV check and will be visible regardless of environment\n\n2. **Testing Procedure**:\n   - Run `npm run dev` for the extension\n   - Reload the extension in Chrome\n   - Open the extension popup\n   - Click the \"Get Info from Background\" button\n   - Check the Service Worker console (should now show the new logger.info message)\n   - Verify the popup console still shows the successful response\n\n3. **Expected Results**:\n   - Service Worker Console: Should display \"BG SCRIPT: Message received (onMessage entry): ...\" confirming the listener is being invoked\n   - Popup Console: Should still show the successful response from the background script\n\nThis debugging approach will help confirm if the issue is with the logger level configuration or if there's a more fundamental problem with the message listener.\n</info added on 2025-05-12T03:29:26.582Z>",
+          "status": "done"
+        }
+      ]
     },
     {
       "id": 9,
@@ -332,16 +383,16 @@
       "id": 12,
       "title": "Data Processing Service (Summarization/Indexing with Gemini)",
       "description": "Develop a backend service/module (within Next.js or a separate Node.js service) to process synced data from various sources. Use Gemini API for summarizing large text contexts and structuring data for indexing.",
-      "details": "Input: Raw data from Notion, text files, etc. Output: Summarized and structured insights. Use Gemini API (e.g., `gemini-pro` model) for summarization and potentially for extracting key entities or topics. Define schema for processed data. Handle API rate limits and errors. See https://ai.google.dev/gemini-api/docs/structured-output.",
-      "testStrategy": "Unit test processing logic with sample data. Validate Gemini API integration and output quality. Test summarization of various content lengths and types.",
-      "priority": "high",
+      "status": "pending",
       "dependencies": [
         3,
         9,
         10,
         11
       ],
-      "status": "pending",
+      "priority": "high",
+      "details": "Input: Raw data from Notion, text files, etc., received by the Next.js backend. Output: Summarized and structured insights. 1. The backend service (leveraging logic from Subtask 19.4: Backend API for Gemini Text Analysis) will receive data needing processing. 2. It will call the Gemini API (e.g., `gemini-pro` or `gemini-2.5-pro` for complex tasks) to perform summarization and/or extract key entities/topics. 3. Prompts to Gemini should request structured JSON output by providing a `response_schema` to the backend API call, which then passes it to Gemini. 4. The backend service (Subtask 19.4) handles Gemini API interaction, including API key management, rate limits, and errors. 5. Processed, structured JSON data is then available for storage (Task 13) or other uses.",
+      "testStrategy": "Unit test processing logic with sample data. Validate Gemini API integration and output quality. Test summarization of various content lengths and types.",
       "subtasks": []
     },
     {
@@ -390,16 +441,17 @@
     },
     {
       "id": 16,
-      "title": "Pre-Meeting Briefing Content Generation (OpenAI)",
-      "description": "Develop the logic to generate content for the 'Intelligent Pre-Flight Check' email using OpenAI models. This content will include personality insights, engagement style, rapport builders, contextual icebreakers, and key discussion points based on synced data and `open-deep-research` output.",
-      "details": "Use OpenAI API (e.g., GPT-4 or latest suitable model). Craft prompts that take meeting context (attendees, topic from calendar), synced user notes, and `open-deep-research` data as input. Output structured JSON for briefing sections. Focus on one person for `open-deep-research` for MVP.",
-      "testStrategy": "Unit test content generation with various inputs. Evaluate the quality, relevance, and accuracy of generated briefings. Iterate on prompt engineering.",
-      "priority": "high",
+      "title": "Pre-Meeting Briefing Content Generation (Gemini via Backend)",
+      "description": "Develop the logic, orchestrated by the backend, to generate content for the 'Intelligent Pre-Flight Check' email using Gemini models via the backend API (Subtask 19.4). This content will include personality insights, engagement style, rapport builders, contextual icebreakers, and key discussion points based on synced data and `open-deep-research` output.",
+      "status": "pending",
       "dependencies": [
         13,
-        15
+        15,
+        19
       ],
-      "status": "pending",
+      "priority": "high",
+      "details": "1. The Next.js backend (specifically logic related to Subtask 19.4: Backend API for Gemini Text Analysis) will orchestrate content generation for the 'Intelligent Pre-Flight Check'.\n2. Inputs for generation include: meeting context (attendees, topic from calendar - via Task 9), synced user notes (from Supabase - via Task 13), and `open-deep-research` output (from Task 15, focusing on one person for MVP).\n3. The backend will make a call to the Gemini API (e.g., `gemini-2.5-pro` due to complexity of inputs and desired output structure) via its internal service (Subtask 19.4).\n4. Prompts to Gemini will be crafted to generate structured JSON output, providing a `response_schema` to the backend API call for sections like: personality insights, engagement style, rapport builders, contextual icebreakers, and key discussion points.\n5. The backend API (Subtask 19.4) handles the direct Gemini API call, API key management, etc.\n6. The generated structured JSON briefing is then stored (e.g., in Supabase, linked to the meeting and user) for later retrieval (e.g., by Task 17 for email, Subtask 19.1 for API).",
+      "testStrategy": "Unit test content generation via the backend API (Subtask 19.4) with various inputs. Evaluate the quality, relevance, and accuracy of generated briefings. Iterate on prompt engineering within the backend service.",
       "subtasks": []
     },
     {
@@ -431,44 +483,207 @@
     },
     {
       "id": 19,
-      "title": "API Endpoint for Pre-Meeting Summary (Next.js for Chrome Ext)",
-      "description": "Create an API endpoint in the Next.js application that the Chrome Extension can call to fetch the pre-meeting summary content generated by Task 16.",
-      "details": "Develop a secure REST API endpoint (e.g., `/api/meetings/:meetingId/summary`). Authenticate requests from the Chrome extension (e.g., using user session token). Retrieve the relevant briefing data from Supabase.",
-      "testStrategy": "Test the API endpoint with valid and invalid requests. Verify authentication and correct data retrieval. Measure API response time.",
-      "priority": "medium",
+      "title": "Backend Services for Chrome Extension (Next.js)",
+      "description": "Develop and manage all backend API endpoints and WebSocket services within the Next.js application that the Chrome Extension will interact with. This includes services for pre-meeting summaries, AI model interactions (OpenAI STT via proxy, Gemini analysis), and ephemeral token generation.",
+      "status": "pending",
       "dependencies": [
         16,
         6
       ],
-      "status": "pending",
-      "subtasks": []
+      "priority": "medium",
+      "details": "Implement and maintain secure backend services for the Chrome Extension within the Next.js application. This includes:\n1.  **Pre-meeting Summary API:** An endpoint (e.g., `/api/meetings/:meetingId/summary`) to fetch generated summaries (from Task 16).\n2.  **OpenAI STT Proxy:** An endpoint to securely proxy requests from the extension to the OpenAI STT service.\n3.  **Gemini Analysis Service:** An endpoint or service to handle requests for Gemini-based analysis.\n4.  **Ephemeral Token Generation:** An endpoint to generate short-lived tokens for specific extension operations.\n5.  **Authentication:** Ensure all endpoints and services securely authenticate requests originating from the Chrome extension (e.g., using user session tokens or API keys).\n6.  **Data Handling:** Interact with Supabase or other data stores as needed for retrieving/storing relevant information.",
+      "testStrategy": "Test each API endpoint individually with valid/invalid inputs, authentication scenarios (success/failure), and edge cases. Verify correct data handling and interaction with external services (OpenAI, Gemini, Supabase). Test the ephemeral token generation and validation flow. Implement integration tests simulating Chrome Extension interactions. Monitor performance and response times for all services.",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Implement API Endpoint for Pre-Meeting Summaries",
+          "description": "Create a Next.js API endpoint (e.g., `/api/meetings/[meetingId]/summary`) that the Chrome extension can call to fetch pre-meeting summary content. This content is assumed to be generated by Task 16 and stored appropriately (e.g., in Supabase).",
+          "details": "1. Define the API route in the Next.js backend (`src/app/api/meetings/[meetingId]/summary/route.ts`).\n2. Implement logic to retrieve pre-meeting summary data based on `meetingId` (this data would have been generated and stored by processes related to Task 16).\n3. Ensure the endpoint is authenticated to verify requests from the Chrome extension (e.g., using session tokens or a dedicated API key for the extension).\n4. Return the summary data in a structured JSON format.",
+          "status": "pending",
+          "dependencies": [],
+          "parentTaskId": 19
+        },
+        {
+          "id": 2,
+          "title": "Implement API Endpoint for OpenAI Ephemeral Token Generation",
+          "description": "Create a Next.js API endpoint (e.g., `/api/openai/create-transcription-session`) that the Chrome extension calls to get an ephemeral token for OpenAI Realtime API.",
+          "details": "1. Define the API route (e.g., `src/app/api/openai/create-transcription-session/route.ts`).\n2. This endpoint will use the server-side OpenAI API key (stored securely as an environment variable).\n3. It makes a POST request to OpenAI's `https://api.openai.com/v1/realtime/transcription_sessions` endpoint.\n   - Include the `Authorization: Bearer <SERVER_OPENAI_API_KEY>` and `OpenAI-Beta: assistants=v2` headers (Note: the 'assistants=v2' beta header was mentioned in an example for creating sessions; confirm if 'realtime=v1' or another is needed for *this specific* session creation endpoint if different from the WebSocket beta header).\n   - The payload should include necessary parameters like `input_audio_format: 'pcm16'`, `input_audio_transcription: { model: 'gpt-4o-transcribe', language: 'en' }`, and `turn_detection` settings, potentially configurable via query params from the extension's request if needed.\n4. Extract the `client_secret.value` (ephemeral token) from OpenAI's response.\n5. Return this ephemeral token to the Chrome extension in a JSON response.\n6. Implement error handling for the call to OpenAI.",
+          "status": "done",
+          "dependencies": [],
+          "parentTaskId": 19
+        },
+        {
+          "id": 3,
+          "title": "Implement WebSocket Proxy for OpenAI Realtime Transcription",
+          "description": "Implement a WebSocket endpoint in the Next.js backend (e.g., `/api/transcribe-socket`) that proxies communication between the Chrome Extension and the OpenAI Realtime Transcription API.",
+          "details": "1. Set up a WebSocket server on the Next.js backend (e.g., using `ws` library or Next.js specific WebSocket solution if available for App Router route handlers).\n2. When a Chrome extension client connects:\n   a. Expect an `init_transcription` message from the client with desired OpenAI parameters (language, model, etc.).\n   b. Use Subtask 19.2 (or call its logic directly) to obtain an ephemeral token for OpenAI.\n   c. Establish a new WebSocket connection from the backend to OpenAI (`wss://api.openai.com/v1/realtime?intent=transcription`) using the ephemeral token and `OpenAI-Beta: realtime=v1` header.\n   d. Send the `transcription_session.update` message to OpenAI, configured with parameters from the client's `init_transcription` message and `input_audio_format: 'pcm16'`.\n3. Proxying Logic:\n   a. On receiving audio data (e.g., Base64 string in a `{ type: 'audio_chunk', data: '...' }` message) from the extension: Decode Base64 to binary (if OpenAI server-side WS doesn't accept Base64 directly for `input_audio_buffer.append`). Forward the audio data to the OpenAI WebSocket (e.g., as `{ type: 'input_audio_buffer.append', audio: 'base64_encoded_chunk' }` if OpenAI expects Base64, or raw binary if that's how the server-side SDK works).\n   b. On receiving transcription event messages (delta, completed) from OpenAI: Forward these messages to the connected Chrome extension client.\n4. Handle disconnections and errors gracefully for both client-to-backend and backend-to-OpenAI WebSockets. Manage state for multiple concurrent extension clients if applicable.",
+          "status": "in-progress",
+          "dependencies": [],
+          "parentTaskId": 19
+        },
+        {
+          "id": 4,
+          "title": "Implement Backend API for Gemini Text Analysis",
+          "description": "Create a general-purpose Next.js API endpoint (e.g., `/api/gemini/analyze-text`) that the Chrome extension can call for various text analysis tasks using the Gemini API.",
+          "details": "1. Define the API route (e.g., `src/app/api/gemini/analyze-text/route.ts`).\n2. This endpoint will use the server-side Google API key (stored securely as an environment variable).\n3. Accept a POST request from the extension containing:\n    a. `text_input`: The text to be analyzed (e.g., transcript segment, user query).\n    b. `prompt_instructions`: Specific instructions for the Gemini model (e.g., \"Summarize this text for key takeaways,\" \"Identify action items,\" \"Answer this question based on the provided context.\").\n    c. `response_schema` (optional): A JSON schema definition if structured output is required from Gemini (as per Gemini's structured output guide).\n4. Call the Gemini API (e.g., `generateContent` using the appropriate Gemini model like `gemini-2.0-flash` or a `gemini-2.5-pro` variant if needed for complexity) with the provided text, instructions, and schema.\n5. Return Gemini's response (ideally the structured JSON if a schema was provided, or plain text otherwise) to the Chrome extension.\n6. Implement error handling for the call to Gemini API.",
+          "status": "pending",
+          "dependencies": [],
+          "parentTaskId": 19
+        },
+        {
+          "id": 5,
+          "title": "Implement/Refactor Authentication for Extension Backend Services",
+          "description": "Ensure a consistent and secure authentication mechanism (e.g., session token validation, or a dedicated API key for the extension) is applied across all backend API endpoints and WebSocket services intended for Chrome Extension use.",
+          "details": "1. Evaluate existing authentication/session management in the Next.js app (if any, from Task 6 user auth).\n2. Decide on the authentication strategy for extension-to-backend communication (e.g., reuse user session tokens if the user is logged into the webapp and the extension can access this token securely, or issue a separate, securely stored API key/token specifically for the extension).\n3. Implement Next.js middleware or individual endpoint checks to validate the token/key for all relevant API routes and WebSocket upgrade requests under `/api/*` that are used by the extension.\n4. Ensure unauthorized requests are rejected appropriately.",
+          "status": "pending",
+          "dependencies": [],
+          "parentTaskId": 19
+        }
+      ]
     },
     {
       "id": 20,
-      "title": "ElevenLabs 'Scribe' API Integration for Live Transcription",
-      "description": "Integrate the ElevenLabs 'Scribe' API (or an alternative) into the Chrome Extension to capture live audio from the current meeting tab and transcribe it to text in real-time.",
-      "details": "Use `chrome.tabCapture` API to get audio stream from the active meeting tab. Send audio data to ElevenLabs Scribe API (https://elevenlabs.io/docs/api-reference/speech-to-text/convert) via WebSockets or HTTP streaming for real-time results. Handle API key management securely. Manage audio chunks and transcription segments.",
-      "testStrategy": "Test audio capture from a meeting tab. Verify real-time transcription accuracy and latency with ElevenLabs. Handle connection errors and API limits.",
-      "priority": "high",
+      "title": "OpenAI Realtime API Integration for Live Transcription (via Backend Proxy)",
+      "description": "Integrate the OpenAI Realtime API into the Chrome Extension to capture live audio from the current meeting tab and transcribe it to text in real-time.",
+      "status": "pending",
       "dependencies": [
         8
       ],
-      "status": "pending",
-      "subtasks": []
+      "priority": "high",
+      "details": "Use `chrome.tabCapture` API to get audio stream from the active meeting tab. Connect to OpenAI Realtime API via WebSockets (refer to OpenAI documentation for endpoint and protocol). Stream audio data in a compatible format (e.g., PCM16 @ 24kHz mono) to the API. Handle incoming transcript messages (partial/interim and final) from the WebSocket connection. Implement secure API key management (consider ephemeral keys if possible). Add logic to handle session limits (e.g., reconnect every ~30 minutes). Manage audio chunking and buffering appropriately for streaming.",
+      "testStrategy": "Test audio capture from a meeting tab. Verify WebSocket connection to OpenAI Realtime API. Confirm real-time transcription accuracy and latency. Test handling of partial and final transcript events. Test reconnection logic for long sessions. Handle connection errors and API limits gracefully.",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Implement Audio Capture",
+          "description": "Set up browser-based audio capture using the Web Audio API and MediaStream API to access and process microphone input in real time.",
+          "dependencies": [],
+          "details": "Use navigator.mediaDevices.getUserMedia() to request microphone access, create an AudioContext, and process audio data with AudioWorkletNode or MediaStreamAudioSourceNode for further streaming or analysis.\n<info added on 2025-05-12T13:32:26.418Z>\nUse chrome.tabCapture API to capture meeting audio from browser tabs instead of accessing the microphone directly. This involves:\n\n1. Adding the tabCapture permission to the extension manifest (via wxt.config.ts)\n2. Identifying the target tab containing the meeting (Google Meet, Zoom, etc.) by querying tabs based on URL patterns\n3. Using chrome.tabCapture.capture() with the appropriate tabId to obtain a MediaStream\n4. Processing the captured audio stream:\n   - Creating an AudioContext\n   - Creating a MediaStreamAudioSourceNode from the captured stream\n   - Connecting to processing nodes (ScriptProcessorNode or AudioWorkletNode) for raw audio data access\n   - Ensuring output format compatibility with ElevenLabs API requirements\n5. Implementing robust error handling for permission issues and capture failures\n6. Adding logging with the logger utility to track capture status and errors\n\nThis approach allows capturing audio directly from meeting tabs rather than requiring microphone access, providing a more seamless user experience for transcribing online meetings.\n</info added on 2025-05-12T13:32:26.418Z>",
+          "status": "done"
+        },
+        {
+          "id": 2,
+          "title": "Establish WebSocket Connection",
+          "description": "Create and manage a persistent WebSocket connection to the backend server for real-time audio data transmission.",
+          "dependencies": [
+            1
+          ],
+          "details": "Initialize a WebSocket client, handle connection lifecycle events (open, message, close, error), and ensure reconnection logic for robustness.\n<info added on 2025-05-12T14:10:13.904Z>\nInitialize a WebSocket client in the Chrome extension background script to connect to our Next.js backend, which then proxies to OpenAI. The backend handles ephemeral tokens and authenticated connection to OpenAI.\n\n1. The Chrome extension background script will establish a WebSocket connection to a new endpoint on our Next.js backend (e.g., `ws://localhost:3000/api/transcribe-socket` or `wss://<your_domain>/api/transcribe-socket`).\n2. On `onopen`, the extension sends an initial message to the backend (e.g., `{ type: 'init_transcription', config: { language: 'en', model: 'gpt-4o-transcribe', /* other relevant OpenAI params */ } }`).\n3. The Next.js backend, upon receiving this `init_transcription` message:\n    a. Fetches an ephemeral token from OpenAI (using server-side API key, as per Subtask 20.5, via `https://api.openai.com/v1/realtime/transcription_sessions`).\n    b. Establishes its own authenticated WebSocket connection to OpenAI Realtime API (`wss://api.openai.com/v1/realtime?intent=transcription`) using the ephemeral token and `OpenAI-Beta: realtime=v1` header.\n    c. Sends the `transcription_session.update` message to OpenAI with parameters derived from the extension's `init_transcription` message.\n4. The Next.js backend will then proxy messages bidirectionally:\n    a. Audio data from extension -> OpenAI.\n    b. Transcription events from OpenAI -> extension.\n5. The extension's WebSocket handlers (`onmessage`, `onerror`, `onclose`) will interact with our Next.js backend.\n6. Reconnection logic in the extension will attempt to reconnect to our Next.js backend.\n\nThis subtask primarily concerns the extension-to-backend WebSocket. The backend work for proxying and OpenAI connection will be part of an expanded Task 19 or a new backend task.\n</info added on 2025-05-12T14:10:13.904Z>",
+          "status": "in-progress"
+        },
+        {
+          "id": 3,
+          "title": "Stream Audio Data via WebSocket",
+          "description": "Continuously send captured audio chunks to the backend server over the established WebSocket connection.",
+          "dependencies": [
+            2
+          ],
+          "details": "Buffer and encode audio data as needed (e.g., PCM, Opus), then transmit it in small, regular intervals to minimize latency and support real-time processing.\n<info added on 2025-05-12T14:10:31.823Z>\n1. The PCM16 audio data (`ArrayBuffer`) received from the `AudioWorkletNode` (Subtask 20.8) needs to be Base64 encoded in the background script.\n2. The background script sends this Base64 encoded audio string as a message over the WebSocket connection to our Next.js backend endpoint.\n3. The message format to the backend could be simple, e.g., `{ type: 'audio_chunk', data: 'base64_encoded_string' }`.\n4. The Next.js backend receives this, decodes the Base64 string back to binary, and then forwards the binary audio data to the OpenAI Realtime API WebSocket in the format OpenAI expects (e.g., as part of an `input_audio_buffer.append` message if OpenAI also expects base64, or directly as binary if OpenAI's server-side SDK/connection handles that).\n5. Implement buffering in the extension if the WebSocket to the backend is not immediately available or is reconnecting.\n</info added on 2025-05-12T14:10:31.823Z>",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Handle Transcription Results",
+          "description": "Receive and process live transcription data from the backend, updating the user interface in real time.",
+          "dependencies": [
+            3
+          ],
+          "details": "Parse incoming WebSocket messages containing transcript updates, manage partial and final results, and display them to the user.\n<info added on 2025-05-12T14:10:45.447Z>\nParse incoming WebSocket messages containing transcript updates, manage partial and final results, and display them to the user.\n\n1. The Chrome extension background script will receive messages from our Next.js backend via its WebSocket connection.\n2. These messages will contain transcription data proxied from the OpenAI Realtime API.\n3. The background script should specifically listen for and parse messages corresponding to OpenAI's `conversation.item.input_audio_transcription.delta` (for incremental transcript updates) and `conversation.item.input_audio_transcription.completed` (for final transcripts of a speech segment) events.\n4. Extract the transcript text (`delta` or `transcript` field from the OpenAI event payload) from these messages.\n5. This extracted text will then be used for further processing (e.g., by Task 21 for GEM analysis) or display.\n6. Ensure robust parsing and error handling for incoming messages from the backend.\n</info added on 2025-05-12T14:10:45.447Z>",
+          "status": "done"
+        },
+        {
+          "id": 5,
+          "title": "Manage API Keys Securely",
+          "description": "Implement secure handling, storage, and usage of API keys required for backend or third-party transcription services.",
+          "dependencies": [],
+          "details": "Ensure API keys are never exposed in client-side code; use environment variables and secure server-side endpoints for key management.\n<info added on 2025-05-12T13:58:03.056Z>\nEnsure API keys are never exposed in client-side code; use environment variables and secure server-side endpoints for key management.\n\nFor OpenAI Realtime API integration:\n1. Create a new Next.js backend API endpoint (e.g., `/api/openai/create-transcription-session`).\n2. This endpoint will use the server-side OpenAI API key to POST to `https://api.openai.com/v1/realtime/transcription_sessions` (with `OpenAI-Beta: assistants=v2` header and appropriate payload like `input_audio_format`, `input_audio_transcription` model/language, `turn_detection`).\n3. The Next.js endpoint will return the `ephemeral_token` (client_secret.value from OpenAI's response) to the Chrome extension.\n4. The Chrome extension's background script will call this Next.js endpoint to fetch the ephemeral token before establishing the WebSocket connection.\n5. The WebSocket connection will use this ephemeral token in its `Authorization: Bearer <EPHEMERAL_TOKEN>` header.\n6. The main OpenAI API key remains secure on the backend.\n\nThis implementation requires changes to both the Next.js backend and the Chrome extension. The ephemeral token approach ensures the main API key is never exposed to client-side code while still allowing the extension to establish direct WebSocket connections to OpenAI's Realtime API.\n</info added on 2025-05-12T13:58:03.056Z>",
+          "status": "pending"
+        },
+        {
+          "id": 6,
+          "title": "Implement Session Management",
+          "description": "Track and manage user sessions to associate audio streams and transcripts with individual users or sessions.",
+          "dependencies": [
+            2
+          ],
+          "details": "Generate unique session identifiers, handle session start/end events, and ensure session continuity across reconnections.",
+          "status": "pending"
+        },
+        {
+          "id": 7,
+          "title": "Implement Robust Error Handling",
+          "description": "Detect, log, and gracefully recover from errors in audio capture, WebSocket communication, streaming, and transcription.",
+          "dependencies": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "details": "Provide user feedback for recoverable errors, implement retry logic, and ensure system stability in the face of failures.",
+          "status": "pending"
+        },
+        {
+          "id": 8,
+          "title": "Implement Audio Resampling and PCM Conversion (AudioWorklet)",
+          "description": "Create an AudioWorkletProcessor to convert the captured MediaStream to the format required by OpenAI Realtime API (PCM16, 24kHz, mono). This includes downmixing and resampling if necessary.",
+          "details": "1. Define an AudioWorkletProcessor class in a new file (e.g., `live-meeting-assistant/live-meeting-assistant/extension/src/utils/audio-processor.worklet.ts`).\n2. In the processor's `process` method, access raw audio samples.\n3. Implement downmixing logic (if source is stereo).\n4. Implement resampling logic to convert to 24kHz (if source sample rate differs).\n5. Convert float samples to PCM16 format.\n6. Send processed audio chunks back to the main background script (via `port.postMessage()`).\n7. In `background.ts`, load this worklet into the `AudioContext`, connect the `MediaStreamSourceNode` to it, and listen for messages from the worklet containing the processed PCM data.\n<info added on 2025-05-12T14:09:52.809Z>\n1. Define an `AudioWorkletProcessor` class in `live-meeting-assistant/live-meeting-assistant/extension/src/utils/audio-processor.worklet.ts`.\n2. The OpenAI Realtime API for transcription expects `pcm16` input audio format, specifically 16-bit PCM at a 24kHz sample rate, single channel (mono), and little-endian byte order.\n3. In the processor's `process` method:\n    a. Access raw audio samples from the input.\n    b. Implement downmixing logic if the source audio from `chrome.tabCapture` is stereo to convert it to mono.\n    c. Implement resampling logic to convert the audio to a 24kHz sample rate if the `AudioContext.sampleRate` is different (e.g., 44.1kHz or 48kHz).\n    d. Convert the processed (mono, 24kHz) float samples to PCM16 format (Int16Array, little-endian).\n4. Send the processed PCM16 audio data chunks (as ArrayBuffer) back to the main background script via `this.port.postMessage()`.\n5. In `background.ts`, load this worklet, connect the `MediaStreamSourceNode` to it, and listen for messages from the worklet containing the processed PCM16 data.\n</info added on 2025-05-12T14:09:52.809Z>",
+          "status": "pending",
+          "dependencies": [
+            "20.1"
+          ],
+          "parentTaskId": 20
+        }
+      ]
     },
     {
       "id": 21,
       "title": "Real-time Transcript Processing (Basic Keyword Spotting for GEMs)",
-      "description": "Implement initial logic in the Chrome Extension to process the live transcript for 'GEM' alerts. For MVP, this can be based on simple keyword spotting or basic pattern matching against synced user data.",
-      "details": "Analyze incoming transcript segments. Compare text against keywords/phrases extracted from user's synced data (Supabase). Trigger a 'GEM' event when a match is found. This logic will run in the extension's background script or a dedicated web worker.",
-      "testStrategy": "Test with sample transcripts and keyword sets. Verify that GEM events are triggered correctly for matching keywords. Evaluate performance to ensure real-time processing.",
-      "priority": "high",
+      "description": "Implement logic in the Chrome Extension to orchestrate real-time transcript analysis for 'GEMs' by sending segments to the backend for Gemini processing, receiving structured results, and triggering events.",
+      "status": "pending",
       "dependencies": [
         20,
-        13
+        13,
+        19,
+        22,
+        24
       ],
-      "status": "pending",
-      "subtasks": []
+      "priority": "high",
+      "details": "1. The Chrome extension's background script receives transcript segments (from Subtask 20.4, potentially via WebSocket from our backend proxy).\n2. These segments are packaged and sent to our Next.js backend API endpoint dedicated to Gemini text analysis (related to Subtask 19.4).\n3. The backend API (Subtask 19.4) prompts the Gemini API, providing the transcript segment and potentially relevant context from synced user data (Task 13 - coordination needed on how context is efficiently retrieved/passed).\n4. The prompt to Gemini will request structured JSON output. Example schema: `{ \"is_gem\": boolean, \"gem_details\": { \"type\": \"keyword|insight|action\", \"trigger_text\": \"...\", \"explanation\": \"...\" } }` or similar. The exact schema needs finalization.\n5. The backend returns this structured JSON response from Gemini to the extension.\n6. The extension's background script receives and parses this JSON response.\n7. If `is_gem` is true (or based on defined criteria in the response), the extension triggers an internal 'GEM' event for UI display (Task 22) and logging/storage (Task 24).\n8. For MVP, the analysis might focus on Gemini enhancing basic keyword spotting or identifying simple patterns for action items/insights based on the transcript and limited user context.",
+      "testStrategy": "Test by mocking transcript segment reception in the extension. Verify segments are correctly sent to the backend API endpoint. Mock backend responses with various structured JSON payloads (GEM found, GEM not found, different GEM types). Verify the extension correctly parses the JSON and triggers internal GEM events only when appropriate. Test integration with the actual backend API once available. Evaluate the round-trip latency.",
+      "subtasks": [
+        {
+          "id": 21.1,
+          "description": "Implement listener in background script to receive transcript segments (from Task 20 / WebSocket).",
+          "status": "pending"
+        },
+        {
+          "id": 21.2,
+          "description": "Implement function to send transcript segments to the designated Next.js backend API endpoint (Subtask 19.4).",
+          "status": "pending"
+        },
+        {
+          "id": 21.3,
+          "description": "Implement handler for receiving and parsing the structured JSON response from the backend API.",
+          "status": "pending"
+        },
+        {
+          "id": 21.4,
+          "description": "Implement logic to evaluate the parsed JSON (e.g., check `is_gem` flag) and extract relevant GEM details.",
+          "status": "pending"
+        },
+        {
+          "id": 21.5,
+          "description": "Trigger internal extension events (e.g., using `chrome.runtime.sendMessage`) when a GEM is identified, passing necessary details for UI (Task 22) and logging (Task 24).",
+          "status": "pending"
+        },
+        {
+          "id": 21.6,
+          "description": "Define and document the expected JSON structure for the API response (coordinate with backend Task 19).",
+          "status": "pending"
+        }
+      ]
     },
     {
       "id": 22,
@@ -513,18 +728,55 @@
     },
     {
       "id": 25,
-      "title": "Basic AI Chat Interface (OpenAI in Drawer)",
-      "description": "Implement a basic interactive AI chat interface within the AI Assistant Drawer. Connect this interface to OpenAI models to allow users to ask questions and get live insights based on synced data and meeting context.",
-      "details": "Create a chat input field and a message display area in the drawer. Send user queries along with relevant context (e.g., recent transcript, synced data summaries) to an OpenAI API endpoint (e.g., GPT-3.5-turbo or GPT-4). Display AI responses. Manage conversation history for context.",
-      "testStrategy": "Test sending queries and receiving responses from OpenAI. Verify context is being used effectively by the AI. Test UI for chat interaction.",
-      "priority": "high",
+      "title": "AI Chat Interface (Gemini via Backend in Drawer)",
+      "description": "Implement a basic interactive AI chat interface within the AI Assistant Drawer. This interface will connect to Gemini via our Next.js backend API (detailed in Subtask 19.4), allowing users to ask questions and receive live insights based on synced data and meeting context. The backend will manage the direct interaction with the Gemini model.",
+      "status": "pending",
       "dependencies": [
         23,
         13,
-        20
+        20,
+        19
       ],
-      "status": "pending",
-      "subtasks": []
+      "priority": "high",
+      "details": "Key implementation details include:\n- Creating a chat input field and a message display area within the AI Assistant Drawer.\n- Sending user queries, along with relevant context (e.g., recent transcript, synced data summaries), to the designated Next.js backend API endpoint (from Subtask 19.4).\n- The backend API will then forward these requests to Gemini and return the responses.\n- Displaying AI responses received from the backend in the chat interface.\n- Managing conversation history effectively within the new communication flow.\n- Prioritizing the use of structured JSON output from Gemini (facilitated by the backend) if it can enhance chat features, such as displaying rich content or interactive elements.",
+      "testStrategy": "Testing will cover:\n- Sending queries to the Next.js backend API and verifying successful receipt of responses originating from Gemini.\n- Ensuring context (transcript, synced data) is correctly passed to the backend and utilized effectively by Gemini for generating relevant responses.\n- Thorough UI testing for chat interaction, including message input, display, and scrolling.\n- Verifying the correct handling and rendering of structured JSON responses from the backend, if this feature is implemented.\n- End-to-end testing of the chat flow from user input to AI response display via the backend.",
+      "subtasks": [
+        {
+          "id": "25.1",
+          "title": "Update frontend to call Next.js backend API",
+          "description": "Modify the frontend chat interface to send requests to the Next.js backend API (specified in Subtask 19.4) instead of directly calling an external AI provider.",
+          "status": "pending",
+          "assignee": ""
+        },
+        {
+          "id": "25.2",
+          "title": "Adapt frontend for backend responses (Gemini)",
+          "description": "Adapt the frontend to correctly process and display responses received from the Next.js backend, which now communicates with Gemini. This includes handling any new data structures or error formats.",
+          "status": "pending",
+          "assignee": ""
+        },
+        {
+          "id": "25.3",
+          "title": "Ensure conversation history compatibility",
+          "description": "Verify and update the conversation history management logic on the frontend to ensure it's compatible with the new backend communication flow and data structures.",
+          "status": "pending",
+          "assignee": ""
+        },
+        {
+          "id": "25.4",
+          "title": "Handle structured JSON output from Gemini (via backend)",
+          "description": "Investigate the potential for Gemini to return structured JSON via the backend. If beneficial, implement frontend handling for such structured responses to enhance chat features (e.g., rich content, actions).",
+          "status": "pending",
+          "assignee": ""
+        },
+        {
+          "id": "25.5",
+          "title": "Update tests for new architecture",
+          "description": "Update existing unit, integration, and end-to-end tests, and create new ones as necessary, to reflect the change in AI provider (Gemini via backend) and the updated communication flow.",
+          "status": "pending",
+          "assignee": ""
+        }
+      ]
     },
     {
       "id": 26,
@@ -544,78 +796,115 @@
     },
     {
       "id": 27,
-      "title": "Initial Prompt Engineering for OpenAI (GEMs, Chat)",
-      "description": "Develop initial prompts for OpenAI models used in 'GEM' alert generation (for more advanced GEMs beyond keyword spotting) and the AI Chat interface. Focus on clarity, context-awareness, and generating actionable insights.",
-      "details": "For GEMs: Prompts to analyze transcript + user data for connections. For Chat: System prompts to define AI persona and capabilities. User prompts to include conversation history and relevant data snippets. Refer to OpenAI Cookbook for best practices.",
-      "testStrategy": "Iteratively test prompts with sample inputs. Evaluate AI responses for relevance, accuracy, and helpfulness. Refine prompts based on results.",
-      "priority": "high",
+      "title": "Initial Prompt Engineering for Gemini (Backend Service)",
+      "description": "Develop initial prompts for the Gemini API, which will be utilized by the Next.js backend service (Subtask 19.4). These prompts are intended for 'GEM' alert generation (supporting Tasks 21 & 28, for more advanced GEMs beyond keyword spotting) and the AI Chat interface (Task 25). The primary focus is on achieving clarity, context-awareness, generating actionable insights, and ensuring reliable structured JSON output where required.",
+      "status": "pending",
       "dependencies": [
         25
       ],
-      "status": "pending",
+      "priority": "high",
+      "details": "This task is dedicated to the design, development, and initial testing of prompts for the Gemini API. These prompts will be integrated and used by our Next.js backend service (as per Subtask 19.4) to power features related to GEMs and AI Chat.\n\n1.  **Backend Integration Context:**\n    *   All prompts developed in this task are intended for implementation within the Next.js backend service (Subtask 19.4). The backend will be responsible for constructing the final prompts using context (e.g., transcript, user data) and making requests to the Gemini API.\n\n2.  **GEM Analysis Prompts (for Tasks 21 & 28):**\n    *   Design prompts that instruct the Gemini API to analyze provided transcript segments and relevant user data.\n    *   The objective is to identify keywords, extract insights, or suggest action items.\n    *   These prompts must be engineered to request structured JSON output from Gemini (e.g., `{ \"is_gem\": boolean, \"gem_type\": \"insight/action_item\", \"gem_details\": { \"summary\": \"...\", \"evidence\": \"...\" } }`).\n\n3.  **AI Chat Prompts (for Task 25):**\n    *   Develop system prompts to define the persona, capabilities, and operational guidelines for Gemini in the AI chat interface.\n    *   Design user prompt templates that the Next.js backend will dynamically populate. These templates should effectively incorporate conversation history and relevant contextual data snippets to ensure coherent and relevant responses.\n\n4.  **Prompt Engineering Best Practices:**\n    *   Prompts should be meticulously engineered to optimize for the accuracy, relevance, and conciseness of Gemini's responses.\n    *   Particular emphasis should be placed on the reliability and correctness of structured JSON outputs.\n\n5.  **Initial Development and Testing:**\n    *   Initial prompt development and iterative testing should be conducted by directly interacting with the Gemini API (e.g., via Google AI Studio, Colab notebooks, or direct API calls). This allows for rapid refinement before backend integration.\n\n6.  **Documentation and Handoff:**\n    *   Thoroughly document all developed prompts, including their specific purpose, input requirements (context variables), and expected output formats (especially JSON schemas). This documentation is crucial for the team working on Subtask 19.4 (Backend Service Integration).",
+      "testStrategy": "Iteratively test prompts with diverse sample inputs (e.g., various transcript excerpts, user data profiles, chat conversation snippets) directly against the Gemini API (using tools like Google AI Studio or API explorers). Evaluate Gemini's responses for:\n*   Relevance and accuracy of content.\n*   Clarity and helpfulness.\n*   Correctness and consistency of structured JSON output (where applicable).\nRefine prompts based on these evaluation results. Once the prompts are integrated into the Next.js backend service (Subtask 19.4), conduct further end-to-end testing via the backend's API endpoints to ensure they perform as expected in the integrated environment.",
       "subtasks": []
     },
     {
       "id": 28,
-      "title": "Refine 'GEM' Alert Intelligence (Contextual OpenAI analysis)",
-      "description": "Enhance the 'GEM' alert intelligence by using OpenAI models to analyze the live transcript in conjunction with synced user data, moving beyond simple keyword spotting to detect more nuanced contextual connections.",
-      "details": "Modify Task 21's processing logic. Instead of/in addition to keyword spotting, send transcript snippets and relevant user data context to an OpenAI model (with prompts from Task 27) to identify 'hidden gems'. Optimize for low latency.",
-      "testStrategy": "Test with diverse meeting scenarios. Compare AI-driven GEMs against keyword-based ones. Evaluate relevance and insightfulness. Monitor API usage and performance.",
-      "priority": "high",
+      "title": "Refine GEM Alert Intelligence (Contextual Gemini via Backend)",
+      "description": "Enhance the 'GEM' alert intelligence by using Google's Gemini models via a backend service to analyze the live transcript in conjunction with synced user data, moving beyond simple keyword spotting to detect more nuanced contextual connections.",
+      "status": "pending",
       "dependencies": [
         26,
         27,
         20,
-        13
+        13,
+        19
       ],
-      "status": "pending",
+      "priority": "high",
+      "details": "1. This task builds upon the GEM identification mechanism in Task 21 and the prompt engineering in Task 27.\n2. The Next.js backend service (Subtask 19.4) will be called with transcript segments.\n3. The backend service will use refined prompts (from Task 27, iterated here) to query the Gemini API.\n4. These prompts will instruct Gemini to perform a more sophisticated analysis of the transcript segment, cross-referencing it with a richer set of synced user data (Task 13) to identify subtle connections, anticipate needs, or flag complex action items.\n5. Requests to Gemini should continue to specify structured JSON output to clearly delineate identified GEMs and their attributes.\n6. Focus on optimizing the prompt and potentially the amount/type of context sent to Gemini to achieve low latency suitable for real-time alerts while maximizing the insightfulness of the GEMs.\n7. The extension background script will process the structured JSON from the backend to trigger/update GEM alerts.",
+      "testStrategy": "Test with diverse meeting scenarios. Compare Gemini-driven GEMs against keyword-based ones. Evaluate relevance and insightfulness. Test the interaction between the extension, backend service, and Gemini API. Monitor Gemini API usage, latency, and overall performance. Verify correct processing of structured JSON responses.",
       "subtasks": []
     },
     {
       "id": 29,
-      "title": "Implement 'Spark Connection' Smart Chip",
+      "title": "Implement 'Spark Connection' Smart Chip (Gemini via Backend)",
       "description": "Implement the 'Spark Connection' Smart Chip in the AI Assistant Drawer. This chip, when clicked, should query the AI to generate personalized talking points or rapport builders based on available data about attendees.",
-      "details": "Add a 'Spark Connection' button/chip to the AI drawer. On click, trigger an OpenAI query using a specific prompt designed to generate connection ideas, leveraging synced data and `open-deep-research` insights for known attendees.",
-      "testStrategy": "Test the chip with various meeting contexts and attendee information. Evaluate the quality and relevance of the generated talking points.",
-      "priority": "medium",
+      "status": "pending",
       "dependencies": [
         23,
         25,
         13,
         15
       ],
-      "status": "pending",
+      "priority": "medium",
+      "details": "1. Add a 'Spark Connection' button/chip to the AI Assistant Drawer UI (Task 23).\n2. On click, the extension sends a request to our Next.js backend API (Subtask 19.4), indicating the action and providing necessary context (e.g., meeting ID, known attendee identifiers).\n3. The backend API (Subtask 19.4) retrieves relevant data for attendees (synced user data from Task 13, `open-deep-research` output from Task 15).\n4. It then prompts the Gemini API with this data, asking for personalized talking points, rapport builders, or connection ideas.\n5. The prompt should request structured JSON output if we want to categorize or specially format these suggestions.\n6. Gemini's response is returned by the backend to the extension.\n7. The extension displays these suggestions, perhaps in the chat interface (Task 25) or a dedicated area.",
+      "testStrategy": "Test the chip with various meeting contexts and attendee information. Evaluate the quality and relevance of the generated talking points.",
       "subtasks": []
     },
     {
       "id": 30,
-      "title": "Implement 'Key Takeaways So Far' Smart Chip",
-      "description": "Implement the 'Key Takeaways So Far' Smart Chip. This chip should trigger the AI to summarize the meeting discussion up to that point based on the live transcript.",
-      "details": "Add a 'Key Takeaways' button/chip. On click, send the accumulated transcript (or a significant recent portion) to OpenAI with a summarization prompt. Display the summary in the chat interface or a dedicated area.",
-      "testStrategy": "Test during a mock meeting. Verify the generated summary accurately reflects key discussion points from the transcript up to that point.",
-      "priority": "medium",
+      "title": "Implement 'Key Takeaways So Far' Smart Chip (Gemini via Backend)",
+      "description": "Implement the 'Key Takeaways So Far' Smart Chip using Gemini via a backend service. This chip allows users to get an AI-generated summary of the meeting discussion up to the current point based on the live transcript, displayed within the extension.",
+      "status": "pending",
       "dependencies": [
         23,
         25,
         20
       ],
-      "status": "pending",
+      "priority": "medium",
+      "details": "This chip, when clicked in the AI Assistant Drawer (Task 23), will trigger a call to our Next.js backend API (Subtask 19.4). The backend will send the accumulated live transcript (from Task 20, managed/passed by the extension) to Gemini for summarization. Gemini's response (summary text) is returned to the extension for display.\n\nKey implementation steps:\n1. Add a 'Key Takeaways' button/chip to the AI Assistant Drawer UI (Task 23).\n2. On click, the extension sends a request to our Next.js backend API (Subtask 19.4).\n3. The request must include the accumulated meeting transcript (or a significant recent portion of it, obtained via the STT pipeline from Task 20).\n4. The backend API (Subtask 19.4) prompts the Gemini API with this transcript, asking for a summary of key takeaways.\n5. Gemini's response (the summary text) is returned by the backend to the extension.\n6. The extension displays this summary, perhaps in the chat interface (Task 25) or a dedicated area.",
+      "testStrategy": "Test the 'Key Takeaways' chip click action within the AI Assistant Drawer. Verify that the extension correctly sends a request to the Next.js backend API (Subtask 19.4) including mock transcript data. Mock backend responses (simulating Gemini summaries) to test the frontend's ability to receive and display these summaries correctly. Test the display of summaries in the designated UI area (e.g., chat interface as per Task 25). Once the backend integration with Gemini is live, conduct end-to-end tests during mock meetings to evaluate the quality, accuracy, and relevance of Gemini-generated summaries with various transcript lengths and content types.",
       "subtasks": []
     },
     {
       "id": 31,
       "title": "Implement 'Intelligent Recap for Late Joiners' (Basic)",
-      "description": "Implement a basic version of the 'Intelligent Recap for Late Joiners'. When a user with the extension joins mid-meeting, provide a non-intrusive recap of key topics discussed so far, based on the transcript.",
-      "details": "Detect when the extension initializes mid-meeting (e.g., by checking current meeting duration or existing transcript). If so, automatically generate a summary (similar to Task 30) and display it discreetly to the late joiner, perhaps in the AI drawer.",
-      "testStrategy": "Simulate joining a meeting late. Verify that a recap is generated and displayed. Assess the quality and conciseness of the recap.",
-      "priority": "medium",
+      "description": "Implement the 'Intelligent Recap for Late Joiners' feature. When a user with the extension joins mid-meeting, fetch the available prior transcript, send it to the backend for summarization using Gemini, and display the generated recap discreetly to the user.",
+      "status": "pending",
       "dependencies": [
         20,
         8,
-        25
+        25,
+        19,
+        23
       ],
-      "status": "pending",
-      "subtasks": []
+      "priority": "medium",
+      "details": "1. Detect when the extension initializes and the user has joined a meeting that is already in progress.\n2. **Transcript Source for Late Joiner (Needs Design):** Determine how a late-joining user's extension can access the transcript accrued so far. Options include sharing via backend from another user, backend storage, or potentially limiting scope for MVP if too complex. Assume for now that *some* portion of the prior transcript can be made available.\n3. The extension sends this available prior transcript to our Next.js backend API (related to Subtask 19.4).\n4. The backend API (Subtask 19.4) prompts the Gemini API with this transcript, asking for a concise recap of key topics discussed.\n5. Gemini's response (the recap text) is returned by the backend to the extension.\n6. The extension displays this recap discreetly to the late joiner, likely within the AI Assistant Drawer (Task 23).",
+      "testStrategy": "Simulate joining a meeting late. Test the mechanism for obtaining the prior transcript (once designed/implemented). Verify the request sent to the backend with a mock transcript and the response received. Test the display of the recap in the designated UI area (e.g., AI Drawer). Evaluate the quality and conciseness of Gemini-generated recaps once the backend integration is live.",
+      "subtasks": [
+        {
+          "id": 31.1,
+          "title": "Implement late join detection logic",
+          "status": "pending",
+          "assignee": null
+        },
+        {
+          "id": 31.2,
+          "title": "Design and implement mechanism for late joiner transcript retrieval",
+          "status": "pending",
+          "assignee": null,
+          "details": "Investigate and implement the best approach for getting prior transcript data (e.g., backend sharing, direct P2P, etc.). Define fallback if no prior transcript is available."
+        },
+        {
+          "id": 31.3,
+          "title": "Implement extension logic to send transcript to backend API",
+          "status": "pending",
+          "assignee": null,
+          "details": "Requires coordination on the API endpoint defined in Subtask 19.4."
+        },
+        {
+          "id": 31.4,
+          "title": "Implement extension logic to receive and handle recap from backend",
+          "status": "pending",
+          "assignee": null
+        },
+        {
+          "id": 31.5,
+          "title": "Implement UI for displaying the recap",
+          "status": "pending",
+          "assignee": null,
+          "details": "Display the received recap text discreetly, likely integrating with the AI Assistant Drawer (Task 23)."
+        }
+      ]
     },
     {
       "id": 32,

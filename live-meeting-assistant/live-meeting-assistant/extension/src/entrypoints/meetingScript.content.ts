@@ -4,7 +4,7 @@ import { defineContentScript } from '#imports';
 import logger from '@/utils/logger';
 
 export default defineContentScript({
-  matches: ['*://meet.google.com/*', '*://*.zoom.us/wc/*', '*://*.webex.com/*'],
+  matches: ['*://meet.google.com/*', '*://workspace.google.com/products/meet/*', '*://*.zoom.us/wc/*', '*://*.webex.com/*', '*://*.youtube.com/watch*', 'chrome-extension://*/mic-loopback-test.html'],
   runAt: 'document_idle', 
 
   async main() {

@@ -1,11 +1,19 @@
 # Task ID: 30
-# Title: Implement 'Key Takeaways So Far' Smart Chip
+# Title: Implement 'Key Takeaways So Far' Smart Chip (Gemini via Backend)
 # Status: pending
 # Dependencies: 23, 25, 20
 # Priority: medium
-# Description: Implement the 'Key Takeaways So Far' Smart Chip. This chip should trigger the AI to summarize the meeting discussion up to that point based on the live transcript.
+# Description: Implement the 'Key Takeaways So Far' Smart Chip using Gemini via a backend service. This chip allows users to get an AI-generated summary of the meeting discussion up to the current point based on the live transcript, displayed within the extension.
 # Details:
-Add a 'Key Takeaways' button/chip. On click, send the accumulated transcript (or a significant recent portion) to OpenAI with a summarization prompt. Display the summary in the chat interface or a dedicated area.
+This chip, when clicked in the AI Assistant Drawer (Task 23), will trigger a call to our Next.js backend API (Subtask 19.4). The backend will send the accumulated live transcript (from Task 20, managed/passed by the extension) to Gemini for summarization. Gemini's response (summary text) is returned to the extension for display.
+
+Key implementation steps:
+1. Add a 'Key Takeaways' button/chip to the AI Assistant Drawer UI (Task 23).
+2. On click, the extension sends a request to our Next.js backend API (Subtask 19.4).
+3. The request must include the accumulated meeting transcript (or a significant recent portion of it, obtained via the STT pipeline from Task 20).
+4. The backend API (Subtask 19.4) prompts the Gemini API with this transcript, asking for a summary of key takeaways.
+5. Gemini's response (the summary text) is returned by the backend to the extension.
+6. The extension displays this summary, perhaps in the chat interface (Task 25) or a dedicated area.
 
 # Test Strategy:
-Test during a mock meeting. Verify the generated summary accurately reflects key discussion points from the transcript up to that point.
+Test the 'Key Takeaways' chip click action within the AI Assistant Drawer. Verify that the extension correctly sends a request to the Next.js backend API (Subtask 19.4) including mock transcript data. Mock backend responses (simulating Gemini summaries) to test the frontend's ability to receive and display these summaries correctly. Test the display of summaries in the designated UI area (e.g., chat interface as per Task 25). Once the backend integration with Gemini is live, conduct end-to-end tests during mock meetings to evaluate the quality, accuracy, and relevance of Gemini-generated summaries with various transcript lengths and content types.

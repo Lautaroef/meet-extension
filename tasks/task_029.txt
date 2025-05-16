@@ -1,11 +1,17 @@
 # Task ID: 29
-# Title: Implement 'Spark Connection' Smart Chip
+# Title: Implement 'Spark Connection' Smart Chip (Gemini via Backend)
 # Status: pending
 # Dependencies: 23, 25, 13, 15
 # Priority: medium
 # Description: Implement the 'Spark Connection' Smart Chip in the AI Assistant Drawer. This chip, when clicked, should query the AI to generate personalized talking points or rapport builders based on available data about attendees.
 # Details:
-Add a 'Spark Connection' button/chip to the AI drawer. On click, trigger an OpenAI query using a specific prompt designed to generate connection ideas, leveraging synced data and `open-deep-research` insights for known attendees.
+1. Add a 'Spark Connection' button/chip to the AI Assistant Drawer UI (Task 23).
+2. On click, the extension sends a request to our Next.js backend API (Subtask 19.4), indicating the action and providing necessary context (e.g., meeting ID, known attendee identifiers).
+3. The backend API (Subtask 19.4) retrieves relevant data for attendees (synced user data from Task 13, `open-deep-research` output from Task 15).
+4. It then prompts the Gemini API with this data, asking for personalized talking points, rapport builders, or connection ideas.
+5. The prompt should request structured JSON output if we want to categorize or specially format these suggestions.
+6. Gemini's response is returned by the backend to the extension.
+7. The extension displays these suggestions, perhaps in the chat interface (Task 25) or a dedicated area.
 
 # Test Strategy:
 Test the chip with various meeting contexts and attendee information. Evaluate the quality and relevance of the generated talking points.

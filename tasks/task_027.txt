@@ -1,11 +1,37 @@
 # Task ID: 27
-# Title: Initial Prompt Engineering for OpenAI (GEMs, Chat)
+# Title: Initial Prompt Engineering for Gemini (Backend Service)
 # Status: pending
 # Dependencies: 25
 # Priority: high
-# Description: Develop initial prompts for OpenAI models used in 'GEM' alert generation (for more advanced GEMs beyond keyword spotting) and the AI Chat interface. Focus on clarity, context-awareness, and generating actionable insights.
+# Description: Develop initial prompts for the Gemini API, which will be utilized by the Next.js backend service (Subtask 19.4). These prompts are intended for 'GEM' alert generation (supporting Tasks 21 & 28, for more advanced GEMs beyond keyword spotting) and the AI Chat interface (Task 25). The primary focus is on achieving clarity, context-awareness, generating actionable insights, and ensuring reliable structured JSON output where required.
 # Details:
-For GEMs: Prompts to analyze transcript + user data for connections. For Chat: System prompts to define AI persona and capabilities. User prompts to include conversation history and relevant data snippets. Refer to OpenAI Cookbook for best practices.
+This task is dedicated to the design, development, and initial testing of prompts for the Gemini API. These prompts will be integrated and used by our Next.js backend service (as per Subtask 19.4) to power features related to GEMs and AI Chat.
+
+1.  **Backend Integration Context:**
+    *   All prompts developed in this task are intended for implementation within the Next.js backend service (Subtask 19.4). The backend will be responsible for constructing the final prompts using context (e.g., transcript, user data) and making requests to the Gemini API.
+
+2.  **GEM Analysis Prompts (for Tasks 21 & 28):**
+    *   Design prompts that instruct the Gemini API to analyze provided transcript segments and relevant user data.
+    *   The objective is to identify keywords, extract insights, or suggest action items.
+    *   These prompts must be engineered to request structured JSON output from Gemini (e.g., `{ "is_gem": boolean, "gem_type": "insight/action_item", "gem_details": { "summary": "...", "evidence": "..." } }`).
+
+3.  **AI Chat Prompts (for Task 25):**
+    *   Develop system prompts to define the persona, capabilities, and operational guidelines for Gemini in the AI chat interface.
+    *   Design user prompt templates that the Next.js backend will dynamically populate. These templates should effectively incorporate conversation history and relevant contextual data snippets to ensure coherent and relevant responses.
+
+4.  **Prompt Engineering Best Practices:**
+    *   Prompts should be meticulously engineered to optimize for the accuracy, relevance, and conciseness of Gemini's responses.
+    *   Particular emphasis should be placed on the reliability and correctness of structured JSON outputs.
+
+5.  **Initial Development and Testing:**
+    *   Initial prompt development and iterative testing should be conducted by directly interacting with the Gemini API (e.g., via Google AI Studio, Colab notebooks, or direct API calls). This allows for rapid refinement before backend integration.
+
+6.  **Documentation and Handoff:**
+    *   Thoroughly document all developed prompts, including their specific purpose, input requirements (context variables), and expected output formats (especially JSON schemas). This documentation is crucial for the team working on Subtask 19.4 (Backend Service Integration).
 
 # Test Strategy:
-Iteratively test prompts with sample inputs. Evaluate AI responses for relevance, accuracy, and helpfulness. Refine prompts based on results.
+Iteratively test prompts with diverse sample inputs (e.g., various transcript excerpts, user data profiles, chat conversation snippets) directly against the Gemini API (using tools like Google AI Studio or API explorers). Evaluate Gemini's responses for:
+*   Relevance and accuracy of content.
+*   Clarity and helpfulness.
+*   Correctness and consistency of structured JSON output (where applicable).
+Refine prompts based on these evaluation results. Once the prompts are integrated into the Next.js backend service (Subtask 19.4), conduct further end-to-end testing via the backend's API endpoints to ensure they perform as expected in the integrated environment.

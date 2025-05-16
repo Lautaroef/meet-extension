@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "esnext",
+    "lib": ["webworker"], 
+    "outDir": "../../../public/worklets/",
+    "rootDir": ".", 
+    "esModuleInterop": true,
+    "skipLibCheck": true, 
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["audio-processor.worklet.ts"],
+  "exclude": ["logger.ts"]
+} 
